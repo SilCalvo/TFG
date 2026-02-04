@@ -16,7 +16,7 @@ private:
   void timer_callback();
   void configure_serial(int fd);
   int serial_port_;
-  std::string read_buffer_; // Acumulador de texto
+  std::string read_buffer_; 
   // ROS Interfaces
   rclcpp::Subscription<std_msgs::msg::Int16MultiArray>::SharedPtr subscription_;
   rclcpp::Publisher<std_msgs::msg::Int16MultiArray>::SharedPtr publisher_;
