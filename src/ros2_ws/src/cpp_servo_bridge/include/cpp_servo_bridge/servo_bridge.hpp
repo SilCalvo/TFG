@@ -16,6 +16,7 @@ private:
   void timer_callback();
   void configure_serial(int fd);
   int serial_port_;
+  bool robot_mode = 0; // 0 manual 1 automatic
   std::string read_buffer_; 
   // ROS Interfaces
   rclcpp::Subscription<std_msgs::msg::Int16MultiArray>::SharedPtr subscription_;

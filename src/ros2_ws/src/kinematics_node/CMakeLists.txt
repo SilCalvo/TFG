@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(robot_cinematics)
+project(kinematics_node)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -14,11 +14,9 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
+include_directories(include)
+
 add_executable(kinematics_node src/kinematics_node.cpp)
-target_include_directories(kinematics_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_compile_features(kinematics_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(
   kinematics_node
   "rclcpp"
@@ -29,7 +27,8 @@ ament_target_dependencies(
   "tf2_geometry_msgs"
 )
 
-install(TARGETS kinematics_node
+install(TARGETS
+  kinematics_node
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
@@ -45,3 +44,4 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
+

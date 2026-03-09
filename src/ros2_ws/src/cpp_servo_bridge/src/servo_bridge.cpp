@@ -7,7 +7,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <vector> 
-#include <cstdio> // Para sscanf
+#include <cstdio> 
 
 using std::placeholders::_1;
 using namespace std::chrono_literals;
@@ -30,10 +30,22 @@ ServoBridgeNode::ServoBridgeNode()
     RCLCPP_INFO(this->get_logger(), "Arduino conectado en %s", port_name);
   }
 
+  rclcpp::QoS qos_sub(1);
+  qos_sub.transient_local();
   subscription_ = this->create_subscription<std_msgs::msg::Int16MultiArray>(
-    "robot_cmd", 10, std::bind(&ServoBridgeNode::robot_cmd_callback, this, _1));
-
-  publisher_ = this->create_publisher<std_msgs::msg::Int16MultiArray>("robot_status", 10);
+    "robot_cmd", 
+    qos_sub, 
+    std::bind(&ServoBridgeNode::robot_cmd_callback, this, _1)
+  );
+  
+  // Robot servos state publisher
+  rclcpp::QoS qos_profile(1); // History: Keep Last 1 
+  qos_profile.transient_local();  // Durability: Transient Local 
+  qos_profile.reliable();         // Reliability: Reliable 
+  publisher_ = this->create_publisher<std_msgs::msg::Int16MultiArray>(
+      "robot_cmd", 
+      qos_profile
+  );
 
   timer_ = this->create_wall_timer(
       20ms, std::bind(&ServoBridgeNode::timer_callback, this));
@@ -49,10 +61,13 @@ void ServoBridgeNode::robot_cmd_callback(const std_msgs::msg::Int16MultiArray::S
 {
   if (serial_port_ < 0) return;
 
+  if (robot_mode == 0) return;
+
   if (msg->data.size() != 5) {
     RCLCPP_WARN(this->get_logger(), "Ignorando comando: Se esperaban 5 angulos");
     return; 
   }
+
   std::string command = "";
   for (size_t i = 0; i < msg->data.size(); ++i) {
     command += std::to_string(msg->data[i]);
@@ -79,18 +94,35 @@ void ServoBridgeNode::timer_callback()
     while (pos != std::string::npos) {
       std::string line = read_buffer_.substr(0, pos);
       read_buffer_.erase(0, pos + 1); // Borrar lo procesado
-      int v[5];
-      int encontrados = sscanf(line.c_str(), "%d,%d,%d,%d,%d", &v[0], &v[1], &v[2], &v[3], &v[4]);
-
-      if (encontrados == 5) {
-        std_msgs::msg::Int16MultiArray msg_out;
-        msg_out.data.assign(v, v + 5); 
-        publisher_->publish(msg_out);
+      if (!line.empty() && line.back() == '\r') {
+        line.pop_back();
       }
 
-      // Buscar siguiente línea
-      pos = read_buffer_.find('\n'); ////////////////////////////////////////////////////////////////////
-    }
+      if (line.find("manual") != std::string::npos) {
+        RCLCPP_INFO(this->get_logger(), "Arduino: MANUAL MODE ACTIVATED");
+        robot_mode = 0;
+      }
+      else if (line.find("automatic") != std::string::npos) {
+        RCLCPP_INFO(this->get_logger(), "Arduino: AUTOMATIC MODE ACTIVATED");
+        robot_mode = 1;
+        
+      }
+      else if (robot_mode == 0){
+        int v[5];
+        int encontrados = sscanf(line.c_str(), "%d,%d,%d,%d,%d", &v[0], &v[1], &v[2], &v[3], &v[4]);
+
+        if (encontrados == 5) {
+          std_msgs::msg::Int16MultiArray msg_out;
+          msg_out.data.assign(v, v + 5); 
+          joint_publisher_->publish(msg_out);
+        }
+      }else {
+        RCLCPP_INFO(this->get_logger(), "Arduino: UNKNOWN COMMAND");
+
+      } 
+
+      // Buscar si hay otra línea en el buffer ///////////////////////////////////////////////
+      pos = read_buffer_.find('\n');}
   }
 }
 
