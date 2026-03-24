@@ -11,8 +11,11 @@ Codigo de prueba para comprpbar que la cinematica directa calculada mediante el 
 workspace de ros2 Jazzy. 
 
 #### Como funciona:
-1. Hacer launch del paquete robot_pkg:
-2. Eviar una petición de accion a un punto en x,y,z:
+1. Hacer launch del paquete robot_pkg: ros2 launch robot_pkg move_action.launch.py
+2. Eviar una petición de accion a un punto en x,y,z: 
+
+ros2 action send_goal /navigate_to_pose nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.5, y: 0.2, z: 0.5}, orientation: {w: 1.0}}}}"
+
 3. Calcula la cinematica inversa con pybullet (es un servicio)
 4. Se mueve a la posision y se puede ver mediante rviz2. 
 
