@@ -16,12 +16,12 @@ private:
   void timer_callback();
   void configure_serial(int fd);
   int serial_port_;
-  bool robot_mode = 0; // 0 manual 1 automatic
+  bool robot_mode = 1; // 0 manual 1 automatic
   std::string read_buffer_; 
-  // ROS Interfaces
+  
   rclcpp::Subscription<std_msgs::msg::Int16MultiArray>::SharedPtr subscription_;
   rclcpp::Publisher<std_msgs::msg::Int16MultiArray>::SharedPtr publisher_;
   rclcpp::TimerBase::SharedPtr timer_;
 };
 
-#endif // SERVO_BRIDGE_HPP_
+#endif 

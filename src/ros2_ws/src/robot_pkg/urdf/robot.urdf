@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<robot name="robot_cilindros_pinza_simple">
+
+  <material name="rojo"><color rgba="1 0 0 1"/></material>
+  <material name="naranja"><color rgba="1 0.5 0 1"/></material>
+  <material name="amarillo"><color rgba="1 1 0 1"/></material>
+  <material name="verde"><color rgba="0 1 0 1"/></material>
+  <material name="morado"><color rgba="0.5 0 0.5 1"/></material>
+  <material name="negro"><color rgba="0 0 0 1"/></material>
+
+  <link name="base">
+    <visual>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <geometry><cylinder length="0.2" radius="0.3"/></geometry>
+      <material name="rojo"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <geometry><cylinder length="0.2" radius="0.3"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/><origin xyz="0 0 0.1"/><inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+  </link>
+
+  <link name="c1_base">
+    <visual>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <geometry><cylinder length="0.2" radius="0.1"/></geometry>
+      <material name="naranja"/>
+    </visual>
+    <inertial>
+      <mass value="1.0"/><origin xyz="0 0 0.1"/><inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_base_c1" type="revolute">
+    <parent link="base"/><child link="c1_base"/>
+    <origin xyz="0 0 0.2"/><axis xyz="0 0 1"/>
+    <limit lower="-1.57" upper="1.57" effort="10" velocity="2.0"/>
+  </joint>
+
+  <link name="c2_brazo">
+    <visual>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <geometry><cylinder length="0.3" radius="0.05"/></geometry>
+      <material name="amarillo"/>
+    </visual>
+    <inertial>
+      <mass value="1.0"/><origin xyz="0 0 0.15"/><inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_c1_c2" type="revolute">
+    <parent link="c1_base"/><child link="c2_brazo"/>
+    <origin xyz="0 0 0.2"/><axis xyz="0 1 0"/>
+    <limit lower="-1.57" upper="1.57" effort="10" velocity="2.0"/>
+  </joint>
+
+  <link name="c3_antebrazo">
+    <visual>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <geometry><cylinder length="0.3" radius="0.05"/></geometry>
+      <material name="verde"/>
+    </visual>
+    <inertial>
+      <mass value="1.0"/><origin xyz="0 0 0.15"/><inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_c2_c3" type="revolute">
+    <parent link="c2_brazo"/><child link="c3_antebrazo"/>
+    <origin xyz="0 0 0.3"/><axis xyz="0 1 0"/>
+    <limit lower="-1.57" upper="1.57" effort="10" velocity="2.0"/>
+  </joint>
+
+  <link name="c5_muneca2_gira">
+    <visual>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <geometry><cylinder length="0.1" radius="0.05"/></geometry>
+      <material name="morado"/>
+    </visual>
+    <inertial>
+      <mass value="1.0"/><origin xyz="0 0 0.05"/><inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_c3_c5" type="revolute">
+    <parent link="c3_antebrazo"/><child link="c5_muneca2_gira"/>
+    <origin xyz="0 0 0.3"/><axis xyz="0 0 1"/>
+    <limit lower="-1.57" upper="1.57" effort="10" velocity="2.0"/>
+  </joint>
+
+  <link name="mano">
+    <visual>
+      <origin xyz="0 0 0.005" rpy="0 0 0"/>
+      <geometry><box size="0.12 0.02 0.01"/></geometry>
+      <material name="negro"/>
+    </visual>
+    <inertial>
+      <mass value="1.0"/><origin xyz="0 0 0.005"/><inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_c5_mano" type="fixed">
+    <parent link="c5_muneca2_gira"/><child link="mano"/>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  </joint>
+
+  <link name="dedo_der">
+    <visual>
+      <origin xyz="0 0 0.035" rpy="0 0 0"/>
+      <geometry><box size="0.01 0.02 0.07"/></geometry>
+      <material name="negro"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.035" rpy="0 0 0"/>
+      <geometry><box size="0.01 0.02 0.07"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/><origin xyz="0 0 0.035"/><inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_dedo_der_fijo" type="fixed">
+    <parent link="mano"/><child link="dedo_der"/>
+    <origin xyz="0.04 0 0.01" rpy="0 0 0"/>
+  </joint>
+
+  <link name="dedo_izq">
+    <visual>
+      <origin xyz="0 0 0.035" rpy="0 0 0"/>
+      <geometry><box size="0.01 0.02 0.07"/></geometry>
+      <material name="negro"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.035" rpy="0 0 0"/>
+      <geometry><box size="0.01 0.02 0.07"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/><origin xyz="0 0 0.035"/><inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_pinza" type="revolute">
+    <parent link="mano"/>
+    <child link="dedo_izq"/>
+    <origin xyz="-0.04 0 0.01" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/> 
+    <limit lower="0" upper="1.57" effort="10" velocity="2.0"/>
+  </joint>
+  
+</robot>

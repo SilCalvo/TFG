@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(kinematics_node)
+project(robot_pkg)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -8,28 +8,46 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(geometry_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(tf2 REQUIRED)
-find_package(tf2_ros REQUIRED)
-find_package(tf2_geometry_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(robot_interfaces REQUIRED)
+find_package(urdf REQUIRED)
 
 include_directories(include)
 
-add_executable(kinematics_node src/kinematics_node.cpp)
-ament_target_dependencies(
-  kinematics_node
-  "rclcpp"
-  "geometry_msgs"
-  "sensor_msgs"
-  "tf2"
-  "tf2_ros"
-  "tf2_geometry_msgs"
+add_executable(move_arm_node src/move_arm_node.cpp)
+ament_target_dependencies(move_arm_node 
+  rclcpp 
+  rclcpp_action 
+  nav2_msgs
+  robot_interfaces
 )
 
+add_executable(rviz_bridge_node src/rviz_bridge_node.cpp)
+ament_target_dependencies(rviz_bridge_node
+  rclcpp
+  std_msgs
+  sensor_msgs
+)
+
+add_executable(servo_node src/servo_bridge_node.cpp)
+ament_target_dependencies(servo_node rclcpp std_msgs)
+
 install(TARGETS
-  kinematics_node
-  DESTINATION lib/${PROJECT_NAME})
+  move_arm_node
+  rviz_bridge_node
+  servo_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  urdf
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -44,4 +62,3 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
-

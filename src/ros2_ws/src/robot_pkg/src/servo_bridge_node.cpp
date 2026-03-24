@@ -1,4 +1,4 @@
-#include "cpp_servo_bridge/servo_bridge.hpp"
+#include "robot_pkg/servo_bridge_node.hpp"
 
 #include <chrono>
 #include <string>
@@ -12,9 +12,8 @@
 using std::placeholders::_1;
 using namespace std::chrono_literals;
 
-// --- CONSTRUCTOR ---
 ServoBridgeNode::ServoBridgeNode()
-: Node("cpp_servo_bridge"), serial_port_(-1)
+: Node("servo_bridge_node"), serial_port_(-1)
 {
   const char * port_name = "/dev/ttyACM0"; // PUERTO ARDUINO
   
@@ -24,7 +23,6 @@ ServoBridgeNode::ServoBridgeNode()
   if (serial_port_ < 0) {
     RCLCPP_ERROR(this->get_logger(), "Error fatal: No se puede abrir %s", port_name);
   } else {
-    // Restauramos flags para que read() funcione normal pero sin bloquear
     fcntl(serial_port_, F_SETFL, 0); 
     configure_serial(serial_port_);
     RCLCPP_INFO(this->get_logger(), "Arduino conectado en %s", port_name);
@@ -39,19 +37,18 @@ ServoBridgeNode::ServoBridgeNode()
   );
   
   // Robot servos state publisher
-  rclcpp::QoS qos_profile(1); // History: Keep Last 1 
-  qos_profile.transient_local();  // Durability: Transient Local 
-  qos_profile.reliable();         // Reliability: Reliable 
+  rclcpp::QoS qos_profile(1); 
+  qos_profile.transient_local();  
+  qos_profile.reliable();        
   publisher_ = this->create_publisher<std_msgs::msg::Int16MultiArray>(
-      "robot_cmd", 
-      qos_profile
+    "robot_cmd", 
+    qos_profile
   );
 
   timer_ = this->create_wall_timer(
-      20ms, std::bind(&ServoBridgeNode::timer_callback, this));
+    20ms, std::bind(&ServoBridgeNode::timer_callback, this));
 }
 
-// --- DESTRUCTOR ---
 ServoBridgeNode::~ServoBridgeNode() {
   if (serial_port_ >= 0) close(serial_port_);
 }
@@ -114,7 +111,7 @@ void ServoBridgeNode::timer_callback()
         if (encontrados == 5) {
           std_msgs::msg::Int16MultiArray msg_out;
           msg_out.data.assign(v, v + 5); 
-          joint_publisher_->publish(msg_out);
+          publisher_->publish(msg_out);
         }
       }else {
         RCLCPP_INFO(this->get_logger(), "Arduino: UNKNOWN COMMAND");
@@ -128,30 +125,30 @@ void ServoBridgeNode::timer_callback()
 
 // --- SERIAL CONFIGURATION  ---
 void ServoBridgeNode::configure_serial(int fd) {
-    struct termios tty;
-    if(tcgetattr(fd, &tty) != 0) return;
-    
-    cfsetospeed(&tty, B57600);
-    cfsetispeed(&tty, B57600);
-    
-    tty.c_cflag &= ~PARENB; 
-    tty.c_cflag &= ~CSTOPB; 
-    tty.c_cflag &= ~CSIZE;
-    tty.c_cflag |= CS8;     
-    tty.c_cflag |= CREAD | CLOCAL; 
+  struct termios tty;
+  if(tcgetattr(fd, &tty) != 0) return;
+  
+  cfsetospeed(&tty, B57600);
+  cfsetispeed(&tty, B57600);
+  
+  tty.c_cflag &= ~PARENB; 
+  tty.c_cflag &= ~CSTOPB; 
+  tty.c_cflag &= ~CSIZE;
+  tty.c_cflag |= CS8;     
+  tty.c_cflag |= CREAD | CLOCAL; 
 
-    tty.c_lflag &= ~ICANON;
-    tty.c_lflag &= ~ECHO;
-    tty.c_lflag &= ~ECHOE;
-    tty.c_lflag &= ~ISIG;
-    
-    tty.c_cc[VMIN]  = 0; 
-    tty.c_cc[VTIME] = 0; 
+  tty.c_lflag &= ~ICANON;
+  tty.c_lflag &= ~ECHO;
+  tty.c_lflag &= ~ECHOE;
+  tty.c_lflag &= ~ISIG;
+  
+  tty.c_cc[VMIN]  = 0; 
+  tty.c_cc[VTIME] = 0; 
 
-    tcsetattr(fd, TCSANOW, &tty);
-    
-    int flags = fcntl(fd, F_GETFL, 0);
-    fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+  tcsetattr(fd, TCSANOW, &tty);
+  
+  int flags = fcntl(fd, F_GETFL, 0);
+  fcntl(fd, F_SETFL, flags | O_NONBLOCK);
 }
 
 // --- MAIN ---

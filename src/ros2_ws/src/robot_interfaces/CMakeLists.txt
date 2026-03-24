@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(cpp_servo_bridge)
+project(robot_interfaces)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -7,17 +7,13 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
-include_directories(include)
-
-add_executable(servo_node src/servo_bridge.cpp)
-ament_target_dependencies(servo_node rclcpp std_msgs)
-
-install(TARGETS
-  servo_node
-  DESTINATION lib/${PROJECT_NAME})
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/SolveIK.srv"
+  DEPENDENCIES geometry_msgs
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
