@@ -37,6 +37,8 @@ Current angles en move_node en get trayectory que los coja bien.
 
 Comprobar que pasa si se envia a un punto al que no llega
 
+Falta lo de +90 grados al enviar al arduino
+
 Añadir paredes virtuales - manual y automatico
 
 
