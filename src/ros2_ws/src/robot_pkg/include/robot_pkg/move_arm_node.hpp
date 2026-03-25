@@ -25,23 +25,37 @@ public:
   MoveArmNode();
 
 private:
-  rclcpp_action::Server<NavigateToPose>::SharedPtr action_server_;
+  rclcpp_action::Server<NavigateToPose>::SharedPtr action_server_moveJ;
+  rclcpp_action::Server<NavigateToPose>::SharedPtr action_server_moveL;
   rclcpp::Publisher<std_msgs::msg::Int16MultiArray>::SharedPtr publisher_;
   rclcpp::Client<robot_interfaces::srv::SolveIK>::SharedPtr ik_client_;
 
-  std::vector<double> current_angles_;
-  Point calculate_fk(const std::vector<double>& angles);
-  std::vector<std::vector<double>> get_trajectory(Point target);
+  std::vector<double> current_angles_ = std::vector<double>(5, 0.0);
+  Point calculate_dk(const std::vector<double>& angles);
+  std::vector<std::vector<double>> get_trajectory_moveJ(Point target);
+  std::vector<std::vector<double>> get_trajectory_moveL(Point target);
 
-  rclcpp_action::GoalResponse handle_goal(
+  rclcpp_action::GoalResponse handle_goal_moveJ(
       const rclcpp_action::GoalUUID & uuid,
       std::shared_ptr<const NavigateToPose::Goal> goal);
 
-  rclcpp_action::CancelResponse handle_cancel(
+  rclcpp_action::CancelResponse handle_cancel_moveJ(
       const std::shared_ptr<GoalHandleNav> goal_handle);
 
-  void handle_accepted(const std::shared_ptr<GoalHandleNav> goal_handle);
-  void execute(const std::shared_ptr<GoalHandleNav> goal_handle);
+  void handle_accepted_moveJ(const std::shared_ptr<GoalHandleNav> goal_handle);
+  void execute_moveJ(const std::shared_ptr<GoalHandleNav> goal_handle);
+
+
+
+  rclcpp_action::GoalResponse handle_goal_moveL(
+      const rclcpp_action::GoalUUID & uuid,
+      std::shared_ptr<const NavigateToPose::Goal> goal);
+
+  rclcpp_action::CancelResponse handle_cancel_moveL(
+      const std::shared_ptr<GoalHandleNav> goal_handle);
+
+  void handle_accepted_moveL(const std::shared_ptr<GoalHandleNav> goal_handle);
+  void execute_moveL(const std::shared_ptr<GoalHandleNav> goal_handle);
 };
 
 #endif 
