@@ -4,14 +4,22 @@
 #include <memory>
 #include <vector>
 #include <thread>
+#include <cmath>
+#include <algorithm>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "nav2_msgs/action/navigate_to_pose.hpp"
 #include "robot_interfaces/srv/solve_ik.hpp"
+#include "robot_interfaces/srv/solve_dk.hpp"
 #include "robot_interfaces/srv/add_obstacle.hpp"
 #include "robot_interfaces/srv/remove_obstacle.hpp"
 #include "std_msgs/msg/int16_multi_array.hpp"
+
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2/LinearMath/Matrix3x3.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+
 
 class MoveArmNode : public rclcpp::Node {
 public:
@@ -22,6 +30,16 @@ public:
     double x;
     double y;
     double z;
+    double roll;  
+    double pitch; 
+    double yaw;
+  };
+
+  struct Tool_Config {
+    std::string name;
+    geometry_msgs::msg::Pose offset;
+    std::vector<double> dimensions;
+    int type; // 0: Caja, 1: Cilindro
   };
 
   MoveArmNode();
@@ -32,6 +50,7 @@ private:
   rclcpp::Publisher<std_msgs::msg::Int16MultiArray>::SharedPtr publisher_;
 
   rclcpp::Client<robot_interfaces::srv::SolveIK>::SharedPtr ik_client_;
+  rclcpp::Client<robot_interfaces::srv::SolveDK>::SharedPtr dk_client_;
   rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedPtr add_wall_client_;
   rclcpp::Client<robot_interfaces::srv::RemoveObstacle>::SharedPtr remove_wall_client_;
 
@@ -39,6 +58,13 @@ private:
   Point calculate_dk(const std::vector<double>& angles);
   std::vector<std::vector<double>> get_trajectory_moveJ(Point target);
   std::vector<std::vector<double>> get_trajectory_moveL(Point target);
+
+  std::map<std::string, Tool_Config> tool_library_;
+  std::string active_tool_name_ = "default";
+  // Métodos para gestionar la librería
+  void add_tool(std::string name, int type, std::vector<double> dims, geometry_msgs::msg::Pose off);
+  void delete_tool(std::string name);
+  void set_active_tool(std::string name);
 
   rclcpp_action::GoalResponse handle_goal_moveJ(
       const rclcpp_action::GoalUUID & uuid,
@@ -49,8 +75,6 @@ private:
 
   void handle_accepted_moveJ(const std::shared_ptr<GoalHandleNav> goal_handle);
   void execute_moveJ(const std::shared_ptr<GoalHandleNav> goal_handle);
-
-
 
   rclcpp_action::GoalResponse handle_goal_moveL(
       const rclcpp_action::GoalUUID & uuid,

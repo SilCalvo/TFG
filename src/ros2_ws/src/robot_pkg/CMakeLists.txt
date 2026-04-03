@@ -15,15 +15,20 @@ find_package(rclcpp_action REQUIRED)
 find_package(nav2_msgs REQUIRED)
 find_package(robot_interfaces REQUIRED)
 find_package(urdf REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 include_directories(include)
 
 add_executable(move_arm_node src/move_arm_node.cpp)
 ament_target_dependencies(move_arm_node 
-  rclcpp 
-  rclcpp_action 
-  nav2_msgs
+  rclcpp
+  rclcpp_action
+  tf2
+  tf2_geometry_msgs
+  geometry_msgs
   robot_interfaces
+  nav2_msgs
 )
 
 add_executable(rviz_bridge_node src/rviz_bridge_node.cpp)

@@ -1,7 +1,4 @@
 #include "robot_pkg/move_arm_node.hpp"
-#include <cmath>
-#include <vector>
-#include <algorithm>
 
 const double PI = 3.14159265358979323846;
 
@@ -28,6 +25,7 @@ MoveArmNode::MoveArmNode()
 
   // Cliente del servicio IK
   ik_client_ = this->create_client<robot_interfaces::srv::SolveIK>("solve_ik");
+  dk_client_ = this->create_client<robot_interfaces::srv::SolveDK>("solve_dk");
   add_wall_client_ = this->create_client<robot_interfaces::srv::AddObstacle>("add_wall");
   remove_wall_client_ = this->create_client<robot_interfaces::srv::RemoveObstacle>("remove_wall");
 
@@ -38,19 +36,95 @@ MoveArmNode::MoveArmNode()
 
   publisher_ = this->create_publisher<std_msgs::msg::Int16MultiArray>("robot_cmd", qos_profile);
 
+  geometry_msgs::msg::Pose default_pose;
+  default_pose.position.x = 0.0;
+  default_pose.position.y = 0.0;
+  default_pose.position.z = 0.0; 
+  default_pose.orientation.w = 1.0; 
+  add_tool("default", 1, {2, 0.1}, default_pose);
+  active_tool_name_ = "default";
+
   RCLCPP_INFO(this->get_logger(), "Nodo 'move_arm_node' inicializado. Publicando en 'robot_cmd'.");
 }
 
 // Cinemática directa -------------------
 MoveArmNode::Point MoveArmNode::calculate_dk(const std::vector<double>& angles) {
-  Point p = {0.0, 0.0, 0.0};
+  /*Point p = {0.0, 0.0, 0.0};
   if (angles.size() >= 3) {
     double q1 = angles[0], q2 = angles[1], q3 = angles[2];
     p.x = std::cos(q1) * (0.4 * std::sin(q2 + q3) + 0.3 * std::sin(q2));
     p.y = std::sin(q1) * (0.4 * std::sin(q2 + q3) + 0.3 * std::sin(q2));
     p.z = 0.4 * std::cos(q2 + q3) + 0.3 * std::cos(q2) + 0.4;
   }
-  return p;
+  return p;*/
+
+  Point p_out = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+  auto request = std::make_shared<robot_interfaces::srv::SolveDK::Request>();
+  request->joint_angles = angles;
+  
+  auto current_tcp = tool_library_[active_tool_name_];
+  request->tcp_offset = current_tcp.offset;
+  request->tool_dimensions = current_tcp.dimensions;
+
+  if (!dk_client_->wait_for_service(std::chrono::seconds(2))) {
+    RCLCPP_ERROR(this->get_logger(), "El servicio DK no responde.");
+    return p_out;
+  }
+
+  auto result_future = dk_client_->async_send_request(request);
+  auto response = result_future.get();
+
+  if (response && response->success) {
+    p_out.x = response->target_pose.position.x;
+    p_out.y = response->target_pose.position.y;
+    p_out.z = response->target_pose.position.z;
+
+    tf2::Quaternion q(
+        response->target_pose.orientation.x,
+        response->target_pose.orientation.y,
+        response->target_pose.orientation.z,
+        response->target_pose.orientation.w
+    );
+    tf2::Matrix3x3(q).getRPY(p_out.roll, p_out.pitch, p_out.yaw);
+  } else {
+    RCLCPP_ERROR(this->get_logger(), "Fallo en la respuesta del servicio DK.");
+  }
+  return p_out;
+
+}
+
+void MoveArmNode::add_tool(std::string name, int type, std::vector<double> dims, geometry_msgs::msg::Pose off) {
+    Tool_Config new_tool;
+    new_tool.name = name;
+    new_tool.type = type;
+    new_tool.dimensions = dims;
+    new_tool.offset = off;
+
+    tool_library_[name] = new_tool;
+    RCLCPP_INFO(this->get_logger(), "Herramienta '%s' añadida a la librería.", name.c_str());
+}
+
+// Borrar una herramienta por nombre
+void MoveArmNode::delete_tool(std::string name) {
+    if (tool_library_.find(name) != tool_library_.end()) {
+        tool_library_.erase(name);
+        RCLCPP_INFO(this->get_logger(), "Herramienta '%s' eliminada.", name.c_str());
+        
+        // Si borramos la activa, volvemos a una por defecto
+        if (active_tool_name_ == name) active_tool_name_ = "default";
+    } else {
+        RCLCPP_WARN(this->get_logger(), "No se pudo borrar: '%s' no existe.", name.c_str());
+    }
+}
+
+// Seleccionar cuál usar en el próximo movimiento
+void MoveArmNode::set_active_tool(std::string name) {
+    if (tool_library_.count(name)) {
+        active_tool_name_ = name;
+        RCLCPP_INFO(this->get_logger(), "Herramienta activa cambiada a: %s", name.c_str());
+    } else {
+        RCLCPP_ERROR(this->get_logger(), "Error: La herramienta '%s' no existe en la librería.", name.c_str());
+    }
 }
 
 // Generador de trayectoria
@@ -60,6 +134,22 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveJ(Point target)
   request->target_pose.position.x = target.x;
   request->target_pose.position.y = target.y;
   request->target_pose.position.z = target.z;
+  auto current_tcp = tool_library_[active_tool_name_];
+  request->tcp_offset = current_tcp.offset;
+  request->tool_dimensions = current_tcp.dimensions;
+  request->tool_type = current_tcp.type;
+
+  if (target.roll != 0.0 || target.pitch != 0.0 || target.yaw != 0.0) {
+    tf2::Quaternion q;
+    q.setRPY(target.roll, target.pitch, target.yaw);
+
+    request->target_pose.orientation.x = q.x();
+    request->target_pose.orientation.y = q.y();
+    request->target_pose.orientation.z = q.z();
+    request->target_pose.orientation.w = q.w();
+  } else {
+    request->target_pose.orientation.w = 0.0;
+  }
 
   if (!ik_client_->wait_for_service(std::chrono::seconds(2))) {
     RCLCPP_ERROR(this->get_logger(), "El servicio IK no responde. Abortando trayectoria.");
@@ -105,48 +195,61 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveL(Point target)
   std::vector<std::vector<double>> trajectory;
   if (current_angles_.empty()) return trajectory;
 
-  Point start = calculate_dk(current_angles_);
-  double distance = std::sqrt(std::pow(target.x-start.x,2) + std::pow(target.y-start.y,2) + std::pow(target.z-start.z,2));
+  // 1. Obtener Pose actual (Posición + Orientación real)
+  Point start = calculate_dk(current_angles_); 
   
-  double step_size = 0.02; // Un punto cada 2cm
+  // 2. Fijar la orientación del inicio para toda la línea
+  tf2::Quaternion q_fixed;
+  q_fixed.setRPY(start.roll, start.pitch, start.yaw);
 
+  double distance = std::sqrt(std::pow(target.x - start.x, 2) + 
+                              std::pow(target.y - start.y, 2) + 
+                              std::pow(target.z - start.z, 2));
+  
+  double step_size = 0.02; // 2cm por paso
   int steps = std::max(1, static_cast<int>(std::ceil(distance / step_size)));
-  if (!ik_client_->wait_for_service(std::chrono::seconds(2))) {
-    RCLCPP_ERROR(this->get_logger(), "El servicio IK no responde. Abortando trayectoria.");
-    return trajectory;
-  }
+
+  if (!ik_client_->wait_for_service(std::chrono::seconds(2))) return trajectory;
 
   for (int step = 1; step <= steps; ++step) {
     double percent = static_cast<double>(step) / steps;
     auto request = std::make_shared<robot_interfaces::srv::SolveIK::Request>();
+    
+    // Interpolación lineal de posición
     request->target_pose.position.x = start.x + (target.x - start.x) * percent;
     request->target_pose.position.y = start.y + (target.y - start.y) * percent;
     request->target_pose.position.z = start.z + (target.z - start.z) * percent;
+    
+    // Orientación fija (la herramienta no "baila")
+    request->target_pose.orientation.x = q_fixed.x();
+    request->target_pose.orientation.y = q_fixed.y();
+    request->target_pose.orientation.z = q_fixed.z();
+    request->target_pose.orientation.w = q_fixed.w();
+
+    auto current_tcp = tool_library_[active_tool_name_];
+    request->tcp_offset = current_tcp.offset;
+    request->tool_dimensions = current_tcp.dimensions;
+    request->tool_type = current_tcp.type;
 
     auto result_future = ik_client_->async_send_request(request);
     if (result_future.wait_for(std::chrono::seconds(1)) == std::future_status::ready) {
       auto response = result_future.get();
       if (response->success) {
         std::vector<double> angles = response->joint_angles;
-        // FILTRO: Normalizar cada punto de la línea
+        // Filtro de seguridad
         for (size_t j = 0; j < angles.size(); ++j) {
-          angles[j] = atan2(sin(angles[j]), cos(angles[j]));
-          angles[j] = std::clamp(angles[j], -PI/2.0, PI/2.0);
+          angles[j] = std::clamp(atan2(sin(angles[j]), cos(angles[j])), -PI/2.0, PI/2.0);
         }
         trajectory.push_back(angles);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      } else {
+        RCLCPP_WARN(this->get_logger(), "Trayectoria MoveL bloqueada por colisión/límites.");
+        return {};
       }
     }
   }
-  if (!trajectory.empty()) {
-    current_angles_ = trajectory.back(); 
-    RCLCPP_INFO(this->get_logger(), "current_angles_ actualizado al final de MoveL.");
-  }
+  if (!trajectory.empty()) current_angles_ = trajectory.back(); 
   return trajectory;
-
 }
-
-
 
 // Callbacks de la acción
 rclcpp_action::GoalResponse MoveArmNode::handle_goal_moveJ(
@@ -176,10 +279,37 @@ void MoveArmNode::execute_moveJ(const std::shared_ptr<GoalHandleNav> goal_handle
   auto feedback = std::make_shared<NavigateToPose::Feedback>();
   auto result = std::make_shared<NavigateToPose::Result>();
 
+  bool orientation_is_null = (goal->pose.pose.orientation.x == 0.0 &&
+                              goal->pose.pose.orientation.y == 0.0 &&
+                              goal->pose.pose.orientation.z == 0.0 &&
+                              goal->pose.pose.orientation.w == 0.0);
+
+  double r = 0.0, p = 0.0, y = 0.0;
+
+  // 2. Si NO es nula, calculamos los ángulos Euler reales
+  if (!orientation_is_null) {
+    tf2::Quaternion q(
+      goal->pose.pose.orientation.x,
+      goal->pose.pose.orientation.y,
+      goal->pose.pose.orientation.z,
+      goal->pose.pose.orientation.w
+    );
+    
+    // Si el cuaternión es inválido (ej: todo 0 excepto W=0), Matrix3x3 puede fallar.
+    // Verificamos que al menos la norma sea cercana a 1 por seguridad
+    if (q.length2() > 1e-6) {
+      tf2::Matrix3x3 m(q);
+      m.getRPY(r, p, y);
+    }
+  }
+
+  // 3. Rellenar el struct Point
+  // Si era nula, r, p, y irán como 0.0
   Point target_pt = {
-      goal->pose.pose.position.x,
-      goal->pose.pose.position.y,
-      goal->pose.pose.position.z
+    goal->pose.pose.position.x,
+    goal->pose.pose.position.y,
+    goal->pose.pose.position.z,
+    r, p, y
   };
 
   auto trajectory_angles = get_trajectory_moveJ(target_pt);
@@ -206,7 +336,7 @@ void MoveArmNode::execute_moveJ(const std::shared_ptr<GoalHandleNav> goal_handle
     publisher_->publish(cmd_msg);
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-    Point current_xyz = calculate_dk(angles);
+    Point current_xyz = calculate_dk(angles); 
     feedback->current_pose.pose.position.x = current_xyz.x;
     feedback->current_pose.pose.position.y = current_xyz.y;
     feedback->current_pose.pose.position.z = current_xyz.z;
@@ -252,9 +382,9 @@ void MoveArmNode::execute_moveL(const std::shared_ptr<GoalHandleNav> goal_handle
   auto result = std::make_shared<NavigateToPose::Result>();
 
   Point target_pt = {
-      goal->pose.pose.position.x,
-      goal->pose.pose.position.y,
-      goal->pose.pose.position.z
+    goal->pose.pose.position.x,
+    goal->pose.pose.position.y,
+    goal->pose.pose.position.z
   };
 
   auto trajectory_angles = get_trajectory_moveL(target_pt);
@@ -281,7 +411,7 @@ void MoveArmNode::execute_moveL(const std::shared_ptr<GoalHandleNav> goal_handle
     publisher_->publish(cmd_msg);
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-    Point current_xyz = calculate_dk(angles);
+    Point current_xyz = calculate_dk(angles); 
     feedback->current_pose.pose.position.x = current_xyz.x;
     feedback->current_pose.pose.position.y = current_xyz.y;
     feedback->current_pose.pose.position.z = current_xyz.z;
