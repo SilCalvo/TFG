@@ -9,6 +9,8 @@
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "nav2_msgs/action/navigate_to_pose.hpp"
 #include "robot_interfaces/srv/solve_ik.hpp"
+#include "robot_interfaces/srv/add_obstacle.hpp"
+#include "robot_interfaces/srv/remove_obstacle.hpp"
 #include "std_msgs/msg/int16_multi_array.hpp"
 
 class MoveArmNode : public rclcpp::Node {
@@ -28,7 +30,10 @@ private:
   rclcpp_action::Server<NavigateToPose>::SharedPtr action_server_moveJ;
   rclcpp_action::Server<NavigateToPose>::SharedPtr action_server_moveL;
   rclcpp::Publisher<std_msgs::msg::Int16MultiArray>::SharedPtr publisher_;
+
   rclcpp::Client<robot_interfaces::srv::SolveIK>::SharedPtr ik_client_;
+  rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedPtr add_wall_client_;
+  rclcpp::Client<robot_interfaces::srv::RemoveObstacle>::SharedPtr remove_wall_client_;
 
   std::vector<double> current_angles_ = std::vector<double>(5, 0.0);
   Point calculate_dk(const std::vector<double>& angles);

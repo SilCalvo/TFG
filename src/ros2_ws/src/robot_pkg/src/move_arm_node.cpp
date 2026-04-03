@@ -28,6 +28,8 @@ MoveArmNode::MoveArmNode()
 
   // Cliente del servicio IK
   ik_client_ = this->create_client<robot_interfaces::srv::SolveIK>("solve_ik");
+  add_wall_client_ = this->create_client<robot_interfaces::srv::AddObstacle>("add_wall");
+  remove_wall_client_ = this->create_client<robot_interfaces::srv::RemoveObstacle>("remove_wall");
 
   // Publicador
   rclcpp::QoS qos_profile(1);
@@ -107,7 +109,12 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveL(Point target)
   double distance = std::sqrt(std::pow(target.x-start.x,2) + std::pow(target.y-start.y,2) + std::pow(target.z-start.z,2));
   
   double step_size = 0.02; // Un punto cada 2cm
+
   int steps = std::max(1, static_cast<int>(std::ceil(distance / step_size)));
+  if (!ik_client_->wait_for_service(std::chrono::seconds(2))) {
+    RCLCPP_ERROR(this->get_logger(), "El servicio IK no responde. Abortando trayectoria.");
+    return trajectory;
+  }
 
   for (int step = 1; step <= steps; ++step) {
     double percent = static_cast<double>(step) / steps;
