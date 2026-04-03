@@ -20,7 +20,7 @@ RvizBridgeNode::RvizBridgeNode()
   rclcpp::QoS qos_pub(10);
   publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/joint_states", qos_pub);
 
-  joint_names_ = {"joint_base_c1", "joint_c1_c2", "joint_c2_c3", "joint_c3_c5", "joint_pinza"};
+  joint_names_ = {"joint_base_c1", "joint_c1_c2", "joint_c2_c3", "joint_c3_c4", "joint_c4_c5"};
 
   last_joint_msg_.name = joint_names_;
   last_joint_msg_.position = {0.0, 0.0, 0.0, 0.0, 0.0};

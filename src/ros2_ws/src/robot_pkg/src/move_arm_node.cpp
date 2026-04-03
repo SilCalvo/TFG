@@ -41,7 +41,7 @@ MoveArmNode::MoveArmNode()
   default_pose.position.y = 0.0;
   default_pose.position.z = 0.0; 
   default_pose.orientation.w = 1.0; 
-  add_tool("default", 1, {2, 0.1}, default_pose);
+  add_tool("default", 1, {0.25, 0.05}, default_pose);
   active_tool_name_ = "default";
 
   RCLCPP_INFO(this->get_logger(), "Nodo 'move_arm_node' inicializado. Publicando en 'robot_cmd'.");
@@ -128,28 +128,16 @@ void MoveArmNode::set_active_tool(std::string name) {
 }
 
 // Generador de trayectoria
-std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveJ(Point target) {
+std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveJ(geometry_msgs::msg::Pose target_pose) {
   std::vector<std::vector<double>> trajectory;
   auto request = std::make_shared<robot_interfaces::srv::SolveIK::Request>();
-  request->target_pose.position.x = target.x;
-  request->target_pose.position.y = target.y;
-  request->target_pose.position.z = target.z;
+  
+  request->target_pose = target_pose; 
+  
   auto current_tcp = tool_library_[active_tool_name_];
   request->tcp_offset = current_tcp.offset;
   request->tool_dimensions = current_tcp.dimensions;
   request->tool_type = current_tcp.type;
-
-  if (target.roll != 0.0 || target.pitch != 0.0 || target.yaw != 0.0) {
-    tf2::Quaternion q;
-    q.setRPY(target.roll, target.pitch, target.yaw);
-
-    request->target_pose.orientation.x = q.x();
-    request->target_pose.orientation.y = q.y();
-    request->target_pose.orientation.z = q.z();
-    request->target_pose.orientation.w = q.w();
-  } else {
-    request->target_pose.orientation.w = 0.0;
-  }
 
   if (!ik_client_->wait_for_service(std::chrono::seconds(2))) {
     RCLCPP_ERROR(this->get_logger(), "El servicio IK no responde. Abortando trayectoria.");
@@ -279,40 +267,8 @@ void MoveArmNode::execute_moveJ(const std::shared_ptr<GoalHandleNav> goal_handle
   auto feedback = std::make_shared<NavigateToPose::Feedback>();
   auto result = std::make_shared<NavigateToPose::Result>();
 
-  bool orientation_is_null = (goal->pose.pose.orientation.x == 0.0 &&
-                              goal->pose.pose.orientation.y == 0.0 &&
-                              goal->pose.pose.orientation.z == 0.0 &&
-                              goal->pose.pose.orientation.w == 0.0);
-
-  double r = 0.0, p = 0.0, y = 0.0;
-
-  // 2. Si NO es nula, calculamos los ángulos Euler reales
-  if (!orientation_is_null) {
-    tf2::Quaternion q(
-      goal->pose.pose.orientation.x,
-      goal->pose.pose.orientation.y,
-      goal->pose.pose.orientation.z,
-      goal->pose.pose.orientation.w
-    );
-    
-    // Si el cuaternión es inválido (ej: todo 0 excepto W=0), Matrix3x3 puede fallar.
-    // Verificamos que al menos la norma sea cercana a 1 por seguridad
-    if (q.length2() > 1e-6) {
-      tf2::Matrix3x3 m(q);
-      m.getRPY(r, p, y);
-    }
-  }
-
-  // 3. Rellenar el struct Point
-  // Si era nula, r, p, y irán como 0.0
-  Point target_pt = {
-    goal->pose.pose.position.x,
-    goal->pose.pose.position.y,
-    goal->pose.pose.position.z,
-    r, p, y
-  };
-
-  auto trajectory_angles = get_trajectory_moveJ(target_pt);
+  // Le pasamos el Pose directamente desde el goal
+  auto trajectory_angles = get_trajectory_moveJ(goal->pose.pose);
 
   if (trajectory_angles.empty()) {
     RCLCPP_ERROR(this->get_logger(), "Trayectoria vacía. Abortando acción.");

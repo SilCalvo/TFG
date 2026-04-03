@@ -56,7 +56,7 @@ private:
 
   std::vector<double> current_angles_ = std::vector<double>(5, 0.0);
   Point calculate_dk(const std::vector<double>& angles);
-  std::vector<std::vector<double>> get_trajectory_moveJ(Point target);
+  std::vector<std::vector<double>> get_trajectory_moveJ(geometry_msgs::msg::Pose target_pose);
   std::vector<std::vector<double>> get_trajectory_moveL(Point target);
 
   std::map<std::string, Tool_Config> tool_library_;

@@ -6,6 +6,7 @@ import math
 import time
 
 from robot_interfaces.srv import SolveIK, AddObstacle, RemoveObstacle, SolveDK
+from ament_index_python.packages import get_package_share_directory
 
 class PyBulletIKServer(Node):
     def __init__(self):
@@ -20,7 +21,9 @@ class PyBulletIKServer(Node):
         self.physicsClient = p.connect(p.GUI)
         
         # Configuración del Robot
-        urdf_path = os.path.expanduser("~/robot_ws/src/mi_robot_pkg/urdf/robot.urdf") 
+        pkg_path = get_package_share_directory('robot_pkg') # Pon el nombre de tu paquete aquí
+        urdf_path = os.path.join(pkg_path, 'urdf', 'robot.urdf')
+        
         if not os.path.exists(urdf_path):
             self.get_logger().error(f"¡URDF no encontrado en: {urdf_path}!")
         
@@ -98,10 +101,24 @@ class PyBulletIKServer(Node):
                 response.success = False
                 return response
             
-            # --- VALIDACIÓN ---
+            # --- VALIDACIÓN (El Teletransporte Doble) ---
+            
+            # 1. Teletransportamos el brazo del robot
             for i, joint_idx in enumerate(self.movable_joints):
                 p.resetJointState(self.robot_id, joint_idx, joint_poses[i])
-            
+
+            # 2. Teletransportamos la herramienta para que no se quede atrás flotando
+            new_wrist_state = p.getLinkState(self.robot_id, self.end_effector_index)
+            new_tool_pos, new_tool_orn = p.multiplyTransforms(
+                new_wrist_state[4], new_wrist_state[5], 
+                self.tool_local_pos, 
+                self.tool_local_orn
+            )
+            p.resetBasePositionAndOrientation(self.tool_body_id, new_tool_pos, new_tool_orn)
+
+            # 3. Avanzamos 1 frame la física para asentar piezas
+            p.stepSimulation()
+
             wrist_state = p.getLinkState(self.robot_id, self.end_effector_index)
             # USAR t_orn AQUÍ TAMBIÉN para que la punta sea real
             actual_tip_pos, _ = p.multiplyTransforms(wrist_state[4], wrist_state[5], t_pos, t_orn)
@@ -297,11 +314,34 @@ class PyBulletIKServer(Node):
                 vis_id = p.createVisualShape(p.GEOM_CYLINDER, radius=dims[1], length=dims[0], rgbaColor=[0.8, 0.8, 0.8, 1])
                 z_offset = dims[0] / 2
 
-            # Crear el cuerpo
-            self.tool_body_id = p.createMultiBody(baseMass=0.1, 
-                                                baseCollisionShapeIndex=col_id, 
-                                                baseVisualShapeIndex=vis_id)
+           # 1. Leer dónde está la muñeca AHORA MISMO
+            wrist_state = p.getLinkState(self.robot_id, self.end_effector_index)
+            w_pos = wrist_state[4]
+            w_orn = wrist_state[5]# Calculamos la posición exacta sumando el tcp, el offset del centro y los 0.04 de la mano
+            spawn_pos, spawn_orn = p.multiplyTransforms(
+                w_pos, w_orn, 
+                [tcp.position.x, tcp.position.y, tcp.position.z + z_offset + 0.04], 
+                [tcp.orientation.x, tcp.orientation.y, tcp.orientation.z, tcp.orientation.w]
+            )
+            # GUARDAMOS EN SELF para poder usarlo luego en el teletransporte
+            self.tool_local_pos = [tcp.position.x, tcp.position.y, tcp.position.z + z_offset + 0.04]
+            self.tool_local_orn = [tcp.orientation.x, tcp.orientation.y, tcp.orientation.z, tcp.orientation.w]
+
+            # --- 2. CREAR EL CUERPO ---
+            self.tool_body_id = p.createMultiBody(
+                baseMass=0.1, 
+                baseCollisionShapeIndex=col_id, 
+                baseVisualShapeIndex=vis_id,
+                basePosition=spawn_pos,       # Nace en el sitio perfecto
+                baseOrientation=spawn_orn     # Con la rotación perfecta
+            )
+
             self.get_logger().info(f"Nuevo objeto herramienta creado con ID: {self.tool_body_id}")
+
+            # --- 3. DESACTIVAR EL FUEGO AMIGO (Auto-colisión) ---
+            # ¡ESTO FALTABA! Evita que la herramienta pelee físicamente contra la mano
+            for j in range(-1, p.getNumJoints(self.robot_id)):
+                p.setCollisionFilterPair(self.robot_id, self.tool_body_id, j, -1, enableCollision=0)
 
             # 4. Atar la herramienta al robot
             # Usamos p.multiplyTransforms para que el z_offset respete la orientación del TCP
@@ -312,7 +352,7 @@ class PyBulletIKServer(Node):
                 childLinkIndex=-1,
                 jointType=p.JOINT_FIXED,
                 jointAxis=[0, 0, 0],
-                parentFramePosition=[tcp.position.x, tcp.position.y, tcp.position.z + z_offset],
+                parentFramePosition=[tcp.position.x, tcp.position.y, tcp.position.z + z_offset + 0.04],
                 childFramePosition=[0, 0, 0],
                 parentFrameOrientation=[tcp.orientation.x, tcp.orientation.y, tcp.orientation.z, tcp.orientation.w]
             )
