@@ -21,11 +21,11 @@
         - [`rutines/`](./src/robot_pkg/rutines/)  
           Se encuentran los archivos de rutinas a ejecutar por el usuario.
           
-          [`test_moveL/`](./src/robot_pkg/robot_pkg/rutines/test_moveL.yaml) : Rutina de testear MOVEL (por defecto).
+          [`test_moveL/`](./src/robot_pkg/rutines/test_moveL.yam) : Rutina de testear MOVEL (por defecto).
 
-          [`test_tcp/`](./src/robot_pkg/robot_pkg/rutines/test_tcp.yaml) : Rutina de testear el cambio de herramienta.
+          [`test_tcp/`](./src/robot_pkg/rutines/test_tcp.yaml) : Rutina de testear el cambio de herramienta.
 
-          [`test_wall/`](./src/robot_pkg/robot_pkg/rutines/test_wall.yaml) : Rutina de testear creacion de una pared virtual. Debe dar fallo porque no puede atravesar dicha pared virtual
+          [`test_wall/`](./src/robot_pkg/rutines/test_wall.yaml) : Rutina de testear creacion de una pared virtual. Debe dar fallo porque no puede atravesar dicha pared virtual
 
         - [`src/`](./src/robot_pkg/src/)  
           Se encuentran los nodos del programa.
