@@ -16,13 +16,13 @@ En las siguientes carpetas encontrarás todos los recursos del proyecto:
 - [`src/`](./src/)  
   Contiene todas las capetas con los diferentes código de este proyecto. Dentro de esta carpeta se incluyen:
 
-  - [`Arduino/`](./codigo/arduino/)  
+  - [`Arduino/`](./src/arduino/)  
     Código final del brazo robotico en arduino.
 
-  - [`pybullet/`](./codigo/pybullet/)  
+  - [`pybullet/`](./src/pybullet/)  
     Codigo de prueba para comprpbar que la cinematica directa calculada mediante el metodo denavit hartenberg es correcta comprobandolo con pybullet
 
-  - [`ros2_ws/`](./codigo/ros2_ws/)  
+  - [`ros2_ws/`](./src/ros2_ws/)  
    Workspace en ros2 jazzy con todos los paquetes necesarios para el funcionamiento
 
 
