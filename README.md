@@ -54,11 +54,12 @@ colcon build
 ros2 launch robot_pkg move_action.launch.py
 ```
 Existen 2 modos de probarlo:
-**Comandos**: Escribiendo por terminal los comandos 
-**Rutina**: Ejecutando una rutina ya escrita
+
+- **Comandos**: Escribiendo por terminal los comandos 
+- **Rutina**: Ejecutando una rutina ya escrita
 
 
-#### Probar Move J y Move L con TCP default
+### Probar Move J y Move L con TCP default
 
 **COMANDOS**
 
@@ -77,7 +78,7 @@ ros2 action send_goal /moveL nav2_msgs/action/NavigateToPose "{pose: {header: {f
 ros2 run robot_pkg rutine_node
 ```
 
-#### Probar TCP nuevo
+### Probar TCP nuevo
 
 **COMANDOS**
 
@@ -105,7 +106,7 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_tcp.yaml"
 Se puede observar como el brazo baja la diferencia de 0.15 que es la diferencia del tamaño de las herramientas.
 
 
-#### Probar añadir pared virtual
+### Probar añadir pared virtual
 
 Aqui habrá una diferencia porque la rutina da error ya que no podrá moverse por la pared virtual y no seguirá ejecutandose. Mientras que por comandos puedes seguir enviando el siguiente
 
