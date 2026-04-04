@@ -17,19 +17,19 @@ En las siguientes carpetas encontrarás todos los recursos del proyecto:
   Contiene todas las capetas con los diferentes código de este proyecto. Dentro de esta carpeta se incluyen:
 
   - [`Arduino/`](./src/arduino/)  
-    Código final del brazo robotico en arduino. Para más informació [`arduino doc/`](./src/arduino/arduino.md)
+    Código final del brazo robotico en arduino. Para más informació [`arduino md/`](./src/arduino/arduino.md)
 
   - [`pybullet/`](./src/pybullet/)  
-    Codigo de prueba para comprpbar que la cinematica directa calculada mediante el metodo denavit hartenberg es correcta comprobandolo con pybullet.Para más informació [`pybullet doc/`](./src/pybullet/pybullet.md)
+    Codigo de prueba para comprpbar que la cinematica directa calculada mediante el metodo denavit hartenberg es correcta comprobandolo con pybullet.Para más informació [`pybullet md/`](./src/pybullet/pybullet.md)
 
   - [`ros2_ws/`](./src/ros2_ws/)  
-   Workspace en ros2 jazzy con todos los paquetes necesarios para el funcionamiento. Para más informació [`ros2_ws doc/`](./src/ros2_ws/ros2_ws.md)
+   Workspace en ros2 jazzy con todos los paquetes necesarios para el funcionamiento. Para más informació [`ros2_ws md/`](./src/ros2_ws/ros2_ws.md)
 
 - [`documentacion/`](./doc/)  
  Contiene la documentación de este programa (Como camiar un robot, como funciona, manuales, informes... )
 
 
--------------------------------------- TEMPORAL ------------------------
+## ---- TEMPORAL para probar ahora ----
 ## Requisitos
 
 - Ros2 Jazzy
