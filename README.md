@@ -1,22 +1,41 @@
-# TFG
+# TFG Silvia Calvo Cabello - Sofware 
+
+## Descripción
 
 
-### Arduino: 
-Progama del brazo robotico en arduino
+## Estructura del Repositorio
 
-### Pybullet: 
-Codigo de prueba para comprpbar que la cinematica directa calculada mediante el metodo denavit hartenberg es correcta comprobandolo con pybullet 
+En las siguientes carpetas encontrarás todos los recursos del proyecto:
 
-### ros2_ws:
-workspace de ros2 Jazzy. 
+- [`src/`](./src/)  
+  Contiene todas las capetas con los diferentes código de este proyecto. Dentro de esta carpeta se incluyen:
 
-#### Como funciona:
-1. Hacer launch del paquete robot_pkg 
-2. Eviar una petición de accion a un punto en x,y,z
-3. Calcula la cinematica inversa con pybullet (es un servicio)
-4. Se mueve a la posision y se puede ver mediante rviz2, en pybullet se ve las pruebas que hace para llegar a los objetivos y las herramientas que se vayan seleccionado. 
+  - [`Arduino/`](./codigo/arduino/)  
+    Código final del brazo robotico en arduino.
 
-#### Probar Códido:
+  - [`pybullet/`](./codigo/pybullet/)  
+    Codigo de prueba para comprpbar que la cinematica directa calculada mediante el metodo denavit hartenberg es correcta comprobandolo con pybullet
+
+  - [`ros2_ws/`](./codigo/ros2_ws/)  
+   Workspace en ros2 jazzy con todos los paquetes necesarios para el funcionamiento
+
+
+- [`documentacion/`](./documentacion/)  
+ Contiene la documentación de este programa
+
+
+## Como funciona:
+1. Compilar workspace
+2. Hacer launch del paquete robot_pkg 
+3. Eviar una petición de accion a un punto en x,y,z
+4. Calcula la cinematica inversa con pybullet (es un servicio)
+5. Se mueve a la posision y se puede ver mediante rviz2, en pybullet se ve las pruebas que hace para llegar a los objetivos y las herramientas que se vayan seleccionado. 
+
+### Probar Códido:
+
+```bash
+colcon build
+```
 ```bash
 ros2 launch robot_pkg move_action.launch.py
 ```
