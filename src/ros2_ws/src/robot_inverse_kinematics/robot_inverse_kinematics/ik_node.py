@@ -138,6 +138,7 @@ class PyBulletIKServer(Node):
       tolerancia = 0.05 ############
       
       if error_dist > tolerancia or colision:
+        self.update_debug_text(actual_tip_pos)
         if colision:
           self.get_logger().warn(f'¡COLISIÓN detectada con pared: {wall_name_colision}!')
         else:
@@ -147,15 +148,25 @@ class PyBulletIKServer(Node):
         # REBOBINAR
         for i, joint_idx in enumerate(self.movable_joints):
           p.resetJointState(self.robot_id, joint_idx, saved_joint_states[i])
-        
+
+        restored_wrist_state = p.getLinkState(self.robot_id, self.end_effector_index)
+        restored_tool_pos, restored_tool_orn = p.multiplyTransforms(
+          restored_wrist_state[4], restored_wrist_state[5], 
+          self.tool_local_pos, 
+          self.tool_local_orn
+        )
+        p.resetBasePositionAndOrientation(self.tool_body_id, restored_tool_pos, restored_tool_orn)
+        restored_tip_pos, _ = p.multiplyTransforms(restored_wrist_state[4], restored_wrist_state[5], t_pos, t_orn)
+        self.update_debug_text(restored_tip_pos)
+
         response.success = False
         response.joint_angles = []
       else:
         self.get_logger().info(f'IK Exitosa. Error punta: {error_dist:.4f}m')
+        self.update_debug_text(actual_tip_pos)
+        
         response.joint_angles = [joint_poses[i] for i in range(len(self.movable_joints))]
         response.success = True
-
-      self.update_debug_text(actual_tip_pos)
 
     except Exception as e:
       self.get_logger().error(f'Error crítico en IK: {str(e)}')
