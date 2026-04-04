@@ -23,6 +23,32 @@ MoveArmNode::MoveArmNode()
     std::bind(&MoveArmNode::handle_accepted_moveL, this, std::placeholders::_1)
   );
 
+  geometry_msgs::msg::Pose default_pose;
+  default_pose.position.x = 0.0;
+  default_pose.position.y = 0.0;
+  default_pose.position.z = 0.0; 
+  default_pose.orientation.w = 1.0; 
+
+  Tool_Config default_cfg;
+  default_cfg.name = "default";
+  default_cfg.type = 1; 
+  default_cfg.dimensions = {0.25, 0.05}; 
+  default_cfg.offset = default_pose;
+  tool_library_["default"] = default_cfg;
+
+  // SET TOOL
+  this->declare_parameter("active_tool", "default");
+  parameter_callback_handle_ = this->add_on_set_parameters_callback(
+    std::bind(&MoveArmNode::on_set_parameters, this, std::placeholders::_1));
+
+  // ADD TOOL 
+  add_tool_service_ = this->create_service<robot_interfaces::srv::ManageTool>(
+    "add_tool", std::bind(&MoveArmNode::handle_add_tool, this, std::placeholders::_1, std::placeholders::_2));
+
+  // DELETE TOOL 
+  delete_tool_service_ = this->create_service<robot_interfaces::srv::ManageTool>(
+    "delete_tool", std::bind(&MoveArmNode::handle_delete_tool, this, std::placeholders::_1, std::placeholders::_2));
+
   // Cliente del servicio IK
   ik_client_ = this->create_client<robot_interfaces::srv::SolveIK>("solve_ik");
   dk_client_ = this->create_client<robot_interfaces::srv::SolveDK>("solve_dk");
@@ -35,14 +61,6 @@ MoveArmNode::MoveArmNode()
   qos_profile.reliable();
 
   publisher_ = this->create_publisher<std_msgs::msg::Int16MultiArray>("robot_cmd", qos_profile);
-
-  geometry_msgs::msg::Pose default_pose;
-  default_pose.position.x = 0.0;
-  default_pose.position.y = 0.0;
-  default_pose.position.z = 0.0; 
-  default_pose.orientation.w = 1.0; 
-  add_tool("default", 1, {0.25, 0.05}, default_pose);
-  active_tool_name_ = "default";
 
   RCLCPP_INFO(this->get_logger(), "Nodo 'move_arm_node' inicializado. Publicando en 'robot_cmd'.");
 }
@@ -62,7 +80,8 @@ MoveArmNode::Point MoveArmNode::calculate_dk(const std::vector<double>& angles) 
   auto request = std::make_shared<robot_interfaces::srv::SolveDK::Request>();
   request->joint_angles = angles;
   
-  auto current_tcp = tool_library_[active_tool_name_];
+  std::string current_tool_name = this->get_parameter("active_tool").as_string();
+  auto current_tcp = tool_library_[current_tool_name];
   request->tcp_offset = current_tcp.offset;
   request->tool_dimensions = current_tcp.dimensions;
 
@@ -80,10 +99,10 @@ MoveArmNode::Point MoveArmNode::calculate_dk(const std::vector<double>& angles) 
     p_out.z = response->target_pose.position.z;
 
     tf2::Quaternion q(
-        response->target_pose.orientation.x,
-        response->target_pose.orientation.y,
-        response->target_pose.orientation.z,
-        response->target_pose.orientation.w
+      response->target_pose.orientation.x,
+      response->target_pose.orientation.y,
+      response->target_pose.orientation.z,
+      response->target_pose.orientation.w
     );
     tf2::Matrix3x3(q).getRPY(p_out.roll, p_out.pitch, p_out.yaw);
   } else {
@@ -92,39 +111,82 @@ MoveArmNode::Point MoveArmNode::calculate_dk(const std::vector<double>& angles) 
   return p_out;
 
 }
+void MoveArmNode::handle_add_tool(
+  const std::shared_ptr<robot_interfaces::srv::ManageTool::Request> request,
+  std::shared_ptr<robot_interfaces::srv::ManageTool::Response> response) {
+    
+  if (request->name.empty()) {
+    response->success = false;
+    response->message = "Error: El nombre de la herramienta está vacío.";
+    return;
+  }
 
-void MoveArmNode::add_tool(std::string name, int type, std::vector<double> dims, geometry_msgs::msg::Pose off) {
-    Tool_Config new_tool;
-    new_tool.name = name;
-    new_tool.type = type;
-    new_tool.dimensions = dims;
-    new_tool.offset = off;
+  // Lógica que antes estaba en add_tool()
+  Tool_Config new_tool;
+  new_tool.name = request->name;
+  new_tool.type = request->type;
+  new_tool.dimensions = request->dimensions;
+  new_tool.offset = request->offset;
 
-    tool_library_[name] = new_tool;
-    RCLCPP_INFO(this->get_logger(), "Herramienta '%s' añadida a la librería.", name.c_str());
+  tool_library_[request->name] = new_tool;
+
+  RCLCPP_INFO(this->get_logger(), "Herramienta '%s' añadida directamente vía servicio.", request->name.c_str());
+  
+  response->success = true;
+  response->message = "Herramienta '" + request->name + "' guardada con éxito.";
 }
 
-// Borrar una herramienta por nombre
-void MoveArmNode::delete_tool(std::string name) {
-    if (tool_library_.find(name) != tool_library_.end()) {
-        tool_library_.erase(name);
-        RCLCPP_INFO(this->get_logger(), "Herramienta '%s' eliminada.", name.c_str());
-        
-        // Si borramos la activa, volvemos a una por defecto
-        if (active_tool_name_ == name) active_tool_name_ = "default";
-    } else {
-        RCLCPP_WARN(this->get_logger(), "No se pudo borrar: '%s' no existe.", name.c_str());
+void MoveArmNode::handle_delete_tool(
+  const std::shared_ptr<robot_interfaces::srv::ManageTool::Request> request,
+  std::shared_ptr<robot_interfaces::srv::ManageTool::Response> response) 
+{
+  auto it = tool_library_.find(request->name);
+  
+  if (it != tool_library_.end()) {
+
+    if (request->name == "default") {
+      response->success = false;
+      response->message = "Prohibido borrar la herramienta 'default'.";
+      RCLCPP_WARN(this->get_logger(), "Intento de borrado de herramienta protegida.");
+      return;
     }
+    tool_library_.erase(it);
+
+    std::string active_tool_name_ = this->get_parameter("active_tool").as_string();
+    if (active_tool_name_ == request->name) {
+      this->set_parameter(rclcpp::Parameter("active_tool", "default"));
+    }
+
+    RCLCPP_INFO(this->get_logger(), "Herramienta '%s' eliminada vía servicio.", request->name.c_str());
+    response->success = true;
+    response->message = "Herramienta eliminada correctamente.";
+  } 
+  else {
+    response->success = false;
+    response->message = "Error: La herramienta '" + request->name + "' no existe.";
+  }
 }
 
-// Seleccionar cuál usar en el próximo movimiento
-void MoveArmNode::set_active_tool(std::string name) {
-    if (tool_library_.count(name)) {
-        active_tool_name_ = name;
-        RCLCPP_INFO(this->get_logger(), "Herramienta activa cambiada a: %s", name.c_str());
-    } else {
-        RCLCPP_ERROR(this->get_logger(), "Error: La herramienta '%s' no existe en la librería.", name.c_str());
+rcl_interfaces::msg::SetParametersResult MoveArmNode::on_set_parameters(
+  const std::vector<rclcpp::Parameter> &parameters) {
+
+  rcl_interfaces::msg::SetParametersResult result;
+  result.successful = true;
+
+  for (const auto &param : parameters) {
+    if (param.get_name() == "active_tool") {
+      std::string requested_tool = param.as_string();
+      
+      if (tool_library_.find(requested_tool) == tool_library_.end()) {
+        result.successful = false;
+        result.reason = "Error: La herramienta '" + requested_tool + "' no está en la librería.";
+        RCLCPP_WARN(this->get_logger(), "Rechazado cambio de parámetro: %s no existe.", requested_tool.c_str());
+      } else {
+        RCLCPP_INFO(this->get_logger(), "Validación exitosa: herramienta activa ahora es '%s'", requested_tool.c_str());
+      }
     }
+  }
+  return result;
 }
 
 // Generador de trayectoria
@@ -134,7 +196,8 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveJ(geometry_msgs
   
   request->target_pose = target_pose; 
   
-  auto current_tcp = tool_library_[active_tool_name_];
+  std::string current_tool_name = this->get_parameter("active_tool").as_string();
+  auto current_tcp = tool_library_[current_tool_name];
   request->tcp_offset = current_tcp.offset;
   request->tool_dimensions = current_tcp.dimensions;
   request->tool_type = current_tcp.type;
@@ -214,7 +277,8 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveL(Point target)
     request->target_pose.orientation.z = q_fixed.z();
     request->target_pose.orientation.w = q_fixed.w();
 
-    auto current_tcp = tool_library_[active_tool_name_];
+    std::string current_tool_name = this->get_parameter("active_tool").as_string();
+    auto current_tcp = tool_library_[current_tool_name];
     request->tcp_offset = current_tcp.offset;
     request->tool_dimensions = current_tcp.dimensions;
     request->tool_type = current_tcp.type;
