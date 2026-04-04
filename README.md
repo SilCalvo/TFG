@@ -29,7 +29,7 @@ En las siguientes carpetas encontrarás todos los recursos del proyecto:
  Contiene la documentación de este programa (Como camiar un robot, como funciona, manuales, informes... )
 
 
-## ---- TEMPORAL para probar ahora ----
+## ----------------------- TEMPORAL para probar ahora -----------------------
 ## Requisitos
 
 - Ros2 Jazzy
