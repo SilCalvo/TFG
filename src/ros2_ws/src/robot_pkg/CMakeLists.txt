@@ -17,6 +17,8 @@ find_package(robot_interfaces REQUIRED)
 find_package(urdf REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(ament_index_cpp REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 include_directories(include)
 
@@ -41,16 +43,30 @@ ament_target_dependencies(rviz_bridge_node
 add_executable(servo_node src/servo_bridge_node.cpp)
 ament_target_dependencies(servo_node rclcpp std_msgs)
 
+add_executable(rutine_node src/routine_executor.cpp)
+ament_target_dependencies(rutine_node
+  rclcpp
+  rclcpp_action
+  nav2_msgs
+  robot_interfaces
+  yaml-cpp
+  ament_index_cpp
+)
+target_link_libraries(rutine_node yaml-cpp)
+
 install(TARGETS
   move_arm_node
   rviz_bridge_node
   servo_node
+  rutine_node
   DESTINATION lib/${PROJECT_NAME}
 )
+
 
 install(DIRECTORY
   urdf
   launch
+  rutines
   DESTINATION share/${PROJECT_NAME}
 )
 

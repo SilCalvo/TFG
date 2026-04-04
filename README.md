@@ -18,17 +18,26 @@ En las siguientes carpetas encontrarás todos los recursos del proyecto:
   Contiene todas las capetas con los diferentes código de este proyecto. Dentro de esta carpeta se incluyen:
 
   - [`Arduino/`](./codigo/arduino/)  
-    Código final del brazo robotico en arduino.
+    Código final del brazo robotico en arduino. Para más informació [`arduino doc/`](./codigo/arduino/arduino.md)  
 
   - [`pybullet/`](./codigo/pybullet/)  
-    Codigo de prueba para comprpbar que la cinematica directa calculada mediante el metodo denavit hartenberg es correcta comprobandolo con pybullet
+    Codigo de prueba para comprpbar que la cinematica directa calculada mediante el metodo denavit hartenberg es correcta comprobandolo con pybullet.Para más informació [`pybullet doc/`](./codigo/pybullet/pybullet.md)  
 
   - [`ros2_ws/`](./codigo/ros2_ws/)  
-   Workspace en ros2 jazzy con todos los paquetes necesarios para el funcionamiento
+   Workspace en ros2 jazzy con todos los paquetes necesarios para el funcionamiento. Para más informació [`ros2_ws doc/`](./codigo/ros2_ws/ros2_ws.md)  
 
 
-- [`documentacion/`](./documentacion/)  
+- [`documentacion/`](./doc/)  
  Contiene la documentación de este programa (Como camiar un robot, como funciona, manuales, informes... )
+
+
+-------------------------------------- TEMPORAL ------------------------
+## Requisitos
+
+- Ros2 Jazzy
+- Pybullet
+- Rvizz
+- Arduino
 
 
 ## Como funciona:
@@ -46,7 +55,14 @@ colcon build
 ```bash
 ros2 launch robot_pkg move_action.launch.py
 ```
-**Probar Move J y Move L con TCP default**
+Existen 2 modos de probarlo:
+**Comandos**: Escribiendo por terminal los comandos 
+**Rutina**: Ejecutando una rutina ya escrita
+
+
+#### Probar Move J y Move L con TCP default
+
+**COMANDOS**
 
 ```bash
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
@@ -57,8 +73,15 @@ ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {f
 ```bash
 ros2 action send_goal /moveL nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.3, y: 0.0, z: 1.4}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}"
 ```
+**RUTINA**
 
-**Probar TCP nuevo**
+```bash
+ros2 run robot_pkg rutine_node
+```
+
+#### Probar TCP nuevo
+
+**COMANDOS**
 
 ```bash
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
@@ -76,8 +99,19 @@ ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {f
 
 Se puede observar como el brazo baja la diferencia de 0.15 que es la diferencia del tamaño de las herramientas.
 
+**RUTINA**
+```bash
+ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_tcp.yaml"
+```
 
-**Probar añadir pared virtual**
+Se puede observar como el brazo baja la diferencia de 0.15 que es la diferencia del tamaño de las herramientas.
+
+
+#### Probar añadir pared virtual
+
+Aqui habrá una diferencia porque la rutina da error ya que no podrá moverse por la pared virtual y no seguirá ejecutandose. Mientras que por comandos puedes seguir enviando el siguiente
+
+**COMANDOS**
 
 ```bash
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.7, y: 0.0, z: 0.9}, orientation: {x: 0.707, y: 0.0, z: 0.707, w: 0.0}}}}"
@@ -108,6 +142,14 @@ ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {f
 
 ```bash
 ros2 service call /remove_wall robot_interfaces/srv/RemoveObstacle "{name: 'pared_frontal'}"
+```
+```bash
+ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.7, y: 0.0, z: 0.9}, orientation: {x: 0.707, y: 0.0, z: 0.707, w: 0.0}}}}"
+```
+
+**RUTINA**
+```bash
+ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_wall.yaml"
 ```
 
 

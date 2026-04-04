@@ -1,0 +1,48 @@
+rutina:
+  - tipo: "moveJ"
+    x: 0.7
+    y: 0.0
+    z: 0.9
+    qx: 0.707
+    qy: 0.0
+    qz: 0.707
+    qw: 0.0
+
+  - tipo: "moveJ"
+    x: 0.0
+    y: 0.0
+    z: 1.4
+    qx: 0.0
+    qy: 0.0
+    qz: 0.0
+    qw: 1.0
+
+  - tipo: "add_wall"
+    name: "pared_frontal"
+    x: 0.5
+    y: 0.0
+    z: 0.0
+    width: 0.02
+    depth: 0.8
+    height: 3.0
+
+  - tipo: "moveJ"
+    x: 0.7
+    y: 0.0
+    z: 0.9
+    qx: 0.707
+    qy: 0.0
+    qz: 0.707
+    qw: 0.0
+
+  - tipo: "remove_wall"
+    name: "pared_frontal"
+
+  - tipo: "moveJ"
+    x: 0.7
+    y: 0.0
+    z: 0.9
+    qx: 0.707
+    qy: 0.0
+    qz: 0.707
+    qw: 0.0
