@@ -11,51 +11,57 @@ Codigo de prueba para comprpbar que la cinematica directa calculada mediante el 
 workspace de ros2 Jazzy. 
 
 #### Como funciona:
-1. Hacer launch del paquete robot_pkg: ros2 launch robot_pkg move_action.launch.py
+1. Hacer launch del paquete robot_pkg 
 2. Eviar una petición de accion a un punto en x,y,z
 3. Calcula la cinematica inversa con pybullet (es un servicio)
 4. Se mueve a la posision y se puede ver mediante rviz2, en pybullet se ve las pruebas que hace para llegar a los objetivos y las herramientas que se vayan seleccionado. 
 
 #### Probar Códido:
+```bash
+ros2 launch robot_pkg move_action.launch.py
+```
+**Probar Move J y Move L con TCP default**
 
-*Probar Move J y Move L con TCP default*
-
+```bash
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
-
+```
+```bash
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: -0.2, y: 0.0, z: 1.4}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}"
-
-
+```
+```bash
 ros2 action send_goal /moveL nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.3, y: 0.0, z: 1.4}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}"
+```
 
+**Probar TCP nuevo**
 
-*Probar TCP nuevo*
-
+```bash
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
-
-
+```
+```bash
 ros2 service call /add_tool robot_interfaces/srv/ManageTool "{name: 'pinza', type: 1, dimensions: [0.1, 0.05], offset: {position: {z: 0.0}, orientation: {w: 1.0}}}"
-
-
+```
+```bash
 ros2 param set /move_action_server active_tool "pinza"
+```
 
-
-
+```bash
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
-
+```
 
 Se puede observar como el brazo baja la diferencia de 0.15 que es la diferencia del tamaño de las herramientas.
 
 
-*Probar añadir pared virtual*
+**Probar añadir pared virtual**
 
-
+```bash
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.7, y: 0.0, z: 0.9}, orientation: {x: 0.707, y: 0.0, z: 0.707, w: 0.0}}}}"
+```
 
-
-
+```bash
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.0, y: 0.0, z: 1.4}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}"
+```
 
-
+```bash
 ros2 service call /add_wall robot_interfaces/srv/AddObstacle "{                             
   name: 'pared_frontal',
   x: 0.5,
@@ -65,13 +71,18 @@ ros2 service call /add_wall robot_interfaces/srv/AddObstacle "{
   height: 3,
   depth: 0.8
 }"
+```
 
+Puedes obbservar la pared virtual en pybullet 
+
+
+```bash
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.7, y: 0.0, z: 0.9}, orientation: {x: 0.707, y: 0.0, z: 0.707, w: 0.0}}}}"
+```
 
-
-
+```bash
 ros2 service call /remove_wall robot_interfaces/srv/RemoveObstacle "{name: 'pared_frontal'}"
-
+```
 
 
 #### Por que pybullet
