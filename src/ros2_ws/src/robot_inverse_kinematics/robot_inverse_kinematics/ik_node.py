@@ -4,9 +4,14 @@ from rclpy.node import Node
 import pybullet as p
 import math
 import time
-
-from robot_interfaces.srv import SolveIK, AddObstacle, RemoveObstacle, SolveDK
+import numpy as np
+from tf2_ros import TransformBroadcaster
+from geometry_msgs.msg import TransformStamped
+from tf2_ros.static_transform_broadcaster import StaticTransformBroadcaster
+from sensor_msgs.msg import Image,CameraInfo
+from robot_interfaces.srv import SolveIK, AddObstacle, RemoveObstacle, SolveDK, SpawnObject,AddCamera
 from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import PackageNotFoundError
 
 class PyBulletIKServer(Node):
   def __init__(self):
@@ -16,8 +21,16 @@ class PyBulletIKServer(Node):
     self.srv_dk = self.create_service(SolveDK, 'solve_dk', self.dk_callback)
     self.srv_add = self.create_service(AddObstacle, 'add_wall', self.add_wall_callback)
     self.srv_rem = self.create_service(RemoveObstacle, 'remove_wall', self.remove_wall_callback)
-    
+    self.srv_spawn = self.create_service(SpawnObject, 'add_object', self.spawn_object_callback)
+    self.srv_camera = self.create_service(AddCamera, 'add_camera', self.add_camera_callback)
+    self.srv_remove_object = self.create_service(SpawnObject, 'remove_object', self.remove_object_callback)
+    self.srv_remove_camera = self.create_service(AddCamera, 'remove_camera', self.remove_camera_callback)
+
     self.walls = {}
+    self.enviroment_objects = {}
+    self.cameras_config = {}
+    self.camera_publishers = {}
+    self.camera_timer = None
     self.physicsClient = p.connect(p.GUI)
     
     # Configuración del Robot
@@ -38,13 +51,15 @@ class PyBulletIKServer(Node):
         self.movable_joints.append(i)
             
     
-    initial_pos = p.getLinkState(self.robot_id, self.end_effector_index)[4]
+    init_pos = p.getLinkState(self.robot_id, self.end_effector_index)[4]
     self.debug_text_id = p.addUserDebugText(
-      text=f"X: {initial_pos[0]:.2f} Y: {initial_pos[1]:.2f} Z: {initial_pos[2]:.2f}",
-      textPosition=[initial_pos[0], initial_pos[1], initial_pos[2] + 0.1],
+      text=f"X: {init_pos[0]:.2f} Y: {init_pos[1]:.2f} Z: {init_pos[2]:.2f}",
+      textPosition=[init_pos[0], init_pos[1], init_pos[2] + 0.1],
       textColorRGB=[1, 0, 0], textSize=1.5
     )
     self.debug_line_id = -1
+
+    self.tf_broadcaster = TransformBroadcaster(self)
     
     self.get_logger().info('Servidor IK y Obstáculos listo.')
 
@@ -65,19 +80,19 @@ class PyBulletIKServer(Node):
         response.success = False
         return response
       
-      t_pos, t_orn = self.get_tcp_info(request.tcp_offset, request.tool_dimensions)
+      tcp_pos, tcp_orn = self.get_tcp_info(request.tcp_offset, request.tool_dimensions)
 
       angles_matered=True
-      if all(v == 0 for v in target_orn):
+      if all(angle == 0 for angle in target_orn):
         angles_matered=False
         _, curr_wrist_orn = p.getLinkState(self.robot_id, self.end_effector_index)[4:6]
-        _, curr_tip_orn = p.multiplyTransforms([0,0,0], curr_wrist_orn, [0,0,0], t_orn)
+        _, curr_tip_orn = p.multiplyTransforms([0,0,0], curr_wrist_orn, [0,0,0], tcp_orn)
         
         target_orn = curr_tip_orn
 
-      inv_pos, inv_orn = p.invertTransform(t_pos, t_orn)
+      inv_pos, inv_orn = p.invertTransform(tcp_pos, tcp_orn)
       
-      # Muñeca = Target_Punta * TCP_Invertido
+      # Muñeca = Target * TCP_Invertido
       wrist_target_pos, wrist_target_orn = p.multiplyTransforms(
         target_pos, target_orn, inv_pos, inv_orn
       )
@@ -96,6 +111,31 @@ class PyBulletIKServer(Node):
         response.success = False
         return response
       
+      curr_wrist_pos = p.getLinkState(self.robot_id, self.end_effector_index)[4]
+      dist_cartesiana = math.sqrt(sum((a - b)**2 for a, b in zip(curr_wrist_pos, wrist_target_pos)))
+
+      if dist_cartesiana < 0.04:
+        UMBRAL_SINGULARIDAD_RAD = 0.5  # Aprox 28 grados de límite por motor
+        es_singularidad = False
+        
+        for i, target_angle in enumerate(joint_poses):
+          current_angle = saved_joint_states[i]
+          salto = abs(target_angle - current_angle)
+          
+          if salto > UMBRAL_SINGULARIDAD_RAD:
+            self.get_logger().error(
+              f"¡SINGULARIDAD DETECTADA! La articulación {self.movable_joints[i]} "
+              f"intenta dar un latigazo de {salto:.2f} rads para un avance cartesiano de solo {dist_cartesiana:.3f}m."
+            )
+            es_singularidad = True
+            break
+                
+        #  Si es singularidad, ABORTAR ANTES de mover el robot 
+        if es_singularidad:
+          response.success = False
+          response.joint_angles = []
+          return response
+      
       for i, joint_idx in enumerate(self.movable_joints):
         p.resetJointState(self.robot_id, joint_idx, joint_poses[i])
 
@@ -110,7 +150,7 @@ class PyBulletIKServer(Node):
       p.stepSimulation()
 
       wrist_state = p.getLinkState(self.robot_id, self.end_effector_index)
-      actual_tip_pos, _ = p.multiplyTransforms(wrist_state[4], wrist_state[5], t_pos, t_orn)
+      actual_tip_pos, _ = p.multiplyTransforms(wrist_state[4], wrist_state[5], tcp_pos, tcp_orn)
       w_pos = wrist_state[4] 
 
       self.get_logger().info(
@@ -156,7 +196,7 @@ class PyBulletIKServer(Node):
           self.tool_local_orn
         )
         p.resetBasePositionAndOrientation(self.tool_body_id, restored_tool_pos, restored_tool_orn)
-        restored_tip_pos, _ = p.multiplyTransforms(restored_wrist_state[4], restored_wrist_state[5], t_pos, t_orn)
+        restored_tip_pos, _ = p.multiplyTransforms(restored_wrist_state[4], restored_wrist_state[5], tcp_pos, tcp_orn)
         self.update_debug_text(restored_tip_pos)
 
         response.success = False
@@ -187,10 +227,10 @@ class PyBulletIKServer(Node):
         p.resetJointState(self.robot_id, joint_idx, angles[i])
 
       w_pos, w_orn = p.getLinkState(self.robot_id, self.end_effector_index)[4:6]
-      t_pos, t_orn = self.get_tcp_info(request.tcp_offset, request.tool_dimensions)
+      tcp_pos, tcp_orn = self.get_tcp_info(request.tcp_offset, request.tool_dimensions)
       
       #Punta = Muñeca * TCP
-      f_pos, f_orn = p.multiplyTransforms(w_pos, w_orn, t_pos, t_orn)
+      f_pos, f_orn = p.multiplyTransforms(w_pos, w_orn, tcp_pos, tcp_orn)
 
       for i, joint_idx in enumerate(self.movable_joints):
         p.resetJointState(self.robot_id, joint_idx, old_angles[i])
@@ -219,12 +259,12 @@ class PyBulletIKServer(Node):
     tip_local_orn = [0, 0, 0, 1]
 
     # PUNTA respecto a la MUÑECA
-    t_pos, t_orn = p.multiplyTransforms(base_pos, base_orn, tip_local_pos, tip_local_orn)
-    norm = math.sqrt(sum([v**2 for v in t_orn]))
+    tcp_pos, tcp_orn = p.multiplyTransforms(base_pos, base_orn, tip_local_pos, tip_local_orn)
+    norm = math.sqrt(sum([v**2 for v in tcp_orn]))
     if norm > 0:
-      t_orn = [v/norm for v in t_orn]
+      tcp_orn = [v/norm for v in tcp_orn]
     
-    return t_pos, t_orn
+    return tcp_pos, tcp_orn
   
 
   # --- MÉTODOS DE GESTIÓN DE OBSTÁCULOS  ---
@@ -345,6 +385,280 @@ class PyBulletIKServer(Node):
     except Exception as e:
       self.get_logger().error(f"Error al crear la geometría de la herramienta: {str(e)}")
       return False
+  
+  
+  def spawn_object_callback(self, request, response):
+    try:
+      if request.name in self.enviroment_objects:
+        p.removeBody(self.enviroment_objects[request.name])
+
+      try:
+        pkg_path = get_package_share_directory(request.package_name)
+      except PackageNotFoundError:
+        self.get_logger().error(f"¡Rechazado! El paquete '{request.package_name}' no existe en tu workspace.")
+        response.success = False
+        return response
+      
+      urdf_name = f"{request.piece_type.lower()}.urdf"
+      urdf_file_path = os.path.join(pkg_path, 'urdf', urdf_name)
+      
+      if not os.path.exists(urdf_file_path):
+        self.get_logger().error(f"¡Rechazado! No se encuentra el archivo URDF en: {urdf_file_path}")
+        response.success = False
+        return response
+
+      piece_id = p.loadURDF(
+        urdf_file_path, 
+        basePosition=[request.x, request.y, request.z],
+        useFixedBase=True 
+      )
+      
+      self.enviroment_objects[request.name] = piece_id
+      self.get_logger().info(f"Objeto '{urdf_name}' colocado en {request.x:.2f}, {request.y:.2f}, {request.z:.2f}.")
+      response.success = True
+
+    except Exception as e:
+      self.get_logger().error(f"Error al cargar el URDF dinámico: {str(e)}")
+      response.success = False
+
+    return response
+  
+
+
+
+  def add_camera_callback(self, request, response):
+    try:
+        fov = 60.0
+        near = 0.01
+        far = 10.0
+
+        view_matrix = p.computeViewMatrix(
+            cameraEyePosition=[request.x, request.y, request.z],
+            cameraTargetPosition=[request.target_x, request.target_y, request.target_z],
+            cameraUpVector=[0, 0, 1]
+        )
+        proj_matrix = p.computeProjectionMatrixFOV(
+            fov=fov, 
+            aspect=float(request.width)/float(request.height), 
+            nearVal=near, 
+            farVal=far
+        )
+
+        # CÁLCULO DE INTRÍNSECAS (Modelo Pinhole)
+        fov_rad = math.radians(fov)
+        f_y = (request.height / 2.0) / math.tan(fov_rad / 2.0)
+        f_x = f_y  # Asumimos píxeles cuadrados
+        c_x = request.width / 2.0
+        c_y = request.height / 2.0
+
+        self.cameras_config[request.name] = {
+            'view': view_matrix,
+            'proj': proj_matrix,
+            'width': request.width,
+            'height': request.height,
+            'near': near,
+            'far': far,
+            'fx': f_x, 'fy': f_y, 'cx': c_x, 'cy': c_y
+        }
+
+        # Creamos los 3 publicadores estándar de una cámara ROS 2
+        if request.name not in self.camera_publishers:
+            self.camera_publishers[request.name] = {
+                'rgb': self.create_publisher(Image, f'/camera/{request.name}/color/image_raw', 10),
+                'depth': self.create_publisher(Image, f'/camera/{request.name}/depth/image_raw', 10),
+                'info': self.create_publisher(CameraInfo, f'/camera/{request.name}/camera_info', 10)
+            }
+
+        if self.camera_timer is None:
+            self.get_logger().info("Detectada primera cámara. Activando sistema de visión RGB-D (10Hz)...")
+            self.camera_timer = self.create_timer(0.1, self.publish_camera_images)
+
+        self.get_logger().info(f"Cámara RGB-D '{request.name}' configurada correctamente.")
+        
+        pos = np.array([request.x, request.y, request.z])
+        target = np.array([request.target_x, request.target_y, request.target_z])
+        forward = (target - pos)
+        forward = forward / np.linalg.norm(forward)
+        
+        world_up = np.array([0.0, 0.0, 1.0])
+        right = np.cross(forward, world_up)
+        right = right / np.linalg.norm(right)
+        down = np.cross(forward, right)
+        
+        rot_matrix = np.array([
+            [right[0], down[0], forward[0]],
+            [right[1], down[1], forward[1]],
+            [right[2], down[2], forward[2]]
+        ])
+        
+        tr = np.trace(rot_matrix)
+        if tr > 0:
+            S = np.sqrt(tr + 1.0) * 2
+            qw = 0.25 * S
+            qx = (rot_matrix[2, 1] - rot_matrix[1, 2]) / S
+            qy = (rot_matrix[0, 2] - rot_matrix[2, 0]) / S
+            qz = (rot_matrix[1, 0] - rot_matrix[0, 1]) / S
+        else:
+            qx, qy, qz, qw = 0.0, 0.707, 0.0, 0.707 
+
+        # En vez de publicar, lo GUARDAMOS en la configuración de esta cámara
+        self.cameras_config[request.name] = {
+            'view': view_matrix,
+            'proj': proj_matrix,
+            'width': request.width,
+            'height': request.height,
+            'near': near,
+            'far': far,
+            'fx': f_x, 'fy': f_y, 'cx': c_x, 'cy': c_y,
+            'pos': [request.x, request.y, request.z], # <-- Guardamos Posición
+            'quat': [qx, qy, qz, qw]                  # <-- Guardamos Rotación
+        }
+        response.success = True
+
+    except Exception as e:
+        self.get_logger().error(f"Error al añadir cámara: {str(e)}")
+        response.success = False
+    return response
+  
+
+  def publish_camera_images(self):
+    if not self.cameras_config:
+        self.get_logger().info("No hay cámaras. Apagando sistema de visión.")
+        self.destroy_timer(self.camera_timer)
+        self.camera_timer = None
+        return
+
+    for name, config in self.cameras_config.items():
+        try:
+            # Captura de imagen completa (Color + Profundidad)
+            w, h, rgb_img, depth_buffer, _ = p.getCameraImage(
+                width=config['width'],
+                height=config['height'],
+                viewMatrix=config['view'],
+                projectionMatrix=config['proj'],
+                renderer=p.ER_BULLET_HARDWARE_OPENGL
+            )
+
+            stamp = self.get_clock().now().to_msg()
+            frame_id = f"camera_{name}_link"
+
+            msg_rgb = Image()
+            msg_rgb.header.stamp = stamp
+            msg_rgb.header.frame_id = frame_id
+            msg_rgb.height = h
+            msg_rgb.width = w
+            msg_rgb.encoding = "rgba8"
+            msg_rgb.step = w * 4
+            msg_rgb.data = np.array(rgb_img, dtype=np.uint8).tobytes()
+            self.camera_publishers[name]['rgb'].publish(msg_rgb)
+
+            depth_np = np.array(depth_buffer, dtype=np.float32)
+            far = config['far']
+            near = config['near']
+            depth_real_meters = (far * near) / (far - (far - near) * depth_np)
+
+            msg_depth = Image()
+            msg_depth.header.stamp = stamp
+            msg_depth.header.frame_id = frame_id
+            msg_depth.height = h
+            msg_depth.width = w
+            msg_depth.encoding = "32FC1" # 32-bit Float, 1 Canal (Metros)
+            msg_depth.is_bigendian = False
+            msg_depth.step = w * 4
+            msg_depth.data = depth_real_meters.tobytes()
+            self.camera_publishers[name]['depth'].publish(msg_depth)
+
+            msg_info = CameraInfo()
+            msg_info.header.stamp = stamp
+            msg_info.header.frame_id = frame_id
+            msg_info.height = h
+            msg_info.width = w
+            msg_info.distortion_model = "plumb_bob"
+            msg_info.d = [0.0, 0.0, 0.0, 0.0, 0.0] # Lente perfecta sin distorsión
+            
+            # K = [fx, 0, cx, 0, fy, cy, 0, 0, 1]
+            msg_info.k = [config['fx'], 0.0, config['cx'], 
+                          0.0, config['fy'], config['cy'], 
+                          0.0, 0.0, 1.0]
+            
+            # P = Matriz de proyección rectificada
+            msg_info.p = [config['fx'], 0.0, config['cx'], 0.0,
+                          0.0, config['fy'], config['cy'], 0.0,
+                          0.0, 0.0, 1.0, 0.0]
+            
+            self.camera_publishers[name]['info'].publish(msg_info)
+            
+            # --- 1. PUBLICACIÓN DEL LINK FRAME (Z arriba, X frente) ---
+            t_link = TransformStamped()
+            t_link.header.stamp = stamp
+            t_link.header.frame_id = 'base' # Cambia a 'base_link' si prefieres
+            t_link.child_frame_id = frame_id # camera_camara_tablero_link
+            
+            t_link.transform.translation.x = config['pos'][0]
+            t_link.transform.translation.y = config['pos'][1]
+            t_link.transform.translation.z = config['pos'][2]
+            t_link.transform.rotation.x = config['quat'][0]
+            t_link.transform.rotation.y = config['quat'][1]
+            t_link.transform.rotation.z = config['quat'][2]
+            t_link.transform.rotation.w = config['quat'][3]
+            
+            # --- 2. PUBLICACIÓN DEL OPTICAL FRAME (Z frente, Y abajo) ---
+            t_opt = TransformStamped()
+            t_opt.header.stamp = stamp
+            t_opt.header.frame_id = frame_id # El padre es el Link Frame
+            t_opt.child_frame_id = f"camera_{name}_optical_frame"
+            
+            # Rotación mágica para pasar de convención de mundo a convención de cámara (OpenCV)
+            # Rota -90º en X y 90º en Z
+            t_opt.transform.rotation.x = 0.0
+            t_opt.transform.rotation.y = 0.7071
+            t_opt.transform.rotation.z = 0.0
+            t_opt.transform.rotation.w = 0.7071
+            # (La traslación es 0, ya que coinciden en el mismo punto físico)
+
+            # Publicamos ambas transformaciones de forma dinámica
+            self.tf_broadcaster.sendTransform([t_link, t_opt])
+
+        except Exception as e:
+            self.get_logger().error(f"Error en streaming RGB-D de {name}: {str(e)}")
+
+  def remove_object_callback(self, request, response):
+    if request.name in self.enviroment_objects:
+      try:
+        p.removeBody(self.enviroment_objects[request.name])
+        del self.enviroment_objects[request.name]
+        
+        self.get_logger().info(f"Objeto '{request.name}' eliminado del entorno.")
+        response.success = True
+      except Exception as e:
+        self.get_logger().error(f"Error al borrar el objeto '{request.name}': {str(e)}")
+        response.success = False
+    else:
+      self.get_logger().warn(f"No se pudo borrar: El objeto '{request.name}' no existe.")
+      response.success = False
+      
+    return response
+  
+
+  def remove_camera_callback(self, request, response):
+    if request.name in self.cameras_config:
+      try:
+        del self.cameras_config[request.name]
+        
+        if request.name in self.camera_publishers:
+          for pub in self.camera_publishers[request.name].values():
+            self.destroy_publisher(pub)
+          
+          del self.camera_publishers[request.name]
+
+      except Exception as e:
+        self.get_logger().error(f"Error al borrar la cámara '{request.name}': {str(e)}")
+        response.success = False
+    else:
+      self.get_logger().warn(f"No se pudo borrar: La cámara '{request.name}' no existe.")
+      response.success = False
+      
+    return response
 
 def main(args=None):
   rclpy.init(args=args)

@@ -152,6 +152,54 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_wall.yaml"
 ```
 
 
+
+### Jugar al 3 en raya
+
+**COMANDOS**
+
+**Añadir camara**
+```bash
+
+ros2 service call /add_camera robot_interfaces/srv/AddCamera "{name: 'camara_tablero', x: 1.0, y: 0.01, z: 0.45, target_x: 1.0, target_y: 0.0, target_z: 0.0, width: 640, height: 480}"
+
+```
+
+__Añadir tablero__
+```bash
+
+ros2 service call /add_object robot_interfaces/srv/SpawnObject "{name: 'tablero_principal', package_name: 'tic_tac_toe_dlc', piece_type: 'tablero', x: 1.0, y: 0.0, z: 0.0}"
+```
+
+
+Crear entorno para modelo de aprendizaje automatico con pytorch (ocupa 1 GB aprox).
+
+En una terminal diferente.
+```bash
+
+chmod +x src/tic_tac_toe_dlc/launch/init_python.sh
+./src/tic_tac_toe_dlc/launch/init_python.sh
+```
+
+Lanzar juego
+
+En otra terminal diferente:
+```bash
+ros2 launch tic_tac_toe_dlc init_game.launch.py 
+```
+
+Colocar ficha
+
+Para poner una ficha puedes usar este servicio indicando la fila y la columna donde quieras poner tu ficha
+```bash
+ros2 service call /put_piece_virtual robot_interfaces/srv/PutPiece "{fila: 1, columna: 1}"
+```
+
+O puedes poner a mano tu ficha si sabes en que coordernadas ponerla
+```bash
+ros2 service call /add_object robot_interfaces/srv/SpawnObject "{name: 'ficha_o_1', package_name: 'tic_tac_toe_dlc', piece_type: 'ficha_o', x: 1.0, y: 0.0, z: 0.01}"
+
+```
+
 #### Por que pybullet
 Para cambiar el robot solo hay que cambiar el urdf , la cinemática directa y en el nodo rviz_bridge cambiar a los nuevos nombres. De esta manera el software es lo más indepediente posible al robot fisico y cambiarlo no supondía más de 2 minutos.
 

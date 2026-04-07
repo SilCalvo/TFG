@@ -16,6 +16,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/RemoveObstacle.srv"
   "srv/SolveDK.srv"
   "srv/ManageTool.srv"
+  "srv/SpawnObject.srv"
+  "srv/AddCamera.srv"
+  "srv/PutPiece.srv"
   DEPENDENCIES geometry_msgs
 )
 

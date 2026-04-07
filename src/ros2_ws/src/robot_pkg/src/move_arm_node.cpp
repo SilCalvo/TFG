@@ -297,6 +297,9 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveL(Point target)
         RCLCPP_WARN(this->get_logger(), "Trayectoria MoveL bloqueada por colisión/límites.");
         return {};
       }
+    } else {
+      RCLCPP_ERROR(this->get_logger(), "Timeout: El servidor IK no respondió a tiempo. Abortando trayectoria.");
+      return {}; 
     }
   }
   if (!trajectory.empty()) current_angles_ = trajectory.back(); 
