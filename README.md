@@ -157,7 +157,7 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_wall.yaml"
 
 **COMANDOS**
 
-**Añadir camara**
+__Añadir camara__
 ```bash
 
 ros2 service call /add_camera robot_interfaces/srv/AddCamera "{name: 'camara_tablero', x: 1.0, y: 0.01, z: 0.45, target_x: 1.0, target_y: 0.0, target_z: 0.0, width: 640, height: 480}"
@@ -170,24 +170,25 @@ __Añadir tablero__
 ros2 service call /add_object robot_interfaces/srv/SpawnObject "{name: 'tablero_principal', package_name: 'tic_tac_toe_dlc', piece_type: 'tablero', x: 1.0, y: 0.0, z: 0.0}"
 ```
 
+__Añadir entorno y ML__
 
 Crear entorno para modelo de aprendizaje automatico con pytorch (ocupa 1 GB aprox).
 
-En una terminal diferente.
+En una terminal diferente escribe:
 ```bash
 
 chmod +x src/tic_tac_toe_dlc/launch/init_python.sh
 ./src/tic_tac_toe_dlc/launch/init_python.sh
 ```
 
-Lanzar juego
+__Lanzar juego__
 
 En otra terminal diferente:
 ```bash
 ros2 launch tic_tac_toe_dlc init_game.launch.py 
 ```
 
-Colocar ficha
+__Colocar ficha__
 
 Para poner una ficha puedes usar este servicio indicando la fila y la columna donde quieras poner tu ficha
 ```bash
@@ -199,6 +200,30 @@ O puedes poner a mano tu ficha si sabes en que coordernadas ponerla
 ros2 service call /add_object robot_interfaces/srv/SpawnObject "{name: 'ficha_o_1', package_name: 'tic_tac_toe_dlc', piece_type: 'ficha_o', x: 1.0, y: 0.0, z: 0.01}"
 
 ```
+
+
+### Funcionalidades
+**Añadir TCP**
+
+**Selecionar TCP**
+
+**Borrar TCP**
+
+**Añadir pared**
+
+**Borrar pared**
+
+**Ejecutar rutina**
+
+**Añadir camara**
+
+**Borrar camara**
+
+**Añadir objeto**
+
+**Borrar objeto**
+
+
 
 #### Por que pybullet
 Para cambiar el robot solo hay que cambiar el urdf , la cinemática directa y en el nodo rviz_bridge cambiar a los nuevos nombres. De esta manera el software es lo más indepediente posible al robot fisico y cambiarlo no supondía más de 2 minutos.
@@ -213,18 +238,16 @@ Falta probar comunicacion arduino --> pc
 
 Falta: ----------------------------------------
 
-Current angles en move_node en get trayectory que los coja bien. 
+- Current angles en move_node en get trayectory que los coja bien. 
+- Falta lo de +90 grados al enviar al arduino
+- Añadir paredes virtuales - manual 
+- Añadir TCP - manual 
+- Juego de 3 en raya real 
+- Juego 3 en raya virtual mover robot
+- URDF del robot real
+- Manual de desarrolador
+- Manual de usuario
+- Cinematica directa introducirlo de alguna manera
+- Limpiar codigo
 
-
-Falta lo de +90 grados al enviar al arduino
-
-Añadir paredes virtuales - manual 
-
-
-Añadir TCP - manual 
-
-
-Juego de 3 en raya / vision ....
-
-
-URDF del robot con su Cinematica directa bien
+- 
