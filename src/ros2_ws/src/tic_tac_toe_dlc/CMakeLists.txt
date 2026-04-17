@@ -15,6 +15,8 @@ find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED) 
 find_package(OpenCV REQUIRED)
 find_package(std_srvs REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(nav2_msgs REQUIRED)
 
 include_directories(include)
 
@@ -29,6 +31,8 @@ ament_target_dependencies(tic_tac_toe_node
   geometry_msgs
   sensor_msgs
   std_srvs
+  rclcpp_action
+  nav2_msgs
 )
 
 target_link_libraries(tic_tac_toe_node ${OpenCV_LIBRARIES})
