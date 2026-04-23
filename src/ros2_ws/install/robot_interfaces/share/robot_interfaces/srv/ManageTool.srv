@@ -1,0 +1,8 @@
+# ManageTool.srv
+string name
+int32 type
+float64[] dimensions
+geometry_msgs/Pose offset
+---
+bool success
+string message

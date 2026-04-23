@@ -1,0 +1,441 @@
+[0.413s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build']
+[0.413s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=8, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7e2b56757980>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7e2b567564b0>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7e2b567564b0>>)
+[0.554s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.555s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.555s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.555s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.555s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.555s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.555s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/silvia/TFG/TFG/src/ros2_ws/src'
+[0.555s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.555s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.555s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.555s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.555s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.555s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.555s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.555s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.555s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.586s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.586s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.586s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.586s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.586s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(digital_twin_mal) by extensions ['ignore', 'ignore_ament_install']
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(digital_twin_mal) by extension 'ignore'
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(digital_twin_mal) ignored
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.587s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(robot_digital_twin) by extensions ['ignore', 'ignore_ament_install']
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(robot_digital_twin) by extension 'ignore'
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(robot_digital_twin) by extension 'ignore_ament_install'
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(robot_digital_twin) by extensions ['colcon_pkg']
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(robot_digital_twin) by extension 'colcon_pkg'
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(robot_digital_twin) by extensions ['colcon_meta']
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(robot_digital_twin) by extension 'colcon_meta'
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(robot_digital_twin) by extensions ['ros']
+[0.588s] Level 1:colcon.colcon_core.package_identification:_identify(robot_digital_twin) by extension 'ros'
+[0.593s] DEBUG:colcon.colcon_core.package_identification:Package 'robot_digital_twin' with type 'ros.ament_python' and name 'robot_digital_twin'
+[0.593s] Level 1:colcon.colcon_core.package_identification:_identify(robot_interfaces) by extensions ['ignore', 'ignore_ament_install']
+[0.594s] Level 1:colcon.colcon_core.package_identification:_identify(robot_interfaces) by extension 'ignore'
+[0.594s] Level 1:colcon.colcon_core.package_identification:_identify(robot_interfaces) by extension 'ignore_ament_install'
+[0.594s] Level 1:colcon.colcon_core.package_identification:_identify(robot_interfaces) by extensions ['colcon_pkg']
+[0.594s] Level 1:colcon.colcon_core.package_identification:_identify(robot_interfaces) by extension 'colcon_pkg'
+[0.594s] Level 1:colcon.colcon_core.package_identification:_identify(robot_interfaces) by extensions ['colcon_meta']
+[0.594s] Level 1:colcon.colcon_core.package_identification:_identify(robot_interfaces) by extension 'colcon_meta'
+[0.594s] Level 1:colcon.colcon_core.package_identification:_identify(robot_interfaces) by extensions ['ros']
+[0.594s] Level 1:colcon.colcon_core.package_identification:_identify(robot_interfaces) by extension 'ros'
+[0.595s] DEBUG:colcon.colcon_core.package_identification:Package 'robot_interfaces' with type 'ros.ament_cmake' and name 'robot_interfaces'
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(robot_inverse_kinematics) by extensions ['ignore', 'ignore_ament_install']
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(robot_inverse_kinematics) by extension 'ignore'
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(robot_inverse_kinematics) by extension 'ignore_ament_install'
+[0.596s] Level 1:colcon.colcon_core.package_identification:_identify(robot_inverse_kinematics) by extensions ['colcon_pkg']
+[0.596s] Level 1:colcon.colcon_core.package_identification:_identify(robot_inverse_kinematics) by extension 'colcon_pkg'
+[0.596s] Level 1:colcon.colcon_core.package_identification:_identify(robot_inverse_kinematics) by extensions ['colcon_meta']
+[0.596s] Level 1:colcon.colcon_core.package_identification:_identify(robot_inverse_kinematics) by extension 'colcon_meta'
+[0.596s] Level 1:colcon.colcon_core.package_identification:_identify(robot_inverse_kinematics) by extensions ['ros']
+[0.596s] Level 1:colcon.colcon_core.package_identification:_identify(robot_inverse_kinematics) by extension 'ros'
+[0.596s] DEBUG:colcon.colcon_core.package_identification:Package 'robot_inverse_kinematics' with type 'ros.ament_python' and name 'robot_inverse_kinematics'
+[0.596s] Level 1:colcon.colcon_core.package_identification:_identify(robot_kinematics) by extensions ['ignore', 'ignore_ament_install']
+[0.597s] Level 1:colcon.colcon_core.package_identification:_identify(robot_kinematics) by extension 'ignore'
+[0.597s] Level 1:colcon.colcon_core.package_identification:_identify(robot_kinematics) by extension 'ignore_ament_install'
+[0.597s] Level 1:colcon.colcon_core.package_identification:_identify(robot_kinematics) by extensions ['colcon_pkg']
+[0.597s] Level 1:colcon.colcon_core.package_identification:_identify(robot_kinematics) by extension 'colcon_pkg'
+[0.597s] Level 1:colcon.colcon_core.package_identification:_identify(robot_kinematics) by extensions ['colcon_meta']
+[0.597s] Level 1:colcon.colcon_core.package_identification:_identify(robot_kinematics) by extension 'colcon_meta'
+[0.597s] Level 1:colcon.colcon_core.package_identification:_identify(robot_kinematics) by extensions ['ros']
+[0.597s] Level 1:colcon.colcon_core.package_identification:_identify(robot_kinematics) by extension 'ros'
+[0.598s] DEBUG:colcon.colcon_core.package_identification:Package 'robot_kinematics' with type 'ros.ament_python' and name 'robot_kinematics'
+[0.598s] Level 1:colcon.colcon_core.package_identification:_identify(robot_pkg) by extensions ['ignore', 'ignore_ament_install']
+[0.598s] Level 1:colcon.colcon_core.package_identification:_identify(robot_pkg) by extension 'ignore'
+[0.598s] Level 1:colcon.colcon_core.package_identification:_identify(robot_pkg) by extension 'ignore_ament_install'
+[0.598s] Level 1:colcon.colcon_core.package_identification:_identify(robot_pkg) by extensions ['colcon_pkg']
+[0.598s] Level 1:colcon.colcon_core.package_identification:_identify(robot_pkg) by extension 'colcon_pkg'
+[0.598s] Level 1:colcon.colcon_core.package_identification:_identify(robot_pkg) by extensions ['colcon_meta']
+[0.598s] Level 1:colcon.colcon_core.package_identification:_identify(robot_pkg) by extension 'colcon_meta'
+[0.598s] Level 1:colcon.colcon_core.package_identification:_identify(robot_pkg) by extensions ['ros']
+[0.598s] Level 1:colcon.colcon_core.package_identification:_identify(robot_pkg) by extension 'ros'
+[0.600s] DEBUG:colcon.colcon_core.package_identification:Package 'robot_pkg' with type 'ros.ament_cmake' and name 'robot_pkg'
+[0.600s] Level 1:colcon.colcon_core.package_identification:_identify(tic_tac_toe_dlc) by extensions ['ignore', 'ignore_ament_install']
+[0.600s] Level 1:colcon.colcon_core.package_identification:_identify(tic_tac_toe_dlc) by extension 'ignore'
+[0.600s] Level 1:colcon.colcon_core.package_identification:_identify(tic_tac_toe_dlc) by extension 'ignore_ament_install'
+[0.600s] Level 1:colcon.colcon_core.package_identification:_identify(tic_tac_toe_dlc) by extensions ['colcon_pkg']
+[0.600s] Level 1:colcon.colcon_core.package_identification:_identify(tic_tac_toe_dlc) by extension 'colcon_pkg'
+[0.601s] Level 1:colcon.colcon_core.package_identification:_identify(tic_tac_toe_dlc) by extensions ['colcon_meta']
+[0.601s] Level 1:colcon.colcon_core.package_identification:_identify(tic_tac_toe_dlc) by extension 'colcon_meta'
+[0.601s] Level 1:colcon.colcon_core.package_identification:_identify(tic_tac_toe_dlc) by extensions ['ros']
+[0.601s] Level 1:colcon.colcon_core.package_identification:_identify(tic_tac_toe_dlc) by extension 'ros'
+[0.602s] DEBUG:colcon.colcon_core.package_identification:Package 'tic_tac_toe_dlc' with type 'ros.ament_cmake' and name 'tic_tac_toe_dlc'
+[0.602s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.602s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.602s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.602s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.602s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.654s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.654s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.660s] WARNING:colcon.colcon_core.prefix_path.colcon:The path '/home/silvia/TFG/TFG/src/ros2_ws/install' in the environment variable COLCON_PREFIX_PATH doesn't exist
+[0.660s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.660s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.661s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.661s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.661s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.662s] WARNING:colcon.colcon_ros.prefix_path.catkin:The path '/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc' in the environment variable CMAKE_PREFIX_PATH doesn't exist
+[0.662s] WARNING:colcon.colcon_ros.prefix_path.catkin:The path '/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg' in the environment variable CMAKE_PREFIX_PATH doesn't exist
+[0.662s] WARNING:colcon.colcon_ros.prefix_path.catkin:The path '/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces' in the environment variable CMAKE_PREFIX_PATH doesn't exist
+[0.662s] WARNING:colcon.colcon_ros.prefix_path.catkin:The path '/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin' in the environment variable CMAKE_PREFIX_PATH doesn't exist
+[0.670s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 331 installed packages in /opt/ros/jazzy
+[0.671s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_digital_twin' build argument 'cmake_args' from command line to 'None'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_digital_twin' build argument 'cmake_target' from command line to 'None'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_digital_twin' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_digital_twin' build argument 'cmake_clean_cache' from command line to 'False'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_digital_twin' build argument 'cmake_clean_first' from command line to 'False'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_digital_twin' build argument 'cmake_force_configure' from command line to 'False'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_digital_twin' build argument 'ament_cmake_args' from command line to 'None'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_digital_twin' build argument 'catkin_cmake_args' from command line to 'None'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_digital_twin' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.848s] DEBUG:colcon.colcon_core.verb:Building package 'robot_digital_twin' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin', 'merge_install': False, 'path': '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_digital_twin', 'symlink_install': False, 'test_result_base': None}
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_interfaces' build argument 'cmake_args' from command line to 'None'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_interfaces' build argument 'cmake_target' from command line to 'None'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_interfaces' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_interfaces' build argument 'cmake_clean_cache' from command line to 'False'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_interfaces' build argument 'cmake_clean_first' from command line to 'False'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_interfaces' build argument 'cmake_force_configure' from command line to 'False'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_interfaces' build argument 'ament_cmake_args' from command line to 'None'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_interfaces' build argument 'catkin_cmake_args' from command line to 'None'
+[0.848s] Level 5:colcon.colcon_core.verb:set package 'robot_interfaces' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.848s] DEBUG:colcon.colcon_core.verb:Building package 'robot_interfaces' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces', 'merge_install': False, 'path': '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_interfaces', 'symlink_install': False, 'test_result_base': None}
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_inverse_kinematics' build argument 'cmake_args' from command line to 'None'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_inverse_kinematics' build argument 'cmake_target' from command line to 'None'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_inverse_kinematics' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_inverse_kinematics' build argument 'cmake_clean_cache' from command line to 'False'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_inverse_kinematics' build argument 'cmake_clean_first' from command line to 'False'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_inverse_kinematics' build argument 'cmake_force_configure' from command line to 'False'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_inverse_kinematics' build argument 'ament_cmake_args' from command line to 'None'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_inverse_kinematics' build argument 'catkin_cmake_args' from command line to 'None'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_inverse_kinematics' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.849s] DEBUG:colcon.colcon_core.verb:Building package 'robot_inverse_kinematics' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_inverse_kinematics', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics', 'merge_install': False, 'path': '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_inverse_kinematics', 'symlink_install': False, 'test_result_base': None}
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_kinematics' build argument 'cmake_args' from command line to 'None'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_kinematics' build argument 'cmake_target' from command line to 'None'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_kinematics' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_kinematics' build argument 'cmake_clean_cache' from command line to 'False'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_kinematics' build argument 'cmake_clean_first' from command line to 'False'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_kinematics' build argument 'cmake_force_configure' from command line to 'False'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_kinematics' build argument 'ament_cmake_args' from command line to 'None'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_kinematics' build argument 'catkin_cmake_args' from command line to 'None'
+[0.849s] Level 5:colcon.colcon_core.verb:set package 'robot_kinematics' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.849s] DEBUG:colcon.colcon_core.verb:Building package 'robot_kinematics' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_kinematics', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics', 'merge_install': False, 'path': '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_kinematics', 'symlink_install': False, 'test_result_base': None}
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'robot_pkg' build argument 'cmake_args' from command line to 'None'
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'robot_pkg' build argument 'cmake_target' from command line to 'None'
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'robot_pkg' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'robot_pkg' build argument 'cmake_clean_cache' from command line to 'False'
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'robot_pkg' build argument 'cmake_clean_first' from command line to 'False'
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'robot_pkg' build argument 'cmake_force_configure' from command line to 'False'
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'robot_pkg' build argument 'ament_cmake_args' from command line to 'None'
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'robot_pkg' build argument 'catkin_cmake_args' from command line to 'None'
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'robot_pkg' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.850s] DEBUG:colcon.colcon_core.verb:Building package 'robot_pkg' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg', 'merge_install': False, 'path': '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg', 'symlink_install': False, 'test_result_base': None}
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'tic_tac_toe_dlc' build argument 'cmake_args' from command line to 'None'
+[0.850s] Level 5:colcon.colcon_core.verb:set package 'tic_tac_toe_dlc' build argument 'cmake_target' from command line to 'None'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'tic_tac_toe_dlc' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'tic_tac_toe_dlc' build argument 'cmake_clean_cache' from command line to 'False'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'tic_tac_toe_dlc' build argument 'cmake_clean_first' from command line to 'False'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'tic_tac_toe_dlc' build argument 'cmake_force_configure' from command line to 'False'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'tic_tac_toe_dlc' build argument 'ament_cmake_args' from command line to 'None'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'tic_tac_toe_dlc' build argument 'catkin_cmake_args' from command line to 'None'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'tic_tac_toe_dlc' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.851s] DEBUG:colcon.colcon_core.verb:Building package 'tic_tac_toe_dlc' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc', 'merge_install': False, 'path': '/home/silvia/TFG/TFG/src/ros2_ws/src/tic_tac_toe_dlc', 'symlink_install': False, 'test_result_base': None}
+[0.851s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.852s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.853s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_interfaces' with build type 'ament_cmake'
+[0.853s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_interfaces'
+[0.867s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.867s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.867s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.874s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_digital_twin' with build type 'ament_python'
+[0.874s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_digital_twin', 'ament_prefix_path')
+[0.875s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/hook/ament_prefix_path.ps1'
+[0.879s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/hook/ament_prefix_path.dsv'
+[0.881s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/hook/ament_prefix_path.sh'
+[0.882s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.882s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.892s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy /usr/bin/cmake /home/silvia/TFG/TFG/src/ros2_ws/src/robot_interfaces -DCMAKE_INSTALL_PREFIX=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces
+[1.218s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_digital_twin'
+[1.219s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.219s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.848s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_digital_twin': PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_digital_twin build --build-base /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/build install --record /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/install.log --single-version-externally-managed install_data
+[3.845s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_digital_twin' returned '0': PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_digital_twin build --build-base /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/build install --record /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/install.log --single-version-externally-managed install_data
+[3.857s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin' for CMake module files
+[3.857s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin' for CMake config files
+[3.858s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib'
+[3.859s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/bin'
+[3.859s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/pkgconfig/robot_digital_twin.pc'
+[3.859s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/python3.12/site-packages'
+[3.859s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_digital_twin', 'pythonpath')
+[3.860s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/hook/pythonpath.ps1'
+[3.860s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/hook/pythonpath.dsv'
+[3.862s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/hook/pythonpath.sh'
+[3.862s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/bin'
+[3.863s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robot_digital_twin)
+[3.863s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/package.ps1'
+[3.865s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/package.dsv'
+[3.866s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/package.sh'
+[3.867s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/package.bash'
+[3.869s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin/package.zsh'
+[3.870s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/colcon-core/packages/robot_digital_twin)
+[8.745s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy /usr/bin/cmake /home/silvia/TFG/TFG/src/ros2_ws/src/robot_interfaces -DCMAKE_INSTALL_PREFIX=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces
+[8.747s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy /usr/bin/cmake --build /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces -- -j8 -l8
+[21.740s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy /usr/bin/cmake --build /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces -- -j8 -l8
+[21.755s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy /usr/bin/cmake --install /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces
+[21.972s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robot_interfaces)
+[21.973s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces' for CMake module files
+[21.974s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy /usr/bin/cmake --install /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces
+[21.974s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces' for CMake config files
+[21.975s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_interfaces', 'cmake_prefix_path')
+[21.975s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/cmake_prefix_path.ps1'
+[21.976s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/cmake_prefix_path.dsv'
+[21.976s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/cmake_prefix_path.sh'
+[21.977s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib'
+[21.977s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_interfaces', 'ld_library_path_lib')
+[21.977s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/ld_library_path_lib.ps1'
+[21.977s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/ld_library_path_lib.dsv'
+[21.978s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/ld_library_path_lib.sh'
+[21.978s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/bin'
+[21.978s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/pkgconfig/robot_interfaces.pc'
+[21.979s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages'
+[21.979s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_interfaces', 'pythonpath')
+[21.979s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/pythonpath.ps1'
+[21.979s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/pythonpath.dsv'
+[21.979s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/pythonpath.sh'
+[21.980s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/bin'
+[21.980s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/package.ps1'
+[21.981s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/package.dsv'
+[21.982s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/package.sh'
+[21.982s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/package.bash'
+[21.983s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/package.zsh'
+[21.983s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/colcon-core/packages/robot_interfaces)
+[21.984s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robot_interfaces)
+[21.984s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces' for CMake module files
+[21.985s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces' for CMake config files
+[21.986s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_interfaces', 'cmake_prefix_path')
+[21.986s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/cmake_prefix_path.ps1'
+[21.986s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/cmake_prefix_path.dsv'
+[21.987s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/cmake_prefix_path.sh'
+[21.987s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib'
+[21.987s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_interfaces', 'ld_library_path_lib')
+[21.988s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/ld_library_path_lib.ps1'
+[21.988s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/ld_library_path_lib.dsv'
+[21.988s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/ld_library_path_lib.sh'
+[21.989s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/bin'
+[21.989s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/pkgconfig/robot_interfaces.pc'
+[21.989s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages'
+[21.989s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_interfaces', 'pythonpath')
+[21.989s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/pythonpath.ps1'
+[21.990s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/pythonpath.dsv'
+[21.990s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/hook/pythonpath.sh'
+[21.991s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/bin'
+[21.991s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/package.ps1'
+[21.992s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/package.dsv'
+[21.993s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/package.sh'
+[21.993s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/package.bash'
+[21.994s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/package.zsh'
+[21.994s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/colcon-core/packages/robot_interfaces)
+[21.995s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_inverse_kinematics' with build type 'ament_python'
+[21.995s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_inverse_kinematics', 'ament_prefix_path')
+[21.995s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/hook/ament_prefix_path.ps1'
+[21.999s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/hook/ament_prefix_path.dsv'
+[21.999s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/hook/ament_prefix_path.sh'
+[22.000s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[22.000s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[22.004s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_kinematics' with build type 'ament_python'
+[22.004s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_kinematics', 'ament_prefix_path')
+[22.004s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/hook/ament_prefix_path.ps1'
+[22.007s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/hook/ament_prefix_path.dsv'
+[22.007s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/hook/ament_prefix_path.sh'
+[22.008s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[22.008s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[22.018s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg' with build type 'ament_cmake'
+[22.018s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg'
+[22.018s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[22.018s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[22.026s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/silvia/TFG/TFG/src/ros2_ws/src/tic_tac_toe_dlc' with build type 'ament_cmake'
+[22.026s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/silvia/TFG/TFG/src/ros2_ws/src/tic_tac_toe_dlc'
+[22.026s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[22.027s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[22.394s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_inverse_kinematics'
+[22.395s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[22.395s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[22.693s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_kinematics'
+[22.693s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[22.693s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[22.705s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake /home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg -DCMAKE_INSTALL_PREFIX=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg
+[22.711s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake /home/silvia/TFG/TFG/src/ros2_ws/src/tic_tac_toe_dlc -DCMAKE_INSTALL_PREFIX=/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc
+[23.945s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_inverse_kinematics': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${CMAKE_PREFIX_PATH} LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_inverse_kinematics/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/lib/python3.12/site-packages:/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_inverse_kinematics build --build-base /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_inverse_kinematics/build install --record /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_inverse_kinematics/install.log --single-version-externally-managed install_data
+[24.041s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_kinematics': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${CMAKE_PREFIX_PATH} LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_kinematics/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/lib/python3.12/site-packages:/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_kinematics build --build-base /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_kinematics/build install --record /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_kinematics/install.log --single-version-externally-managed install_data
+[24.970s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics' for CMake module files
+[24.971s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_inverse_kinematics' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${CMAKE_PREFIX_PATH} LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_inverse_kinematics/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/lib/python3.12/site-packages:/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_inverse_kinematics build --build-base /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_inverse_kinematics/build install --record /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_inverse_kinematics/install.log --single-version-externally-managed install_data
+[24.972s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics' for CMake config files
+[24.972s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/lib'
+[24.973s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/bin'
+[24.973s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/lib/pkgconfig/robot_inverse_kinematics.pc'
+[24.973s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/lib/python3.12/site-packages'
+[24.973s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_inverse_kinematics', 'pythonpath')
+[24.973s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/hook/pythonpath.ps1'
+[24.974s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/hook/pythonpath.dsv'
+[24.974s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/hook/pythonpath.sh'
+[24.975s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/bin'
+[24.975s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robot_inverse_kinematics)
+[24.975s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/package.ps1'
+[24.977s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/package.dsv'
+[24.978s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/package.sh'
+[24.978s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/package.bash'
+[24.979s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/robot_inverse_kinematics/package.zsh'
+[24.979s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_inverse_kinematics/share/colcon-core/packages/robot_inverse_kinematics)
+[25.037s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics' for CMake module files
+[25.038s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_kinematics' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${CMAKE_PREFIX_PATH} LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_kinematics/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/lib/python3.12/site-packages:/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_kinematics build --build-base /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_kinematics/build install --record /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_kinematics/install.log --single-version-externally-managed install_data
+[25.039s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics' for CMake config files
+[25.040s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/lib'
+[25.040s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/bin'
+[25.040s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/lib/pkgconfig/robot_kinematics.pc'
+[25.040s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/lib/python3.12/site-packages'
+[25.041s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_kinematics', 'pythonpath')
+[25.041s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/hook/pythonpath.ps1'
+[25.042s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/hook/pythonpath.dsv'
+[25.042s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/hook/pythonpath.sh'
+[25.043s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/bin'
+[25.043s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robot_kinematics)
+[25.043s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/package.ps1'
+[25.044s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/package.dsv'
+[25.045s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/package.sh'
+[25.046s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/package.bash'
+[25.046s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/robot_kinematics/package.zsh'
+[25.047s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_kinematics/share/colcon-core/packages/robot_kinematics)
+[26.976s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake /home/silvia/TFG/TFG/src/ros2_ws/src/tic_tac_toe_dlc -DCMAKE_INSTALL_PREFIX=/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc
+[26.978s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc -- -j8 -l8
+[26.997s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake /home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg -DCMAKE_INSTALL_PREFIX=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg
+[26.999s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg -- -j8 -l8
+[44.618s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg -- -j8 -l8
+[44.620s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg
+[44.683s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robot_pkg)
+[44.683s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg
+[44.683s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg' for CMake module files
+[44.685s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg' for CMake config files
+[44.685s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_pkg', 'cmake_prefix_path')
+[44.685s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/hook/cmake_prefix_path.ps1'
+[44.686s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/hook/cmake_prefix_path.dsv'
+[44.687s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/hook/cmake_prefix_path.sh'
+[44.687s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib'
+[44.687s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/bin'
+[44.687s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/pkgconfig/robot_pkg.pc'
+[44.688s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/python3.12/site-packages'
+[44.688s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/bin'
+[44.688s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.ps1'
+[44.689s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.dsv'
+[44.689s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.sh'
+[44.690s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.bash'
+[44.691s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.zsh'
+[44.691s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/colcon-core/packages/robot_pkg)
+[44.693s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robot_pkg)
+[44.693s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg' for CMake module files
+[44.693s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg' for CMake config files
+[44.694s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_pkg', 'cmake_prefix_path')
+[44.694s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/hook/cmake_prefix_path.ps1'
+[44.695s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/hook/cmake_prefix_path.dsv'
+[44.695s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/hook/cmake_prefix_path.sh'
+[44.696s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib'
+[44.696s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/bin'
+[44.696s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/pkgconfig/robot_pkg.pc'
+[44.696s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/python3.12/site-packages'
+[44.696s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/bin'
+[44.697s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.ps1'
+[44.697s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.dsv'
+[44.698s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.sh'
+[44.699s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.bash'
+[44.699s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.zsh'
+[44.699s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/colcon-core/packages/robot_pkg)
+[54.433s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc -- -j8 -l8
+[54.435s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc
+[54.498s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(tic_tac_toe_dlc)
+[54.499s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/silvia/TFG/TFG/src/ros2_ws/src/build/tic_tac_toe_dlc
+[54.499s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc' for CMake module files
+[54.500s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc' for CMake config files
+[54.500s] Level 1:colcon.colcon_core.shell:create_environment_hook('tic_tac_toe_dlc', 'cmake_prefix_path')
+[54.500s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/hook/cmake_prefix_path.ps1'
+[54.501s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/hook/cmake_prefix_path.dsv'
+[54.502s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/hook/cmake_prefix_path.sh'
+[54.502s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/lib'
+[54.502s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/bin'
+[54.502s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/lib/pkgconfig/tic_tac_toe_dlc.pc'
+[54.503s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/lib/python3.12/site-packages'
+[54.503s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/bin'
+[54.503s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/package.ps1'
+[54.504s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/package.dsv'
+[54.504s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/package.sh'
+[54.505s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/package.bash'
+[54.505s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/package.zsh'
+[54.505s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/colcon-core/packages/tic_tac_toe_dlc)
+[54.507s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(tic_tac_toe_dlc)
+[54.507s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc' for CMake module files
+[54.508s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc' for CMake config files
+[54.508s] Level 1:colcon.colcon_core.shell:create_environment_hook('tic_tac_toe_dlc', 'cmake_prefix_path')
+[54.508s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/hook/cmake_prefix_path.ps1'
+[54.509s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/hook/cmake_prefix_path.dsv'
+[54.510s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/hook/cmake_prefix_path.sh'
+[54.510s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/lib'
+[54.510s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/bin'
+[54.510s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/lib/pkgconfig/tic_tac_toe_dlc.pc'
+[54.511s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/lib/python3.12/site-packages'
+[54.511s] Level 1:colcon.colcon_core.environment:checking '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/bin'
+[54.511s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/package.ps1'
+[54.512s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/package.dsv'
+[54.512s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/package.sh'
+[54.513s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/package.bash'
+[54.513s] INFO:colcon.colcon_core.shell:Creating package script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/tic_tac_toe_dlc/package.zsh'
+[54.514s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/silvia/TFG/TFG/src/ros2_ws/src/install/tic_tac_toe_dlc/share/colcon-core/packages/tic_tac_toe_dlc)
+[54.514s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[54.515s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[54.515s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[54.515s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[54.590s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[54.590s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[54.590s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[54.590s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[54.596s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files
+[54.596s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[54.597s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/local_setup.ps1'
+[54.598s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/silvia/TFG/TFG/src/ros2_ws/src/install/_local_setup_util_ps1.py'
+[54.600s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/setup.ps1'
+[54.602s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/local_setup.sh'
+[54.603s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/silvia/TFG/TFG/src/ros2_ws/src/install/_local_setup_util_sh.py'
+[54.604s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/setup.sh'
+[54.605s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/local_setup.bash'
+[54.607s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/setup.bash'
+[54.608s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/local_setup.zsh'
+[54.610s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/silvia/TFG/TFG/src/ros2_ws/src/install/setup.zsh'

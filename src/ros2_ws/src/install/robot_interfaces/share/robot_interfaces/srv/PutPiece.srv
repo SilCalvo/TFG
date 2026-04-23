@@ -1,0 +1,6 @@
+#PutPiece
+int32 fila
+int32 columna
+---
+bool success
+string message

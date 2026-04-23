@@ -1,0 +1,13 @@
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/uninstall.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/robot_pkg_uninstall.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/move_arm_node.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/rviz_bridge_node.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/servo_node.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/rutine_node.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/test.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/edit_cache.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/rebuild_cache.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/list_install_components.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/install.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/install/local.dir
+/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg/CMakeFiles/install/strip.dir

@@ -1,0 +1,35 @@
+running egg_info
+creating ../build/robot_digital_twin/robot_digital_twin.egg-info
+writing ../build/robot_digital_twin/robot_digital_twin.egg-info/PKG-INFO
+writing dependency_links to ../build/robot_digital_twin/robot_digital_twin.egg-info/dependency_links.txt
+writing entry points to ../build/robot_digital_twin/robot_digital_twin.egg-info/entry_points.txt
+writing requirements to ../build/robot_digital_twin/robot_digital_twin.egg-info/requires.txt
+writing top-level names to ../build/robot_digital_twin/robot_digital_twin.egg-info/top_level.txt
+writing manifest file '../build/robot_digital_twin/robot_digital_twin.egg-info/SOURCES.txt'
+reading manifest file '../build/robot_digital_twin/robot_digital_twin.egg-info/SOURCES.txt'
+writing manifest file '../build/robot_digital_twin/robot_digital_twin.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/build
+creating /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/build/lib
+creating /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/build/lib/robot_digital_twin
+copying robot_digital_twin/__init__.py -> /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/build/lib/robot_digital_twin
+copying robot_digital_twin/robot_digital_twin_node.py -> /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/build/lib/robot_digital_twin
+running install
+running install_lib
+creating /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/python3.12/site-packages/robot_digital_twin
+copying /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/build/lib/robot_digital_twin/__init__.py -> /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/python3.12/site-packages/robot_digital_twin
+copying /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/build/lib/robot_digital_twin/robot_digital_twin_node.py -> /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/python3.12/site-packages/robot_digital_twin
+byte-compiling /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/python3.12/site-packages/robot_digital_twin/__init__.py to __init__.cpython-312.pyc
+byte-compiling /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/python3.12/site-packages/robot_digital_twin/robot_digital_twin_node.py to robot_digital_twin_node.cpython-312.pyc
+running install_data
+creating /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/ament_index
+creating /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/ament_index/resource_index
+creating /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/ament_index/resource_index/packages
+copying resource/robot_digital_twin -> /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/ament_index/resource_index/packages
+copying package.xml -> /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/share/robot_digital_twin
+running install_egg_info
+Copying ../build/robot_digital_twin/robot_digital_twin.egg-info to /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/python3.12/site-packages/robot_digital_twin-0.0.0-py3.12.egg-info
+running install_scripts
+Installing robot_digital_twin_node script to /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_digital_twin/lib/robot_digital_twin
+writing list of installed files to '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_digital_twin/install.log'

@@ -1,0 +1,105 @@
+[0.686s] Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake /home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg -DCMAKE_INSTALL_PREFIX=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg
+[0.851s] -- The C compiler identification is GNU 13.3.0
+[1.378s] -- The CXX compiler identification is GNU 13.3.0
+[1.824s] -- Detecting C compiler ABI info
+[2.103s] -- Detecting C compiler ABI info - done
+[2.124s] -- Check for working C compiler: /usr/bin/cc - skipped
+[2.124s] -- Detecting C compile features
+[2.125s] -- Detecting C compile features - done
+[2.199s] -- Detecting CXX compiler ABI info
+[2.501s] -- Detecting CXX compiler ABI info - done
+[2.519s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[2.520s] -- Detecting CXX compile features
+[2.520s] -- Detecting CXX compile features - done
+[2.525s] -- Found ament_cmake: 2.5.6 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[2.768s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[2.957s] -- Found rclcpp: 28.1.18 (/opt/ros/jazzy/share/rclcpp/cmake)
+[3.128s] -- Found rosidl_generator_c: 4.6.7 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[3.153s] -- Found rosidl_generator_cpp: 4.6.7 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[3.177s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[3.205s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[3.366s] -- Found rmw_implementation_cmake: 7.3.3 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[3.377s] -- Found rmw_fastrtps_cpp: 8.4.3 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[3.564s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[3.710s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[3.800s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[4.032s] -- Found std_msgs: 5.3.7 (/opt/ros/jazzy/share/std_msgs/cmake)
+[4.059s] -- Found sensor_msgs: 5.3.7 (/opt/ros/jazzy/share/sensor_msgs/cmake)
+[4.131s] -- Found rclcpp_action: 28.1.18 (/opt/ros/jazzy/share/rclcpp_action/cmake)
+[4.243s] -- Found nav2_msgs: 1.3.11 (/opt/ros/jazzy/share/nav2_msgs/cmake)
+[4.456s] -- Found robot_interfaces: 0.0.0 (/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/share/robot_interfaces/cmake)
+[4.493s] -- Found urdf: 2.10.0 (/opt/ros/jazzy/share/urdf/cmake)
+[4.545s] -- Found tf2: 0.36.20 (/opt/ros/jazzy/share/tf2/cmake)
+[4.553s] -- Found tf2_geometry_msgs: 0.36.20 (/opt/ros/jazzy/share/tf2_geometry_msgs/cmake)
+[4.613s] -- Found eigen3_cmake_module: 0.3.0 (/opt/ros/jazzy/share/eigen3_cmake_module/cmake)
+[4.615s] -- Found Eigen3: TRUE (found version "3.4.0") 
+[4.616s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[4.734s] -- Found ament_lint_auto: 0.17.5 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[4.881s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[4.882s] -- Configured cppcheck include dirs: /home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg/include
+[4.882s] -- Configured cppcheck exclude dirs and/or files: 
+[4.883s] -- Added test 'flake8' to check Python code syntax and style conventions
+[4.883s] -- Configured 'flake8' exclude dirs and/or files: 
+[4.886s] -- Added test 'lint_cmake' to check CMake code style
+[4.887s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[4.891s] -- Added test 'uncrustify' to check C / C++ code style
+[4.891s] -- Configured uncrustify additional arguments: 
+[4.892s] -- Added test 'xmllint' to check XML markup files
+[4.895s] -- Configuring done (4.2s)
+[4.946s] -- Generating done (0.0s)
+[4.960s] -- Build files have been written to: /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg
+[4.977s] Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake /home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg -DCMAKE_INSTALL_PREFIX=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg
+[4.980s] Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg -- -j8 -l8
+[5.061s] [ 12%] [32mBuilding CXX object CMakeFiles/move_arm_node.dir/src/move_arm_node.cpp.o[0m
+[5.065s] [ 25%] [32mBuilding CXX object CMakeFiles/rviz_bridge_node.dir/src/rviz_bridge_node.cpp.o[0m
+[5.065s] [ 37%] [32mBuilding CXX object CMakeFiles/servo_node.dir/src/servo_bridge_node.cpp.o[0m
+[5.066s] [ 50%] [32mBuilding CXX object CMakeFiles/rutine_node.dir/src/routine_executor.cpp.o[0m
+[10.974s] [01m[K/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg/src/move_arm_node.cpp:[m[K In member function ‘[01m[Kvoid MoveArmNode::[01;32m[Kexecute_moveL[m[K(std::shared_ptr<rclcpp_action::ServerGoalHandle<nav2_msgs::action::NavigateToPose> >)[m[K’:
+[10.974s] [01m[K/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg/src/move_arm_node.cpp:411:3:[m[K [01;35m[Kwarning: [m[Kmissing initializer for member ‘[01m[KMoveArmNode::Point::roll[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmissing-field-initializers-Wmissing-field-initializers]8;;[m[K]
+[10.975s]   411 |   [01;35m[K}[m[K;
+[10.975s]       |   [01;35m[K^[m[K
+[10.975s] [01m[K/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg/src/move_arm_node.cpp:411:3:[m[K [01;35m[Kwarning: [m[Kmissing initializer for member ‘[01m[KMoveArmNode::Point::pitch[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmissing-field-initializers-Wmissing-field-initializers]8;;[m[K]
+[10.980s] [01m[K/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg/src/move_arm_node.cpp:411:3:[m[K [01;35m[Kwarning: [m[Kmissing initializer for member ‘[01m[KMoveArmNode::Point::yaw[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmissing-field-initializers-Wmissing-field-initializers]8;;[m[K]
+[18.585s] [ 62%] [32m[1mLinking CXX executable rutine_node[0m
+[19.578s] [ 62%] Built target rutine_node
+[20.029s] [ 75%] [32m[1mLinking CXX executable servo_node[0m
+[20.661s] [ 75%] Built target servo_node
+[21.149s] [ 87%] [32m[1mLinking CXX executable rviz_bridge_node[0m
+[21.759s] [100%] [32m[1mLinking CXX executable move_arm_node[0m
+[21.826s] [100%] Built target rviz_bridge_node
+[22.581s] [100%] Built target move_arm_node
+[22.599s] Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg -- -j8 -l8
+[22.601s] Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg
+[22.614s] -- Install configuration: ""
+[22.615s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/robot_pkg/move_arm_node
+[22.623s] -- Set non-toolchain portion of runtime path of "/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/robot_pkg/move_arm_node" to ""
+[22.623s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/robot_pkg/rviz_bridge_node
+[22.632s] -- Set non-toolchain portion of runtime path of "/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/robot_pkg/rviz_bridge_node" to ""
+[22.632s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/robot_pkg/servo_node
+[22.640s] -- Set non-toolchain portion of runtime path of "/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/robot_pkg/servo_node" to ""
+[22.640s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/robot_pkg/rutine_node
+[22.645s] -- Set non-toolchain portion of runtime path of "/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/lib/robot_pkg/rutine_node" to ""
+[22.645s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/urdf
+[22.647s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/urdf/robot.urdf
+[22.648s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/launch
+[22.648s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/launch/move_action.launch.py
+[22.648s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/rutines
+[22.649s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/rutines/test_moveL.yaml
+[22.650s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/rutines/test_wall.yaml
+[22.651s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/rutines/test_tcp.yaml
+[22.652s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/ament_index/resource_index/package_run_dependencies/robot_pkg
+[22.653s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/ament_index/resource_index/parent_prefix_path/robot_pkg
+[22.654s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/environment/ament_prefix_path.sh
+[22.654s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/environment/ament_prefix_path.dsv
+[22.655s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/environment/path.sh
+[22.655s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/environment/path.dsv
+[22.656s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/local_setup.bash
+[22.656s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/local_setup.sh
+[22.657s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/local_setup.zsh
+[22.657s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/local_setup.dsv
+[22.658s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.dsv
+[22.659s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/ament_index/resource_index/packages/robot_pkg
+[22.660s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/cmake/robot_pkgConfig.cmake
+[22.660s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/cmake/robot_pkgConfig-version.cmake
+[22.661s] -- Installing: /home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_pkg/share/robot_pkg/package.xml
+[22.664s] Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg' returned '0': AMENT_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/tic_tac_toe_dlc:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces:/home/silvia/TFG/TFG/src/ros2_ws/install/digital_twin:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_inverse_kinematics:/opt/ros/jazzy LD_LIBRARY_PATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/src/install/robot_interfaces/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_pkg

@@ -1,0 +1,33 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from robot_interfaces/srv/AddCamera.srv
+// generated code does not contain a copyright notice
+
+
+module robot_interfaces {
+  module srv {
+    @verbatim (language="comment", text=
+      "AddCamera")
+    struct AddCamera_Request {
+      string name;
+
+      double x;
+
+      double y;
+
+      double z;
+
+      double target_x;
+
+      double target_y;
+
+      double target_z;
+
+      int32 width;
+
+      int32 height;
+    };
+    struct AddCamera_Response {
+      boolean success;
+    };
+  };
+};

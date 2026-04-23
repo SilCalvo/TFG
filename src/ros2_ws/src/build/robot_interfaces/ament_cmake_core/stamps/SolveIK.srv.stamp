@@ -1,0 +1,8 @@
+geometry_msgs/Pose target_pose
+geometry_msgs/Pose tcp_offset   
+float64[] tool_dimensions     
+int32 tool_type
+---
+float64[] joint_angles
+bool success
+

@@ -1,0 +1,10 @@
+#VRML_SIM R2023b utf8
+PROTO Ros2Supervisor [
+]
+{
+  Robot {
+    name "Ros2Supervisor"
+    controller "<extern>"
+    supervisor TRUE
+  }
+}

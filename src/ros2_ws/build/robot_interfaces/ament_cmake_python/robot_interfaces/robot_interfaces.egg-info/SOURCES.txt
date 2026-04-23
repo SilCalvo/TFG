@@ -1,0 +1,15 @@
+setup.py
+robot_interfaces/__init__.py
+robot_interfaces.egg-info/PKG-INFO
+robot_interfaces.egg-info/SOURCES.txt
+robot_interfaces.egg-info/dependency_links.txt
+robot_interfaces.egg-info/top_level.txt
+robot_interfaces/srv/__init__.py
+robot_interfaces/srv/_add_camera.py
+robot_interfaces/srv/_add_obstacle.py
+robot_interfaces/srv/_manage_tool.py
+robot_interfaces/srv/_put_piece.py
+robot_interfaces/srv/_remove_obstacle.py
+robot_interfaces/srv/_solve_dk.py
+robot_interfaces/srv/_solve_ik.py
+robot_interfaces/srv/_spawn_object.py

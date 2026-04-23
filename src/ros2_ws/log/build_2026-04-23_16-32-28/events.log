@@ -1,0 +1,11 @@
+[0.000000] (-) TimerEvent: {}
+[0.002234] (-) JobUnselected: {'identifier': 'robot_interfaces'}
+[0.002354] (-) JobUnselected: {'identifier': 'robot_inverse_kinematics'}
+[0.002405] (-) JobUnselected: {'identifier': 'tic_tac_toe_dlc'}
+[0.002427] (digital_twin) JobQueued: {'identifier': 'digital_twin', 'dependencies': OrderedDict()}
+[0.002452] (robot_pkg) JobQueued: {'identifier': 'robot_pkg', 'dependencies': OrderedDict({'robot_interfaces': '/home/silvia/TFG/TFG/src/ros2_ws/install/robot_interfaces'})}
+[0.002504] (digital_twin) JobStarted: {'identifier': 'digital_twin'}
+[0.010922] (robot_pkg) JobStarted: {'identifier': 'robot_pkg'}
+[0.026972] (robot_pkg) JobEnded: {'identifier': 'robot_pkg', 'rc': 1}
+[0.028307] (digital_twin) JobEnded: {'identifier': 'digital_twin', 'rc': 'SIGINT'}
+[0.038715] (-) EventReactorShutdown: {}

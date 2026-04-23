@@ -1,0 +1,24 @@
+[1.771s] Invoking command in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_digital_twin': PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/build/robot_digital_twin/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_digital_twin/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_digital_twin build --build-base /home/silvia/TFG/TFG/src/ros2_ws/build/robot_digital_twin/build install --record /home/silvia/TFG/TFG/src/ros2_ws/build/robot_digital_twin/install.log --single-version-externally-managed install_data
+[2.252s] running egg_info
+[2.280s] writing ../../build/robot_digital_twin/robot_digital_twin.egg-info/PKG-INFO
+[2.281s] writing dependency_links to ../../build/robot_digital_twin/robot_digital_twin.egg-info/dependency_links.txt
+[2.281s] writing entry points to ../../build/robot_digital_twin/robot_digital_twin.egg-info/entry_points.txt
+[2.281s] writing requirements to ../../build/robot_digital_twin/robot_digital_twin.egg-info/requires.txt
+[2.282s] writing top-level names to ../../build/robot_digital_twin/robot_digital_twin.egg-info/top_level.txt
+[2.356s] reading manifest file '../../build/robot_digital_twin/robot_digital_twin.egg-info/SOURCES.txt'
+[2.357s] writing manifest file '../../build/robot_digital_twin/robot_digital_twin.egg-info/SOURCES.txt'
+[2.357s] running build
+[2.357s] running build_py
+[2.358s] copying robot_digital_twin/robot_digital_twin_node.py -> /home/silvia/TFG/TFG/src/ros2_ws/build/robot_digital_twin/build/lib/robot_digital_twin
+[2.358s] running install
+[2.365s] running install_lib
+[2.407s] copying /home/silvia/TFG/TFG/src/ros2_ws/build/robot_digital_twin/build/lib/robot_digital_twin/robot_digital_twin_node.py -> /home/silvia/TFG/TFG/src/ros2_ws/install/robot_digital_twin/lib/python3.12/site-packages/robot_digital_twin
+[2.408s] byte-compiling /home/silvia/TFG/TFG/src/ros2_ws/install/robot_digital_twin/lib/python3.12/site-packages/robot_digital_twin/robot_digital_twin_node.py to robot_digital_twin_node.cpython-312.pyc
+[2.411s] running install_data
+[2.412s] running install_egg_info
+[2.449s] removing '/home/silvia/TFG/TFG/src/ros2_ws/install/robot_digital_twin/lib/python3.12/site-packages/robot_digital_twin-0.0.0-py3.12.egg-info' (and everything under it)
+[2.450s] Copying ../../build/robot_digital_twin/robot_digital_twin.egg-info to /home/silvia/TFG/TFG/src/ros2_ws/install/robot_digital_twin/lib/python3.12/site-packages/robot_digital_twin-0.0.0-py3.12.egg-info
+[2.452s] running install_scripts
+[2.644s] Installing robot_digital_twin_node script to /home/silvia/TFG/TFG/src/ros2_ws/install/robot_digital_twin/lib/robot_digital_twin
+[2.644s] writing list of installed files to '/home/silvia/TFG/TFG/src/ros2_ws/build/robot_digital_twin/install.log'
+[2.687s] Invoked command in '/home/silvia/TFG/TFG/src/ros2_ws/src/robot_digital_twin' returned '0': PYTHONPATH=/home/silvia/TFG/TFG/src/ros2_ws/build/robot_digital_twin/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/silvia/TFG/TFG/src/ros2_ws/install/robot_digital_twin/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_digital_twin build --build-base /home/silvia/TFG/TFG/src/ros2_ws/build/robot_digital_twin/build install --record /home/silvia/TFG/TFG/src/ros2_ws/build/robot_digital_twin/install.log --single-version-externally-managed install_data

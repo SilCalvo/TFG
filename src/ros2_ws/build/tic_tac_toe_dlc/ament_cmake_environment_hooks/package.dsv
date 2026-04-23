@@ -1,0 +1,4 @@
+source;share/tic_tac_toe_dlc/local_setup.bash
+source;share/tic_tac_toe_dlc/local_setup.dsv
+source;share/tic_tac_toe_dlc/local_setup.sh
+source;share/tic_tac_toe_dlc/local_setup.zsh

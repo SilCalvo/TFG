@@ -1,0 +1,31 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "/home/silvia/TFG/TFG/src/ros2_ws/src/digital_twin/worlds/Ros2Supervisor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.10101525445522107 0.9091372900969895 0.40406101782088427 1.2
+  position 1.5 -1.5 1.2
+  follow "suelo"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+  luminosity 400
+}
+RectangleArena {
+  name "suelo"
+  floorSize 2 2
+}
+Ros2Supervisor {
+}
+Robot {
+  translation 0 0 0.05
+  name "robot_cilindros"
+  controller "<extern>"
+  supervisor TRUE
+}

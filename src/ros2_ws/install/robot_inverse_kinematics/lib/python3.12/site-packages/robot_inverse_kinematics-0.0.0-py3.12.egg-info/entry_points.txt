@@ -1,0 +1,2 @@
+[console_scripts]
+ik_node = robot_inverse_kinematics.ik_node:main

@@ -1,0 +1,16 @@
+srv/AddCamera.idl
+srv/AddCamera.srv
+srv/AddObstacle.idl
+srv/AddObstacle.srv
+srv/ManageTool.idl
+srv/ManageTool.srv
+srv/PutPiece.idl
+srv/PutPiece.srv
+srv/RemoveObstacle.idl
+srv/RemoveObstacle.srv
+srv/SolveDK.idl
+srv/SolveDK.srv
+srv/SolveIK.idl
+srv/SolveIK.srv
+srv/SpawnObject.idl
+srv/SpawnObject.srv

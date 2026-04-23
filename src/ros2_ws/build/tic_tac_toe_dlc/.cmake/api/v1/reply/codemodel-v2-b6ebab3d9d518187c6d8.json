@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-82b55ab169377c17305e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "tic_tac_toe_dlc",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "tic_tac_toe_dlc_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tic_tac_toe_dlc_uninstall-b4b65a36bcdea77ea014.json",
+					"name" : "tic_tac_toe_dlc_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tic_tac_toe_node::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tic_tac_toe_node-82f14ca64efbf523d142.json",
+					"name" : "tic_tac_toe_node",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-dcae17bf3fac399d0a45.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/silvia/TFG/TFG/src/ros2_ws/build/tic_tac_toe_dlc",
+		"source" : "/home/silvia/TFG/TFG/src/ros2_ws/src/tic_tac_toe_dlc"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

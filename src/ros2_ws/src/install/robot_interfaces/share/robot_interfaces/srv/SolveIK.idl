@@ -1,0 +1,24 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from robot_interfaces/srv/SolveIK.srv
+// generated code does not contain a copyright notice
+
+#include "geometry_msgs/msg/Pose.idl"
+
+module robot_interfaces {
+  module srv {
+    struct SolveIK_Request {
+      geometry_msgs::msg::Pose target_pose;
+
+      geometry_msgs::msg::Pose tcp_offset;
+
+      sequence<double> tool_dimensions;
+
+      int32 tool_type;
+    };
+    struct SolveIK_Response {
+      sequence<double> joint_angles;
+
+      boolean success;
+    };
+  };
+};

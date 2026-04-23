@@ -1,0 +1,2 @@
+[console_scripts]
+robot_kinematics = robot_kinematics.robot_kinematics:main

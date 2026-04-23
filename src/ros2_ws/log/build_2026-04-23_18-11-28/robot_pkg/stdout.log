@@ -1,0 +1,32 @@
+[ 25%] Built target rviz_bridge_node
+[ 50%] Built target move_arm_node
+[ 75%] Built target servo_node
+[100%] Built target rutine_node
+-- Install configuration: ""
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/lib/robot_pkg/move_arm_node
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/lib/robot_pkg/rviz_bridge_node
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/lib/robot_pkg/servo_node
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/lib/robot_pkg/rutine_node
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/urdf
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/urdf/robot.urdf
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/launch
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/launch/move_action.launch.py
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/rutines
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/rutines/test_moveL.yaml
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/rutines/test_wall.yaml
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/rutines/test_tcp.yaml
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/ament_index/resource_index/package_run_dependencies/robot_pkg
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/ament_index/resource_index/parent_prefix_path/robot_pkg
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/environment/ament_prefix_path.sh
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/environment/path.sh
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/environment/path.dsv
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/local_setup.bash
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/local_setup.sh
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/local_setup.zsh
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/local_setup.dsv
+-- Installing: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/package.dsv
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/ament_index/resource_index/packages/robot_pkg
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/cmake/robot_pkgConfig.cmake
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/cmake/robot_pkgConfig-version.cmake
+-- Up-to-date: /home/silvia/TFG/TFG/src/ros2_ws/install/robot_pkg/share/robot_pkg/package.xml
