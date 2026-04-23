@@ -1,7 +1,0 @@
-# SolveDK.srv
-float64[] joint_angles
-geometry_msgs/Pose tcp_offset
-float64[] tool_dimensions
----
-geometry_msgs/Pose target_pose
-bool success

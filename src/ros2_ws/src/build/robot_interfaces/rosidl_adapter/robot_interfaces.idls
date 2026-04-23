@@ -1,8 +1,0 @@
-/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/SolveIK.idl
-/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/AddObstacle.idl
-/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/RemoveObstacle.idl
-/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/SolveDK.idl
-/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/ManageTool.idl
-/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/SpawnObject.idl
-/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/AddCamera.idl
-/home/silvia/TFG/TFG/src/ros2_ws/src/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/PutPiece.idl
