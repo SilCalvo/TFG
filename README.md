@@ -56,13 +56,12 @@ Falta: ----------------------------------------
 - Current angles en move_node en get trayectory que los coja bien. 
 - Falta lo de +90 grados al enviar al arduino
 - Añadir paredes virtuales - manual 
-- Añadir TCP - manual 
-- Juego de 3 en raya real 
 - Juego 3 en raya virtual mover robot
 - URDF del robot real
-- Manual de desarrolador
-- Manual de usuario
 - Cinematica directa introducirlo de alguna manera
 - Limpiar codigo
+- kinematics que coga de cmd_robot si topic mode= manual
+- digital twin, publicar imagenes y transform
+- falta esquema con nuevos topic de autmatic  y transform
 
 - 
