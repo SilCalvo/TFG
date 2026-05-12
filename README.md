@@ -63,5 +63,6 @@ Falta: ----------------------------------------
 - kinematics que coga de cmd_robot si topic mode= manual
 - digital twin, publicar imagenes y transform
 - falta esquema con nuevos topic de autmatic  y transform
+- cerrar pinza y abrir pinza
 
 - 
