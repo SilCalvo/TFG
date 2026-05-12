@@ -60,9 +60,10 @@ Falta: ----------------------------------------
 - URDF del robot real
 - Cinematica directa introducirlo de alguna manera
 - Limpiar codigo
-- kinematics que coga de cmd_robot si topic mode= manual
+- kinematics que coga de joint state si topic mode= manual o que pida agulos posicion inicial y posicion final mejor
 - digital twin, publicar imagenes y transform
 - falta esquema con nuevos topic de autmatic  y transform
-- cerrar pinza y abrir pinza
+- cerrar pinza y abrir pinza y añadirlo a la documentacion
+- cambiar diagramas a lo real 
 
 - 
