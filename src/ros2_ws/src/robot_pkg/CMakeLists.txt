@@ -31,6 +31,7 @@ ament_target_dependencies(move_arm_node
   geometry_msgs
   robot_interfaces
   nav2_msgs
+  sensor_msgs
 )
 
 add_executable(rviz_bridge_node src/rviz_bridge_node.cpp)
@@ -41,7 +42,13 @@ ament_target_dependencies(rviz_bridge_node
 )
 
 add_executable(servo_node src/servo_bridge_node.cpp)
-ament_target_dependencies(servo_node rclcpp std_msgs)
+ament_target_dependencies(servo_node 
+  rclcpp 
+  std_msgs
+  geometry_msgs
+  tf2
+  robot_interfaces
+)
 
 add_executable(rutine_node src/routine_executor.cpp)
 ament_target_dependencies(rutine_node

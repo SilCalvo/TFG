@@ -63,6 +63,13 @@ def generate_launch_description():
             executable='rviz_bridge_node',
             name='rviz_bridge',
             output='screen'
+        ),
+
+        Node(
+            package='robot_pkg',
+            executable='servo_node',
+            name='servo_node',
+            output='screen'
         )
         
     ])

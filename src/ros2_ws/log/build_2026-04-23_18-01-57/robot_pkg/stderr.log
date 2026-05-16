@@ -1,6 +1,0 @@
-[01m[K/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg/src/move_arm_node.cpp:[m[K In member function ‘[01m[Kvoid MoveArmNode::[01;32m[Kexecute_moveL[m[K(std::shared_ptr<rclcpp_action::ServerGoalHandle<nav2_msgs::action::NavigateToPose> >)[m[K’:
-[01m[K/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg/src/move_arm_node.cpp:411:3:[m[K [01;35m[Kwarning: [m[Kmissing initializer for member ‘[01m[KMoveArmNode::Point::roll[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmissing-field-initializers-Wmissing-field-initializers]8;;[m[K]
-  411 |   [01;35m[K}[m[K;
-      |   [01;35m[K^[m[K
-[01m[K/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg/src/move_arm_node.cpp:411:3:[m[K [01;35m[Kwarning: [m[Kmissing initializer for member ‘[01m[KMoveArmNode::Point::pitch[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmissing-field-initializers-Wmissing-field-initializers]8;;[m[K]
-[01m[K/home/silvia/TFG/TFG/src/ros2_ws/src/robot_pkg/src/move_arm_node.cpp:411:3:[m[K [01;35m[Kwarning: [m[Kmissing initializer for member ‘[01m[KMoveArmNode::Point::yaw[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmissing-field-initializers-Wmissing-field-initializers]8;;[m[K]

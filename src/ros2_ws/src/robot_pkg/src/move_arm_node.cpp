@@ -62,7 +62,22 @@ MoveArmNode::MoveArmNode()
 
   publisher_ = this->create_publisher<std_msgs::msg::Int16MultiArray>("robot_cmd", qos_profile);
 
+  rclcpp::QoS qos_sub(10);
+  subscriber_ = this->create_subscription<sensor_msgs::msg::JointState>(
+    "/joint_states",
+    qos_sub,
+    std::bind(&MoveArmNode::joint_state_callback, this, std::placeholders::_1)
+);
+
   RCLCPP_INFO(this->get_logger(), "Nodo 'move_arm_node' inicializado. Publicando en 'robot_cmd'.");
+}
+
+void MoveArmNode::joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg)
+{
+    size_t n = std::min(current_angles_.size(), msg->position.size());
+    for (size_t i = 0; i < n; ++i) {
+        current_angles_[i] = msg->position[i];  // actualizar tu vector miembro
+    }
 }
 
 // Cinemática directa -------------------
@@ -195,6 +210,7 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveJ(geometry_msgs
   auto request = std::make_shared<robot_interfaces::srv::SolveIK::Request>();
   
   request->target_pose = target_pose; 
+  request->origin_joint_angles = current_angles_;
   
   std::string current_tool_name = this->get_parameter("active_tool").as_string();
   auto current_tcp = tool_library_[current_tool_name];
@@ -218,6 +234,8 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveJ(geometry_msgs
   std::vector<double> target_angles = response->joint_angles;
   double max_step_rad = 10.0 * PI / 180.0;
   double max_diff = 0.0;
+  
+
 
   for (size_t i = 0; i < current_angles_.size() && i < target_angles.size(); ++i) {
     double diff = std::abs(target_angles[i] - current_angles_[i]);
@@ -236,8 +254,12 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveJ(geometry_msgs
     }
     trajectory.push_back(step_angles);
   }
-
-  current_angles_ = target_angles;
+  RCLCPP_INFO(this->get_logger(), "Angulos:");
+  for (size_t i = 0; i < target_angles.size(); ++i) {
+      RCLCPP_INFO(this->get_logger(), "  Joint %zu: %f rad", i, target_angles[i]);
+  }
+  
+  //current_angles_ = target_angles;
   return trajectory;
 }
 
@@ -261,7 +283,7 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveL(Point target)
   int steps = std::max(1, static_cast<int>(std::ceil(distance / step_size)));
 
   if (!ik_client_->wait_for_service(std::chrono::seconds(2))) return trajectory;
-
+  std::vector<double> current_angles_1 = current_angles_;
   for (int step = 1; step <= steps; ++step) {
     double percent = static_cast<double>(step) / steps;
     auto request = std::make_shared<robot_interfaces::srv::SolveIK::Request>();
@@ -276,6 +298,8 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveL(Point target)
     request->target_pose.orientation.y = q_fixed.y();
     request->target_pose.orientation.z = q_fixed.z();
     request->target_pose.orientation.w = q_fixed.w();
+
+    request->origin_joint_angles = current_angles_1;
 
     std::string current_tool_name = this->get_parameter("active_tool").as_string();
     auto current_tcp = tool_library_[current_tool_name];
@@ -292,6 +316,7 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveL(Point target)
         for (size_t j = 0; j < angles.size(); ++j) {
           angles[j] = std::clamp(atan2(sin(angles[j]), cos(angles[j])), -PI/2.0, PI/2.0);
         }
+        current_angles_1= angles;
         trajectory.push_back(angles);
       } else {
         RCLCPP_WARN(this->get_logger(), "Trayectoria MoveL bloqueada por colisión/límites.");
@@ -302,7 +327,7 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveL(Point target)
       return {}; 
     }
   }
-  if (!trajectory.empty()) current_angles_ = trajectory.back(); 
+  //if (!trajectory.empty()) current_angles_ = trajectory.back(); 
   return trajectory;
 }
 
@@ -368,6 +393,7 @@ void MoveArmNode::execute_moveJ(const std::shared_ptr<GoalHandleNav> goal_handle
   }
 
   if (rclcpp::ok()) {
+    RCLCPP_INFO(this->get_logger(), "Angulos joint:");
     goal_handle->succeed(result);
     RCLCPP_INFO(this->get_logger(), "Trayectoria completada y Arduino posicionado!");
   }

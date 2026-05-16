@@ -68,7 +68,7 @@ class DigitalTwinVisualizer(Node):
             if name in self.joint_map:
                 p.resetJointState(self.robot_id, self.joint_map[name], position)
 
-    # --- CALLBACK DE SINCRONIZACIÓN DE ENTORNO (PAREDES) ---
+    # --- CALLBACK DE SINCRONIZACIÓN DE ENTORNO (OBSTACULOS) ---
     def sync_callback(self, msg):
         """Recibe JSON del motor cinemático para replicar paredes."""
         try:
@@ -82,17 +82,23 @@ class DigitalTwinVisualizer(Node):
 
                 half_extents = [data['width']/2, data['depth']/2, data['height']/2]
                 col_id = p.createCollisionShape(p.GEOM_BOX, halfExtents=half_extents)
-                # Rojo semitransparente para identificar que es una pared virtual
                 vis_id = p.createVisualShape(p.GEOM_BOX, halfExtents=half_extents, rgbaColor=[1, 0, 0, 0.4])
+                
+                roll = data.get('roll', 0.0)
+                pitch = data.get('pitch', 0.0)
+                yaw = data.get('yaw', 0.0)
+                
+                orientation_q = p.getQuaternionFromEuler([roll, pitch, yaw])
                 
                 wall_id = p.createMultiBody(
                     baseMass=0,
                     baseCollisionShapeIndex=col_id,
                     baseVisualShapeIndex=vis_id,
-                    basePosition=[data['x'], data['y'], data['z']]
+                    basePosition=[data['x'], data['y'], data['z']],
+                    baseOrientation=orientation_q
                 )
                 self.visual_walls[name] = wall_id
-                self.get_logger().info(f"Pared visual sincronizada: {name}")
+                self.get_logger().info(f"Pared visual sincronizada con rotación: {name}")
 
             elif method == "remove_wall":
                 if name in self.visual_walls:

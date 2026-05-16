@@ -16,6 +16,7 @@
 #include "robot_interfaces/srv/remove_obstacle.hpp"
 #include "robot_interfaces/srv/manage_tool.hpp"
 #include "std_msgs/msg/int16_multi_array.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>
@@ -49,11 +50,14 @@ private:
   rclcpp_action::Server<NavigateToPose>::SharedPtr action_server_moveJ;
   rclcpp_action::Server<NavigateToPose>::SharedPtr action_server_moveL;
   rclcpp::Publisher<std_msgs::msg::Int16MultiArray>::SharedPtr publisher_;
+  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr subscriber_;
 
   rclcpp::Client<robot_interfaces::srv::SolveIK>::SharedPtr ik_client_;
   rclcpp::Client<robot_interfaces::srv::SolveDK>::SharedPtr dk_client_;
   rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedPtr add_wall_client_;
   rclcpp::Client<robot_interfaces::srv::RemoveObstacle>::SharedPtr remove_wall_client_;
+
+  void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
 
   std::vector<double> current_angles_ = std::vector<double>(5, 0.0);
   Point calculate_dk(const std::vector<double>& angles);

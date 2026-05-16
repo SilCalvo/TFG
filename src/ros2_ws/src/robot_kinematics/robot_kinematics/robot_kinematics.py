@@ -74,7 +74,16 @@ class PyBulletKinematics(Node):
                   request.target_pose.orientation.w]
 
     try:
-      saved_joint_states = [p.getJointState(self.robot_id, j)[0] for j in self.movable_joints]
+      if len(request.origin_joint_angles) != len(self.movable_joints):
+        self.get_logger().error("El número de ángulos de origen no coincide con las articulaciones del robot.")
+        response.success = False
+        return response
+        
+      #saved_joint_states = [p.getJointState(self.robot_id, j)[0] for j in self.movable_joints]
+      saved_joint_states = list(request.origin_joint_angles)
+      for i, joint_idx in enumerate(self.movable_joints):
+        p.resetJointState(self.robot_id, joint_idx, saved_joint_states[i])
+      
 
       if not self.update_tool_collision(request):
         response.success = False
@@ -115,7 +124,7 @@ class PyBulletKinematics(Node):
       dist_cartesiana = math.sqrt(sum((a - b)**2 for a, b in zip(curr_wrist_pos, wrist_target_pos)))
 
       if dist_cartesiana < 0.04:
-        UMBRAL_SINGULARIDAD_RAD = 0.5  # Aprox 28 grados de límite por motor
+        UMBRAL_SINGULARIDAD_RAD = 3 
         es_singularidad = False
         
         for i, target_angle in enumerate(joint_poses):
@@ -278,23 +287,32 @@ class PyBulletKinematics(Node):
       col_id = p.createCollisionShape(p.GEOM_BOX, halfExtents=half_extents)
       vis_id = p.createVisualShape(p.GEOM_BOX, halfExtents=half_extents, rgbaColor=[1, 0, 0, 0.4])
       
+      # --- MAGIA DE ROTACIÓN AQUÍ ---
+      # Convertimos Roll, Pitch, Yaw a Cuaternión
+      orientation_q = p.getQuaternionFromEuler([request.roll, request.pitch, request.yaw])
+      
       wall_id = p.createMultiBody(
         baseMass=0,
         baseCollisionShapeIndex=col_id,
         baseVisualShapeIndex=vis_id,
-        basePosition=[request.x, request.y, request.z]
+        basePosition=[request.x, request.y, request.z],
+        baseOrientation=orientation_q # Añadimos la orientación al cuerpo
       )
       
       self.walls[request.name] = wall_id 
-      self.get_logger().info(f"Pared '{request.name}' activa.")
+      self.get_logger().info(f"Pared '{request.name}' activa con rotación.")
       response.success = True
-      # Enviamos la info al visualizador
+      
+      # Actualizamos el visualizador JSON
       wall_info = {
           "method": "add_wall",
           "name": request.name,
           "x": request.x,
           "y": request.y,
           "z": request.z,
+          "roll": request.roll,
+          "pitch": request.pitch,
+          "yaw": request.yaw,
           "width": request.width,
           "depth": request.depth,
           "height": request.height

@@ -1,3 +1,4 @@
+float64[] origin_joint_angles
 geometry_msgs/Pose target_pose
 geometry_msgs/Pose tcp_offset   
 float64[] tool_dimensions     

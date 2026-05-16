@@ -84,5 +84,12 @@ void loop() {
   // EXECUTE CONTROL 
   if (automatic_mode) {automatic_control();} // AUTOMATIC MODE CONTROL
   if (manual_mode) {manual_control();}  // MANUAL MODE CONTROL
+
+  delay(1000);
+
+  Serial.println("manual");
+  delay(1000);
+  Serial.println("automatic");
+
   
 }

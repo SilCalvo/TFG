@@ -1,4 +1,5 @@
 #include "robot_pkg/servo_bridge_node.hpp"
+#include "robot_pkg/servo_bridge_node.hpp" // Ajusta el nombre de tu paquete si es necesario
 
 #include <chrono>
 #include <string>
@@ -9,15 +10,18 @@
 #include <vector> 
 #include <cstdio> 
 
+// Librerías añadidas para quaterniones a Euler
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2/LinearMath/Matrix3x3.h>
+
 using std::placeholders::_1;
 using namespace std::chrono_literals;
 
 ServoBridgeNode::ServoBridgeNode()
 : Node("servo_bridge_node"), serial_port_(-1)
 {
-  const char * port_name = "/dev/ttyACM0"; // PUERTO ARDUINO
+  const char * port_name = "/dev/ttyACM0"; 
   
-  // NON-BLOCK 
   serial_port_ = open(port_name, O_RDWR | O_NOCTTY | O_NDELAY);
   
   if (serial_port_ < 0) {
@@ -36,7 +40,6 @@ ServoBridgeNode::ServoBridgeNode()
     std::bind(&ServoBridgeNode::robot_cmd_callback, this, _1)
   );
   
-  // Robot servos state publisher
   rclcpp::QoS qos_profile(1); 
   qos_profile.transient_local();  
   qos_profile.reliable();        
@@ -45,8 +48,14 @@ ServoBridgeNode::ServoBridgeNode()
     qos_profile
   );
 
+  // Inicialización de ambos clientes
+  add_wall_client_ = this->create_client<robot_interfaces::srv::AddObstacle>("/add_wall");
+  dk_client_ = this->create_client<robot_interfaces::srv::SolveDK>("/solve_dk"); // AÑADIDO
+
   timer_ = this->create_wall_timer(
     20ms, std::bind(&ServoBridgeNode::timer_callback, this));
+
+  RCLCPP_INFO(this->get_logger(), "Servo bridge working");
 }
 
 ServoBridgeNode::~ServoBridgeNode() {
@@ -57,7 +66,6 @@ ServoBridgeNode::~ServoBridgeNode() {
 void ServoBridgeNode::robot_cmd_callback(const std_msgs::msg::Int16MultiArray::SharedPtr msg)
 {
   if (serial_port_ < 0) return;
-
   if (robot_mode == 0) return;
 
   if (msg->data.size() != 5) {
@@ -79,7 +87,6 @@ void ServoBridgeNode::timer_callback()
 {
   if (serial_port_ < 0) return;
 
-  // Read buffer
   char buffer[256];
   int n = read(serial_port_, buffer, sizeof(buffer) - 1);
 
@@ -90,37 +97,135 @@ void ServoBridgeNode::timer_callback()
     size_t pos = read_buffer_.find('\n');
     while (pos != std::string::npos) {
       std::string line = read_buffer_.substr(0, pos);
-      read_buffer_.erase(0, pos + 1); // Borrar lo procesado
+      read_buffer_.erase(0, pos + 1); 
       if (!line.empty() && line.back() == '\r') {
         line.pop_back();
       }
 
-      if (line.find("manual") != std::string::npos) {
+      if (line.find("MANUAL") != std::string::npos) {
         RCLCPP_INFO(this->get_logger(), "Arduino: MANUAL MODE ACTIVATED");
         robot_mode = 0;
       }
-      else if (line.find("automatic") != std::string::npos) {
+      else if (line.find("AUTO") != std::string::npos) {
         RCLCPP_INFO(this->get_logger(), "Arduino: AUTOMATIC MODE ACTIVATED");
         robot_mode = 1;
-        
       }
       else if (robot_mode == 0){
         int v[5];
-        int encontrados = sscanf(line.c_str(), "%d,%d,%d,%d,%d", &v[0], &v[1], &v[2], &v[3], &v[4]);
+        
+        int actual_angles = sscanf(line.c_str(), "%d,%d,%d,%d,%d", &v[0], &v[1], &v[2], &v[3], &v[4]);
+        int wall_angles = sscanf(line.c_str(), "WALL(%d,%d,%d,%d,%d)", &v[0], &v[1], &v[2], &v[3], &v[4]);
 
-        if (encontrados == 5) {
+        if (actual_angles == 5) {
           std_msgs::msg::Int16MultiArray msg_out;
           msg_out.data.assign(v, v + 5); 
           publisher_->publish(msg_out);
-        }
-      }else {
-        RCLCPP_INFO(this->get_logger(), "Arduino: UNKNOWN COMMAND");
 
+        } else if (wall_angles == 5) {
+          RCLCPP_INFO(this->get_logger(), "Wall point received");
+          add_wall_point(v); // Esta llamada ya no bloquea el código
+          
+          std_msgs::msg::Int16MultiArray msg_out;
+          msg_out.data.assign(v, v + 5); 
+          publisher_->publish(msg_out);
+
+        } else {
+          RCLCPP_WARN(this->get_logger(), "Formato de datos no reconocido en modo MANUAL: %s", line.c_str());
+        }
+      }
+      else {
+        RCLCPP_INFO(this->get_logger(), "Arduino: UNKNOWN COMMAND");
       } 
 
-      // Buscar si hay otra línea en el buffer ///////////////////////////////////////////////
-      pos = read_buffer_.find('\n');}
+      pos = read_buffer_.find('\n');
+    }
   }
+}
+
+// --- LÓGICA ASÍNCRONA PARA AÑADIR PARED ---
+void ServoBridgeNode::add_wall_point(int v[5]) {
+  
+  std::vector<double> angles(v, v + 5);
+
+  // 1. Configurar la petición de Cinemática (SolveDK)
+  Tool_Config default_cfg;
+  default_cfg.name = "default";
+  default_cfg.type = 1; 
+  default_cfg.dimensions = {0.01, 0.01}; 
+  
+  geometry_msgs::msg::Pose default_pose; // Pose vacía en ceros (CORREGIDO)
+  default_cfg.offset = default_pose;
+
+  auto request_dk = std::make_shared<robot_interfaces::srv::SolveDK::Request>();
+  request_dk->joint_angles = angles;
+  request_dk->tcp_offset = default_cfg.offset;
+  request_dk->tool_dimensions = default_cfg.dimensions;
+
+  if (!dk_client_->wait_for_service(std::chrono::seconds(2))) {
+    RCLCPP_ERROR(this->get_logger(), "El servicio DK no responde. Abortando pared.");
+    return;
+  }
+
+  // 2. Enviar petición asíncrona a DK
+  dk_client_->async_send_request(request_dk, 
+    [this](rclcpp::Client<robot_interfaces::srv::SolveDK>::SharedFuture future_dk) {
+      
+      // Dentro de este callback, .get() es totalmente seguro porque ya resolvió
+      auto response_dk = future_dk.get();
+
+      if (response_dk && response_dk->success) {
+        
+        // Extraer RPY usando TF2
+        double roll, pitch, yaw;
+        tf2::Quaternion q(
+          response_dk->target_pose.orientation.x,
+          response_dk->target_pose.orientation.y,
+          response_dk->target_pose.orientation.z,
+          response_dk->target_pose.orientation.w
+        );
+        tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
+
+        // 3. Crear petición para AddObstacle
+        auto request_wall = std::make_shared<robot_interfaces::srv::AddObstacle::Request>();
+        request_wall->name = "pared_arduino_" + std::to_string(wall_count_);
+        request_wall->x = response_dk->target_pose.position.x;
+        request_wall->y = response_dk->target_pose.position.y;
+        request_wall->z = response_dk->target_pose.position.z;
+        request_wall->roll = roll;
+        request_wall->pitch = pitch;
+        request_wall->yaw = yaw;
+        
+        // Dimensiones: 1m x 1m x 5cm
+        request_wall->width = 1.0;  
+        request_wall->height = 1.0; 
+        request_wall->depth = 0.05; 
+
+        if (!add_wall_client_->wait_for_service(std::chrono::seconds(2))) {
+          RCLCPP_ERROR(this->get_logger(), "El servicio /add_wall no responde.");
+          return;
+        }
+
+        // 4. Enviar petición asíncrona a AddObstacle
+        add_wall_client_->async_send_request(request_wall, 
+          [this](rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedFuture future_wall) {
+            
+            auto response = future_wall.get();
+            
+            if (response && response->success) {
+              RCLCPP_INFO(this->get_logger(), "Pared %d añadida rotada correctamente.", wall_count_);
+              wall_count_++; 
+            } else {
+              RCLCPP_ERROR(this->get_logger(), "Fallo al añadir la pared en el simulador.");
+            }
+
+          }
+        );
+
+      } else {
+        RCLCPP_ERROR(this->get_logger(), "Fallo en la respuesta del servicio DK.");
+      }
+    }
+  );
 }
 
 // --- SERIAL CONFIGURATION  ---
