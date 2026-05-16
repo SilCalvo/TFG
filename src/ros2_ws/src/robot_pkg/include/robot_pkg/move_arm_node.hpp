@@ -54,6 +54,7 @@ private:
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr subscriber_;
 
   rclcpp::Service<robot_interfaces::srv::MoveJoint>::SharedPtr control_joint_service_;
+  rclcpp::Service<robot_interfaces::srv::MoveJoint>::SharedPtr go_home_service_;
   rclcpp::Client<robot_interfaces::srv::SolveIK>::SharedPtr ik_client_;
   rclcpp::Client<robot_interfaces::srv::SolveDK>::SharedPtr dk_client_;
   rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedPtr add_wall_client_;
@@ -63,6 +64,10 @@ private:
   void handle_control_joint(
     const std::shared_ptr<robot_interfaces::srv::MoveJoint::Request> request,
     std::shared_ptr<robot_interfaces::srv::MoveJoint::Response> response);
+  void handle_go_home(
+    const std::shared_ptr<robot_interfaces::srv::MoveJoint::Request> request,
+    std::shared_ptr<robot_interfaces::srv::MoveJoint::Response> response);
+
 
   std::vector<double> current_angles_ = std::vector<double>(5, 0.0);
   Point calculate_dk(const std::vector<double>& angles);

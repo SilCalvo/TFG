@@ -1,5 +1,4 @@
 #include "robot_pkg/servo_bridge_node.hpp"
-#include "robot_pkg/servo_bridge_node.hpp" // Ajusta el nombre de tu paquete si es necesario
 
 #include <chrono>
 #include <string>
@@ -10,7 +9,6 @@
 #include <vector> 
 #include <cstdio> 
 
-// Librerías añadidas para quaterniones a Euler
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 

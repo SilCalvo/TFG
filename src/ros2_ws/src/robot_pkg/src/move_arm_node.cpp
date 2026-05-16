@@ -28,6 +28,11 @@ MoveArmNode::MoveArmNode()
     std::bind(&MoveArmNode::handle_control_joint, this, std::placeholders::_1, std::placeholders::_2)
   );
 
+  go_home_service_ = this->create_service<robot_interfaces::srv::MoveJoint>(
+    "go_home", 
+    std::bind(&MoveArmNode::handle_go_home, this, std::placeholders::_1, std::placeholders::_2)
+  );
+
   geometry_msgs::msg::Pose default_pose;
   default_pose.position.x = 0.0;
   default_pose.position.y = 0.0;
@@ -128,6 +133,67 @@ void MoveArmNode::handle_control_joint(
   response->message = "Comando mixto (Postura actual + Motor modificado) enviado a robot_cmd.";
 }
 
+void MoveArmNode::handle_go_home(
+  const std::shared_ptr<robot_interfaces::srv::MoveJoint::Request> request,
+  std::shared_ptr<robot_interfaces::srv::MoveJoint::Response> response) 
+{
+  (void)request; // Evitar warning de parámetro no usado
+
+  if (current_angles_.empty()) {
+    response->success = false;
+    response->message = "Error: current_angles_ está vacío. No se puede ir a home.";
+    return;
+  }
+
+  // 1. Definir los ángulos objetivo en RADIANES (Home = todos los motores a 0.0)
+  std::vector<double> target_angles(current_angles_.size(), 0.0);
+
+  // 2. Calcular el salto máximo para determinar los pasos necesarios
+  double max_step_rad = 10.0 * PI / 180.0; // 10 grados máximo por paso
+  double max_diff = 0.0;
+  
+  for (size_t i = 0; i < current_angles_.size(); ++i) {
+    double diff = std::abs(target_angles[i] - current_angles_[i]);
+    if (diff > max_diff) max_diff = diff;
+  }
+
+  int steps = std::max(1, static_cast<int>(std::ceil(max_diff / max_step_rad)));
+  RCLCPP_INFO(this->get_logger(), "Moviendo a HOME en %d pasos suaves...", steps);
+
+  // 3. Bucle secuencial que calcula, convierte y publica paso a paso
+  for (int step = 1; step <= steps; ++step) {
+    double percent = static_cast<double>(step) / steps;
+    
+    // Generar el mensaje MultiArray que ROS 2 y tu Arduino esperan (en grados enteros)
+    std_msgs::msg::Int16MultiArray cmd_msg;
+
+    for (size_t i = 0; i < current_angles_.size(); ++i) {
+      // Interpolación en radianes
+      double ang_rad = current_angles_[i] + (target_angles[i] - current_angles_[i]) * percent;
+      
+      // Conversión inmediata a grados enteros para el mensaje de Arduino
+      int16_t ang_deg = static_cast<int16_t>(std::round(ang_rad * 180.0 / PI));
+      cmd_msg.data.push_back(ang_deg);
+    }
+
+    // Publicar el paso actual (ahora sí es el tipo de mensaje correcto)
+    publisher_->publish(cmd_msg);
+
+    // PAUSA CRÍTICA: Esperar 80 milisegundos para que los servos tengan tiempo de moverse
+    std::this_thread::sleep_for(std::chrono::milliseconds(80));
+  }
+
+  // Imprimir logs informativos al terminar
+  RCLCPP_INFO(this->get_logger(), "Ángulos finales de destino:");
+  for (size_t i = 0; i < target_angles.size(); ++i) {
+    RCLCPP_INFO(this->get_logger(), "  Joint %zu: %f rad (0 deg)", i, target_angles[i]);
+  }
+
+  RCLCPP_INFO(this->get_logger(), "¡El robot ha llegado a HOME de forma segura!");
+  
+  response->success = true;
+  response->message = "El robot se ha movido a HOME exitosamente paso a paso.";
+}
 // Cinemática directa -------------------
 MoveArmNode::Point MoveArmNode::calculate_dk(const std::vector<double>& angles) {
   /*Point p = {0.0, 0.0, 0.0};
