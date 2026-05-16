@@ -123,6 +123,7 @@ void TicTacToeNode::game_loop() {
 
 void TicTacToeNode::handle_put_piece(const std::shared_ptr<robot_interfaces::srv::PutPiece::Request> request,
                                      std::shared_ptr<robot_interfaces::srv::PutPiece::Response> response) {
+    RCLCPP_INFO(this->get_logger(), "Put piece service");
     int f = request->fila, c = request->columna;
     if (f<0 || f>2 || c<0 || c>2 || tablero_[f][c] != '-' || estado_actual_ != ESPERANDO_HUMANO) {
         response->success = false; response->message = "Movimiento invalido."; return;
@@ -142,6 +143,7 @@ void TicTacToeNode::handle_put_piece(const std::shared_ptr<robot_interfaces::srv
         spawn_piece->piece_type = "ficha_o";
         spawn_piece->x = pm.x; spawn_piece->y = pm.y; spawn_piece->z = pm.z + 0.002;
         spawn_client_->async_send_request(spawn_piece);
+        RCLCPP_INFO(this->get_logger(), "Piece: x: %f, y: %f, z: %f", pm.x, pm.y, pm.z + 0.002);
 
         response->success = true;
     } else { 
@@ -234,6 +236,7 @@ void TicTacToeNode::ejecutar_turno_robot() {
     
     Point3D pm = get_pixel_xyz_in_robot_frame(cp.x, cp.y, "camera_camara_tablero_optical_frame", "base");
 
+    /*
     // Lógica con comprobación de errores. Si alguno falla, reinicia todo de cero.
     RCLCPP_INFO(this->get_logger(), "Moviendo brazo a aproximación...");
     if (!send_move_action(pm.x, pm.y, pm.z + 0.1, "moveJ")) {
@@ -249,6 +252,7 @@ void TicTacToeNode::ejecutar_turno_robot() {
         estado_actual_ = INICIALIZANDO;
         return;
     }
+    */
 
     auto spawn_piece = std::make_shared<robot_interfaces::srv::SpawnObject::Request>();
     spawn_piece->name = "ficha_x_" + std::to_string(turnos_jugados_);
@@ -257,12 +261,14 @@ void TicTacToeNode::ejecutar_turno_robot() {
     spawn_piece->x = pm.x; spawn_piece->y = pm.y; spawn_piece->z = pm.z + 0.002;
     spawn_client_->async_send_request(spawn_piece);
 
+    /*
     RCLCPP_INFO(this->get_logger(), "Retirando brazo...");
     if (!send_move_action(pm.x, pm.y, pm.z + 0.1, "moveL")) {
         RCLCPP_ERROR(this->get_logger(), "Error físico al retirar el brazo. Abortando turno.");
         estado_actual_ = INICIALIZANDO;
         return;
     }
+    */
 
     imprimir_tablero_debug();
 

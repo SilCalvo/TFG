@@ -137,30 +137,44 @@ class DigitalTwinVisualizer(Node):
         return response
 
     # --- SISTEMA DE CÁMARAS RGB-D ---
+    
+
     def add_camera_callback(self, request, response):
         try:
-            fov, near, far = 60.0, 0.01, 10.0
-            aspect = float(request.width) / float(request.height)
+            fov = 60.0
+            near = 0.01
+            far = 10.0
 
             view_matrix = p.computeViewMatrix(
                 cameraEyePosition=[request.x, request.y, request.z],
                 cameraTargetPosition=[request.target_x, request.target_y, request.target_z],
                 cameraUpVector=[0, 0, 1]
             )
-            proj_matrix = p.computeProjectionMatrixFOV(fov, aspect, near, far)
+            proj_matrix = p.computeProjectionMatrixFOV(
+                fov=fov, 
+                aspect=float(request.width)/float(request.height), 
+                nearVal=near, 
+                farVal=far
+            )
 
-            # Intrínsecas
-            f_y = (request.height / 2.0) / math.tan(math.radians(fov) / 2.0)
-            f_x = f_y
-            c_x, c_y = request.width / 2.0, request.height / 2.0
+            # CÁLCULO DE INTRÍNSECAS (Modelo Pinhole)
+            fov_rad = math.radians(fov)
+            f_y = (request.height / 2.0) / math.tan(fov_rad / 2.0)
+            f_x = f_y  # Asumimos píxeles cuadrados
+            c_x = request.width / 2.0
+            c_y = request.height / 2.0
 
             self.cameras_config[request.name] = {
-                'view': view_matrix, 'proj': proj_matrix,
-                'width': request.width, 'height': request.height,
-                'near': near, 'far': far,
+                'view': view_matrix,
+                'proj': proj_matrix,
+                'width': request.width,
+                'height': request.height,
+                'near': near,
+                'far': far,
                 'fx': f_x, 'fy': f_y, 'cx': c_x, 'cy': c_y
             }
 
+            # Creamos los 3 publicadores estándar de una cámara ROS 2
             if request.name not in self.camera_publishers:
                 self.camera_publishers[request.name] = {
                     'rgb': self.create_publisher(Image, f'/camera/{request.name}/color/image_raw', 10),
@@ -169,51 +183,156 @@ class DigitalTwinVisualizer(Node):
                 }
 
             if self.camera_timer is None:
+                self.get_logger().info("Detectada primera cámara. Activando sistema de visión RGB-D (10Hz)...")
                 self.camera_timer = self.create_timer(0.1, self.publish_camera_images)
 
+            self.get_logger().info(f"Cámara RGB-D '{request.name}' configurada correctamente.")
+            
+            pos = np.array([request.x, request.y, request.z])
+            target = np.array([request.target_x, request.target_y, request.target_z])
+            forward = (target - pos)
+            forward = forward / np.linalg.norm(forward)
+            
+            world_up = np.array([0.0, 0.0, 1.0])
+            right = np.cross(forward, world_up)
+            right = right / np.linalg.norm(right)
+            down = np.cross(forward, right)
+            
+            rot_matrix = np.array([
+                [right[0], down[0], forward[0]],
+                [right[1], down[1], forward[1]],
+                [right[2], down[2], forward[2]]
+            ])
+            
+            tr = np.trace(rot_matrix)
+            if tr > 0:
+                S = np.sqrt(tr + 1.0) * 2
+                qw = 0.25 * S
+                qx = (rot_matrix[2, 1] - rot_matrix[1, 2]) / S
+                qy = (rot_matrix[0, 2] - rot_matrix[2, 0]) / S
+                qz = (rot_matrix[1, 0] - rot_matrix[0, 1]) / S
+            else:
+                qx, qy, qz, qw = 0.0, 0.707, 0.0, 0.707 
+
+            # En vez de publicar, lo GUARDAMOS en la configuración de esta cámara
+            self.cameras_config[request.name] = {
+                'view': view_matrix,
+                'proj': proj_matrix,
+                'width': request.width,
+                'height': request.height,
+                'near': near,
+                'far': far,
+                'fx': f_x, 'fy': f_y, 'cx': c_x, 'cy': c_y,
+                'pos': [request.x, request.y, request.z], # <-- Guardamos Posición
+                'quat': [qx, qy, qz, qw]                  # <-- Guardamos Rotación
+            }
             response.success = True
+
         except Exception as e:
-            self.get_logger().error(f"Error Add Camera: {e}")
+            self.get_logger().error(f"Error al añadir cámara: {str(e)}")
             response.success = False
         return response
-
+    
     def publish_camera_images(self):
+        if not self.cameras_config:
+            self.get_logger().info("No hay cámaras. Apagando sistema de visión.")
+            self.destroy_timer(self.camera_timer)
+            self.camera_timer = None
+            return
+
         for name, config in self.cameras_config.items():
-            _, _, rgb, depth, _ = p.getCameraImage(
-                config['width'], config['height'],
-                config['view'], config['proj'],
-                renderer=p.ER_BULLET_HARDWARE_OPENGL
-            )
+            try:
+                # Captura de imagen completa (Color + Profundidad)
+                w, h, rgb_img, depth_buffer, _ = p.getCameraImage(
+                    width=config['width'],
+                    height=config['height'],
+                    viewMatrix=config['view'],
+                    projectionMatrix=config['proj'],
+                    renderer=p.ER_BULLET_HARDWARE_OPENGL
+                )
 
-            stamp = self.get_clock().now().to_msg()
-            frame_id = f"camera_{name}_optical_frame"
+                stamp = self.get_clock().now().to_msg()
+                frame_id = f"camera_{name}_link"
 
-            # Color
-            msg_rgb = Image()
-            msg_rgb.header.stamp, msg_rgb.header.frame_id = stamp, frame_id
-            msg_rgb.height, msg_rgb.width = config['height'], config['width']
-            msg_rgb.encoding, msg_rgb.step = "rgba8", config['width'] * 4
-            msg_rgb.data = np.array(rgb, dtype=np.uint8).tobytes()
-            self.camera_publishers[name]['rgb'].publish(msg_rgb)
+                msg_rgb = Image()
+                msg_rgb.header.stamp = stamp
+                msg_rgb.header.frame_id = frame_id
+                msg_rgb.height = h
+                msg_rgb.width = w
+                msg_rgb.encoding = "rgba8"
+                msg_rgb.step = w * 4
+                msg_rgb.data = np.array(rgb_img, dtype=np.uint8).tobytes()
+                self.camera_publishers[name]['rgb'].publish(msg_rgb)
 
-            # Depth
-            depth_np = np.array(depth, dtype=np.float32)
-            far, near = config['far'], config['near']
-            depth_real = (far * near) / (far - (far - near) * depth_np)
-            msg_depth = Image()
-            msg_depth.header.stamp, msg_depth.header.frame_id = stamp, frame_id
-            msg_depth.height, msg_depth.width = config['height'], config['width']
-            msg_depth.encoding, msg_depth.step = "32FC1", config['width'] * 4
-            msg_depth.data = depth_real.tobytes()
-            self.camera_publishers[name]['depth'].publish(msg_depth)
+                depth_np = np.array(depth_buffer, dtype=np.float32)
+                far = config['far']
+                near = config['near']
+                depth_real_meters = (far * near) / (far - (far - near) * depth_np)
 
-            # Info
-            msg_info = CameraInfo()
-            msg_info.header.stamp, msg_info.header.frame_id = stamp, frame_id
-            msg_info.height, msg_info.width = config['height'], config['width']
-            msg_info.k = [config['fx'], 0.0, config['cx'], 0.0, config['fy'], config['cy'], 0.0, 0.0, 1.0]
-            msg_info.p = [config['fx'], 0.0, config['cx'], 0.0, 0.0, config['fy'], config['cy'], 0.0, 0.0, 0.0, 1.0, 0.0]
-            self.camera_publishers[name]['info'].publish(msg_info)
+                msg_depth = Image()
+                msg_depth.header.stamp = stamp
+                msg_depth.header.frame_id = frame_id
+                msg_depth.height = h
+                msg_depth.width = w
+                msg_depth.encoding = "32FC1" # 32-bit Float, 1 Canal (Metros)
+                msg_depth.is_bigendian = False
+                msg_depth.step = w * 4
+                msg_depth.data = depth_real_meters.tobytes()
+                self.camera_publishers[name]['depth'].publish(msg_depth)
+
+                msg_info = CameraInfo()
+                msg_info.header.stamp = stamp
+                msg_info.header.frame_id = frame_id
+                msg_info.height = h
+                msg_info.width = w
+                msg_info.distortion_model = "plumb_bob"
+                msg_info.d = [0.0, 0.0, 0.0, 0.0, 0.0] # Lente perfecta sin distorsión
+                
+                # K = [fx, 0, cx, 0, fy, cy, 0, 0, 1]
+                msg_info.k = [config['fx'], 0.0, config['cx'], 
+                            0.0, config['fy'], config['cy'], 
+                            0.0, 0.0, 1.0]
+                
+                # P = Matriz de proyección rectificada
+                msg_info.p = [config['fx'], 0.0, config['cx'], 0.0,
+                            0.0, config['fy'], config['cy'], 0.0,
+                            0.0, 0.0, 1.0, 0.0]
+                
+                self.camera_publishers[name]['info'].publish(msg_info)
+                
+                # --- 1. PUBLICACIÓN DEL LINK FRAME (Z arriba, X frente) ---
+                t_link = TransformStamped()
+                t_link.header.stamp = stamp
+                t_link.header.frame_id = 'base' # Cambia a 'base_link' si prefieres
+                t_link.child_frame_id = frame_id # camera_camara_tablero_link
+                
+                t_link.transform.translation.x = config['pos'][0]
+                t_link.transform.translation.y = config['pos'][1]
+                t_link.transform.translation.z = config['pos'][2]
+                t_link.transform.rotation.x = config['quat'][0]
+                t_link.transform.rotation.y = config['quat'][1]
+                t_link.transform.rotation.z = config['quat'][2]
+                t_link.transform.rotation.w = config['quat'][3]
+                
+                # --- 2. PUBLICACIÓN DEL OPTICAL FRAME (Z frente, Y abajo) ---
+                t_opt = TransformStamped()
+                t_opt.header.stamp = stamp
+                t_opt.header.frame_id = frame_id # El padre es el Link Frame
+                t_opt.child_frame_id = f"camera_{name}_optical_frame"
+                
+                # Rotación mágica para pasar de convención de mundo a convención de cámara (OpenCV)
+                # Rota -90º en X y 90º en Z
+                t_opt.transform.rotation.x = 0.0
+                t_opt.transform.rotation.y = 0.7071
+                t_opt.transform.rotation.z = 0.0
+                t_opt.transform.rotation.w = 0.7071
+                # (La traslación es 0, ya que coinciden en el mismo punto físico)
+
+                # Publicamos ambas transformaciones de forma dinámica
+                self.tf_broadcaster.sendTransform([t_link, t_opt])
+
+            except Exception as e:
+                self.get_logger().error(f"Error en streaming RGB-D de {name}: {str(e)}")
 
     def remove_camera_callback(self, request, response):
         if request.name in self.cameras_config:

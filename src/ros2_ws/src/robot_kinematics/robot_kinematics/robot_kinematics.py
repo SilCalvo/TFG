@@ -9,7 +9,7 @@ from tf2_ros import TransformBroadcaster
 from geometry_msgs.msg import TransformStamped
 from tf2_ros.static_transform_broadcaster import StaticTransformBroadcaster
 from sensor_msgs.msg import Image,CameraInfo
-from robot_interfaces.srv import SolveIK, AddObstacle, RemoveObstacle, SolveDK, SpawnObject,AddCamera
+from robot_interfaces.srv import SolveIK, AddObstacle, RemoveObstacle, SolveDK
 from ament_index_python.packages import get_package_share_directory
 from ament_index_python.packages import PackageNotFoundError
 from std_msgs.msg import String
