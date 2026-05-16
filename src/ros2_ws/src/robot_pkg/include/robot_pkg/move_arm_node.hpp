@@ -15,6 +15,7 @@
 #include "robot_interfaces/srv/add_obstacle.hpp"
 #include "robot_interfaces/srv/remove_obstacle.hpp"
 #include "robot_interfaces/srv/manage_tool.hpp"
+#include "robot_interfaces/srv/move_joint.hpp"
 #include "std_msgs/msg/int16_multi_array.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 
@@ -52,12 +53,16 @@ private:
   rclcpp::Publisher<std_msgs::msg::Int16MultiArray>::SharedPtr publisher_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr subscriber_;
 
+  rclcpp::Service<robot_interfaces::srv::MoveJoint>::SharedPtr control_joint_service_;
   rclcpp::Client<robot_interfaces::srv::SolveIK>::SharedPtr ik_client_;
   rclcpp::Client<robot_interfaces::srv::SolveDK>::SharedPtr dk_client_;
   rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedPtr add_wall_client_;
   rclcpp::Client<robot_interfaces::srv::RemoveObstacle>::SharedPtr remove_wall_client_;
 
   void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
+  void handle_control_joint(
+    const std::shared_ptr<robot_interfaces::srv::MoveJoint::Request> request,
+    std::shared_ptr<robot_interfaces::srv::MoveJoint::Response> response);
 
   std::vector<double> current_angles_ = std::vector<double>(5, 0.0);
   Point calculate_dk(const std::vector<double>& angles);

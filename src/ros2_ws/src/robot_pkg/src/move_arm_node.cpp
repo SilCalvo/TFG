@@ -22,6 +22,11 @@ MoveArmNode::MoveArmNode()
     std::bind(&MoveArmNode::handle_cancel_moveL, this, std::placeholders::_1),
     std::bind(&MoveArmNode::handle_accepted_moveL, this, std::placeholders::_1)
   );
+  
+  control_joint_service_ = this->create_service<robot_interfaces::srv::MoveJoint>(
+    "control_joint", 
+    std::bind(&MoveArmNode::handle_control_joint, this, std::placeholders::_1, std::placeholders::_2)
+  );
 
   geometry_msgs::msg::Pose default_pose;
   default_pose.position.x = 0.0;
@@ -76,8 +81,51 @@ void MoveArmNode::joint_state_callback(const sensor_msgs::msg::JointState::Share
 {
     size_t n = std::min(current_angles_.size(), msg->position.size());
     for (size_t i = 0; i < n; ++i) {
-        current_angles_[i] = msg->position[i];  // actualizar tu vector miembro
+        current_angles_[i] = msg->position[i];  
     }
+}
+
+void MoveArmNode::handle_control_joint(
+  const std::shared_ptr<robot_interfaces::srv::MoveJoint::Request> request,
+  std::shared_ptr<robot_interfaces::srv::MoveJoint::Response> response) 
+{
+  // 1. Validar que tengamos la postura actual del robot
+  if (current_angles_.empty()) {
+    response->success = false;
+    response->message = "Error: El vector current_angles_ está vacío. No se puede conocer la posición actual.";
+    RCLCPP_WARN(this->get_logger(), "No se puede enviar el comando porque current_angles_ no tiene datos.");
+    return;
+  }
+
+  // 2. Validar que el índice solicitado sea válido para el tamaño actual del robot
+  if (request->index < 0 || static_cast<size_t>(request->index) >= current_angles_.size()) {
+    response->success = false;
+    response->message = "Error: Índice fuera de rango.";
+    return;
+  }
+
+  // 3. Crear el mensaje MultiArray para Arduino transformando TODO a grados
+  std_msgs::msg::Int16MultiArray cmd_msg;
+  
+  for (size_t i = 0; i < current_angles_.size(); ++i) {
+    if (i == static_cast<size_t>(request->index)) {
+      // Si es el motor que ha pedido el usuario, metemos DIRECTAMENTE los grados del request
+      cmd_msg.data.push_back(static_cast<int16_t>(std::round(request->degrees)));
+    } else {
+      // Para los demás motores, convertimos sus radianes actuales a grados
+      int16_t angle_deg = static_cast<int16_t>(std::round(current_angles_[i] * 180.0 / PI));
+      cmd_msg.data.push_back(angle_deg);
+    }
+  }
+
+  // 4. Publicar inmediatamente el array completo en grados a robot_cmd
+  publisher_->publish(cmd_msg);
+
+  RCLCPP_INFO(this->get_logger(), "Publicado en robot_cmd: Motor [%d] a %.2f grados (el resto mantiene su posición actual).", 
+              request->index, request->degrees);
+  
+  response->success = true;
+  response->message = "Comando mixto (Postura actual + Motor modificado) enviado a robot_cmd.";
 }
 
 // Cinemática directa -------------------

@@ -19,6 +19,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/SpawnObject.srv"
   "srv/AddCamera.srv"
   "srv/PutPiece.srv"
+  "srv/MoveJoint.srv"
   DEPENDENCIES geometry_msgs
 )
 
