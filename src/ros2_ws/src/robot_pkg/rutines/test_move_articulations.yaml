@@ -1,0 +1,13 @@
+rutina:
+
+  - tipo: "control_joint"
+    index: 2
+    degrees: 45.0
+
+  - tipo: "control_joint"
+    index: 1
+    degrees: 45.0
+
+  - tipo: "control_joint"
+    index: 4
+    degrees: 70.0

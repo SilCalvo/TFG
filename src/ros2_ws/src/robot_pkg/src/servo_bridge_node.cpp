@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <vector> 
 #include <cstdio> 
+#include <sstream>
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>
@@ -29,6 +30,9 @@ ServoBridgeNode::ServoBridgeNode()
     configure_serial(serial_port_);
     RCLCPP_INFO(this->get_logger(), "Arduino conectado en %s", port_name);
   }
+
+  this->declare_parameter("num_joints", 5);
+  num_joints_ = this->get_parameter("num_joints").as_int();
 
   rclcpp::QoS qos_sub(1);
   qos_sub.transient_local();
@@ -66,8 +70,8 @@ void ServoBridgeNode::robot_cmd_callback(const std_msgs::msg::Int16MultiArray::S
   if (serial_port_ < 0) return;
   if (robot_mode == 0) return;
 
-  if (msg->data.size() != 5) {
-    RCLCPP_WARN(this->get_logger(), "Ignorando comando: Se esperaban 5 angulos");
+  if (msg->data.size() != num_joints_) { 
+    RCLCPP_WARN(this->get_logger(), "Ignorando comando: Se esperaban %zu angulos", num_joints_);
     return; 
   }
 
@@ -108,27 +112,45 @@ void ServoBridgeNode::timer_callback()
         RCLCPP_INFO(this->get_logger(), "Arduino: AUTOMATIC MODE ACTIVATED");
         robot_mode = 1;
       }
-      else if (robot_mode == 0){
-        int v[5];
+      else if (robot_mode == 0) {
         
-        int actual_angles = sscanf(line.c_str(), "%d,%d,%d,%d,%d", &v[0], &v[1], &v[2], &v[3], &v[4]);
-        int wall_angles = sscanf(line.c_str(), "WALL(%d,%d,%d,%d,%d)", &v[0], &v[1], &v[2], &v[3], &v[4]);
+        bool is_wall = false;
+        std::string data_str = line;
 
-        if (actual_angles == 5) {
-          std_msgs::msg::Int16MultiArray msg_out;
-          msg_out.data.assign(v, v + 5); 
-          publisher_->publish(msg_out);
+        // Detectar si es un punto de pared y extraer solo los números
+        if (line.find("WALL(") == 0) {
+          is_wall = true;
+          // Quita "WALL(" y el ")" del final
+          data_str = line.substr(5, line.length() - 6); 
+        }
 
-        } else if (wall_angles == 5) {
-          RCLCPP_INFO(this->get_logger(), "Wall point received");
-          add_wall_point(v); // Esta llamada ya no bloquea el código
+        // Dividir el string por las comas y guardarlo en un vector dinámico
+        std::vector<int> v;
+        std::stringstream ss(data_str);
+        std::string token;
+        
+        while (std::getline(ss, token, ',')) {
+          try {
+            v.push_back(std::stoi(token)); // Convertir texto a número
+          } catch (...) {
+            break; // Si hay basura en el serial, rompemos el bucle
+          }
+        }
+
+        // Si la cantidad de números leídos coincide con num_joints_
+        if (v.size() == num_joints_) {
+          
+          if (is_wall) {
+            RCLCPP_INFO(this->get_logger(), "Wall point received");
+            add_wall_point(v); 
+          }
           
           std_msgs::msg::Int16MultiArray msg_out;
-          msg_out.data.assign(v, v + 5); 
+          msg_out.data.assign(v.begin(), v.end()); // Asignar el vector dinámico
           publisher_->publish(msg_out);
 
         } else {
-          RCLCPP_WARN(this->get_logger(), "Formato de datos no reconocido en modo MANUAL: %s", line.c_str());
+          RCLCPP_WARN(this->get_logger(), "Formato incorrecto o cantidad de joints no coincide: %s", line.c_str());
         }
       }
       else {
@@ -141,9 +163,10 @@ void ServoBridgeNode::timer_callback()
 }
 
 // --- LÓGICA ASÍNCRONA PARA AÑADIR PARED ---
-void ServoBridgeNode::add_wall_point(int v[5]) {
+void ServoBridgeNode::add_wall_point(const std::vector<int>& v) { // FIRMA ACTUALIZADA
   
-  std::vector<double> angles(v, v + 5);
+  // Pasar de vector<int> a vector<double> automáticamente
+  std::vector<double> angles(v.begin(), v.end());
 
   // 1. Configurar la petición de Cinemática (SolveDK)
   Tool_Config default_cfg;

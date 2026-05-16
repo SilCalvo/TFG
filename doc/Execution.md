@@ -53,6 +53,43 @@ ros2 action send_goal /moveL nav2_msgs/action/NavigateToPose "{pose: {header: {f
 ros2 run robot_pkg rutine_node
 ```
 
+
+### Mover una articulacion
+
+Sirve para mover una articulación a un grado dado, como por ejemplo cerrar la pinza que sea x grados
+
+**COMANDOS**
+
+```bash
+ros2 service call /control_joint robot_interfaces/srv/MoveJoint "{index: 2, degrees: 45.0}"
+
+```
+
+**RUTINA**
+
+```bash
+ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_move_articulations.yaml"
+```
+
+
+### Mover robot a posicion segura HOME
+
+Coloca al robot en posision segura home 
+
+**COMANDOS**
+
+```bash
+ros2 service call /go_home robot_interfaces/srv/MoveJoint "{index: 0, degrees: 0.0}"
+
+```
+
+**RUTINA**
+
+```bash
+ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_go_home.yaml"
+```
+
+
 ### Probar TCP nuevo
 
 **COMANDOS**
@@ -96,15 +133,19 @@ ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {f
 ```
 
 ```bash
-ros2 service call /add_wall robot_interfaces/srv/AddObstacle "{                             
+ros2 service call /add_wall robot_interfaces/srv/AddObstacle "{                                                                                                                                        
   name: 'pared_frontal',
   x: 0.5,
   y: 0.0,
   z: 0.0,
+  roll: 0.0,
+  pitch: 0.0,
+  yaw: 0.0,
   width: 0.02,
-  height: 3,
+  height: 3.0,
   depth: 0.8
 }"
+
 ```
 
 Puedes obbservar la pared virtual en pybullet 
@@ -126,8 +167,6 @@ ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {f
 ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_wall.yaml"
 ```
 
-
-
 ### Jugar al 3 en raya
 
 **COMANDOS**
@@ -135,14 +174,14 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_wall.yaml"
 __Añadir camara__
 ```bash
 
-ros2 service call /add_camera robot_interfaces/srv/AddCamera "{name: 'camara_tablero', x: 1.0, y: 0.01, z: 0.45, target_x: 1.0, target_y: 0.0, target_z: 0.0, width: 640, height: 480}"
+ros2 service call /add_camera robot_interfaces/srv/AddCamera "{name: 'camara_tablero', x: 0.35, y: 0.01, z: 0.45, target_x: 0.35, target_y: 0.0, target_z: 0.0, width: 640, height: 480}"
 
 ```
 
 __Añadir tablero__
 ```bash
 
-ros2 service call /add_object robot_interfaces/srv/SpawnObject "{name: 'tablero_principal', package_name: 'tic_tac_toe_dlc', piece_type: 'tablero', x: 1.0, y: 0.0, z: 0.0}"
+ros2 service call /add_object robot_interfaces/srv/SpawnObject "{name: 'tablero_principal', package_name: 'tic_tac_toe_dlc', piece_type: 'tablero', x: 0.35, y: 0.0, z: 0.0}"
 ```
 
 __Añadir entorno y ML__
@@ -172,7 +211,7 @@ ros2 service call /put_piece_virtual robot_interfaces/srv/PutPiece "{fila: 1, co
 
 O puedes poner a mano tu ficha si sabes en que coordernadas ponerla
 ```bash
-ros2 service call /add_object robot_interfaces/srv/SpawnObject "{name: 'ficha_o_1', package_name: 'tic_tac_toe_dlc', piece_type: 'ficha_o', x: 1.0, y: 0.0, z: 0.01}"
+ros2 service call /add_object robot_interfaces/srv/SpawnObject "{name: 'ficha_o_1', package_name: 'tic_tac_toe_dlc', piece_type: 'ficha_o', x: 0.35, y: 0.0, z: 0.03}"
 
 ```
 

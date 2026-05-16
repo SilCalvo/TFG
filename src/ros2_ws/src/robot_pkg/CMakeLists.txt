@@ -41,8 +41,8 @@ ament_target_dependencies(rviz_bridge_node
   sensor_msgs
 )
 
-add_executable(servo_node src/servo_bridge_node.cpp)
-ament_target_dependencies(servo_node 
+add_executable(servo_bridge_node src/servo_bridge_node.cpp)
+ament_target_dependencies(servo_bridge_node 
   rclcpp 
   std_msgs
   geometry_msgs
@@ -64,7 +64,7 @@ target_link_libraries(rutine_node yaml-cpp)
 install(TARGETS
   move_arm_node
   rviz_bridge_node
-  servo_node
+  servo_bridge_node
   rutine_node
   DESTINATION lib/${PROJECT_NAME}
 )
@@ -74,6 +74,7 @@ install(DIRECTORY
   urdf
   launch
   rutines
+  config
   DESTINATION share/${PROJECT_NAME}
 )
 

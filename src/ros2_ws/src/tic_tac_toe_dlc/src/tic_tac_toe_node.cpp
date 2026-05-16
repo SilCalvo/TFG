@@ -199,9 +199,9 @@ bool TicTacToeNode::send_move_action(double x, double y, double z, std::string a
     goal_msg.pose.pose.position.z = z;
 
     goal_msg.pose.pose.orientation.x = 0.0;
-    goal_msg.pose.pose.orientation.y = 1.0; 
+    goal_msg.pose.pose.orientation.y = 0.999; 
     goal_msg.pose.pose.orientation.z = 0.0;
-    goal_msg.pose.pose.orientation.w = 0.0; 
+    goal_msg.pose.pose.orientation.w = 0.001; 
 
     auto send_goal_future = client->async_send_goal(goal_msg);
     
@@ -226,6 +226,19 @@ void TicTacToeNode::ejecutar_turno_robot() {
         estado_actual_ = FIN_JUEGO;
         return;
     }
+    char g = comprobar_ganador(tablero_);
+    if (g != '-') { 
+        RCLCPP_INFO(this->get_logger(), "GANADOR: %c", g); 
+        estado_actual_ = FIN_JUEGO; 
+    } else if (hay_empate(tablero_)) { 
+        RCLCPP_INFO(this->get_logger(), "EMPATE"); 
+        estado_actual_ = FIN_JUEGO; 
+    } else { 
+        // Si sigue el juego, devolvemos el turno al humano
+        tiempo_inicio_turno_ = this->get_clock()->now(); 
+        ultimo_segundo_impreso_ = -1;
+        estado_actual_ = ESPERANDO_HUMANO; 
+    }
     
     tablero_[f][c] = 'x'; 
     turnos_jugados_++;
@@ -236,7 +249,7 @@ void TicTacToeNode::ejecutar_turno_robot() {
     
     Point3D pm = get_pixel_xyz_in_robot_frame(cp.x, cp.y, "camera_camara_tablero_optical_frame", "base");
 
-    /*
+    
     // Lógica con comprobación de errores. Si alguno falla, reinicia todo de cero.
     RCLCPP_INFO(this->get_logger(), "Moviendo brazo a aproximación...");
     if (!send_move_action(pm.x, pm.y, pm.z + 0.1, "moveJ")) {
@@ -252,7 +265,7 @@ void TicTacToeNode::ejecutar_turno_robot() {
         estado_actual_ = INICIALIZANDO;
         return;
     }
-    */
+    
 
     auto spawn_piece = std::make_shared<robot_interfaces::srv::SpawnObject::Request>();
     spawn_piece->name = "ficha_x_" + std::to_string(turnos_jugados_);
@@ -261,14 +274,14 @@ void TicTacToeNode::ejecutar_turno_robot() {
     spawn_piece->x = pm.x; spawn_piece->y = pm.y; spawn_piece->z = pm.z + 0.002;
     spawn_client_->async_send_request(spawn_piece);
 
-    /*
+
     RCLCPP_INFO(this->get_logger(), "Retirando brazo...");
     if (!send_move_action(pm.x, pm.y, pm.z + 0.1, "moveL")) {
         RCLCPP_ERROR(this->get_logger(), "Error físico al retirar el brazo. Abortando turno.");
         estado_actual_ = INICIALIZANDO;
         return;
     }
-    */
+
 
     imprimir_tablero_debug();
 

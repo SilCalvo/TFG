@@ -33,6 +33,10 @@ MoveArmNode::MoveArmNode()
     std::bind(&MoveArmNode::handle_go_home, this, std::placeholders::_1, std::placeholders::_2)
   );
 
+  this->declare_parameter("num_joints", 7);
+  int num_joints = this->get_parameter("num_joints").as_int();
+  current_angles_.resize(num_joints, 0.0);
+
   geometry_msgs::msg::Pose default_pose;
   default_pose.position.x = 0.0;
   default_pose.position.y = 0.0;
@@ -42,7 +46,7 @@ MoveArmNode::MoveArmNode()
   Tool_Config default_cfg;
   default_cfg.name = "default";
   default_cfg.type = 1; 
-  default_cfg.dimensions = {0.25, 0.05}; 
+  default_cfg.dimensions = {0.1, 0.05}; 
   default_cfg.offset = default_pose;
   tool_library_["default"] = default_cfg;
 

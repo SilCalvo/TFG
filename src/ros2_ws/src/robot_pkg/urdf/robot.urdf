@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<robot name="robot_cilindros">
+<robot name="robot_cilindros_6dof">
 
+  <!-- ================= MATERIALES ================= -->
   <material name="rojo">
     <color rgba="1 0 0 1"/>
   </material>
@@ -19,10 +20,14 @@
   <material name="morado">
     <color rgba="0.5 0 0.5 1"/>
   </material>
+  <material name="cian">
+    <color rgba="0 1 1 1"/>
+  </material>
   <material name="negro">
     <color rgba="0 0 0 1"/>
   </material>
 
+  <!-- ================= BASE ================= -->
   <link name="base">
     <visual>
       <origin xyz="0 0 0.1" rpy="0 0 0"/>
@@ -39,13 +44,12 @@
     </collision>
     <inertial>
       <origin xyz="0 0 0.1" rpy="0 0 0"/>
-      <mass value="1.0"/> <inertia ixx="0.00583" ixy="0.0" ixz="0.0" 
-               iyy="0.00583" iyz="0.0" 
-               izz="0.005"/>
+      <mass value="1.0"/> 
+      <inertia ixx="0.00583" ixy="0.0" ixz="0.0" iyy="0.00583" iyz="0.0" izz="0.005"/>
     </inertial>
   </link>
 
-
+  <!-- ================= ESLABÓN 1 (Giro Base) ================= -->
   <link name="c1_base">
     <visual>
       <origin xyz="0 0 0.1" rpy="0 0 0"/>
@@ -60,9 +64,11 @@
     <parent link="base"/>
     <child link="c1_base"/>
     <origin xyz="0 0 0.2" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/> <limit lower="-1.57" upper="1.57" effort="0.25" velocity="2.0"/>
+    <axis xyz="0 0 1"/> <!-- Yaw -->
+    <limit lower="-3.14" upper="3.14" effort="0.25" velocity="2.0"/>
   </joint>
 
+  <!-- ================= ESLABÓN 2 (Brazo) ================= -->
   <link name="c2_brazo">
     <visual>
       <origin xyz="0 0 0.15" rpy="0 0 0"/>
@@ -77,10 +83,11 @@
     <parent link="c1_base"/>
     <child link="c2_brazo"/>
     <origin xyz="0 0 0.2" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/> <limit lower="-1.57" upper="1.57" effort="0.25" velocity="2.0"/>
+    <axis xyz="0 1 0"/> <!-- Pitch -->
+    <limit lower="-3.14" upper="3.14" effort="0.25" velocity="2.0"/>
   </joint>
   
-
+  <!-- ================= ESLABÓN 3 (Antebrazo) ================= -->
   <link name="c3_antebrazo">
     <visual>
       <origin xyz="0 0 0.15" rpy="0 0 0"/>
@@ -95,10 +102,11 @@
     <parent link="c2_brazo"/>
     <child link="c3_antebrazo"/>
     <origin xyz="0 0 0.3" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <limit lower="-1.57" upper="1.57" effort="0.25" velocity="2.0"/>
+    <axis xyz="0 1 0"/> <!-- Pitch -->
+    <limit lower="-3.14" upper="3.14" effort="0.25" velocity="2.0"/>
   </joint>
 
+  <!-- ================= ESLABÓN 4 (Muñeca 1 - Roll) ================= -->
   <link name="c4_muneca">
     <visual>
       <origin xyz="0 0 0.05" rpy="0 0 0"/>
@@ -113,10 +121,11 @@
     <parent link="c3_antebrazo"/>
     <child link="c4_muneca"/>
     <origin xyz="0 0 0.3" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <limit lower="-1.57" upper="1.57" effort="0.25" velocity="2.0"/>
+    <axis xyz="0 0 1"/> <!-- Roll del antebrazo -->
+    <limit lower="-3.14" upper="3.14" effort="0.25" velocity="2.0"/>
   </joint>
 
+  <!-- ================= ESLABÓN 5 (Muñeca 2 - Pitch) ================= -->
   <link name="c5_muneca2_gira">
     <visual>
       <origin xyz="0 0 0.05" rpy="0 0 0"/>
@@ -125,21 +134,36 @@
       </geometry>
       <material name="morado"/>
     </visual>
-    <collision>
-      <origin xyz="0 0 0.05" rpy="0 0 0"/>
-      <geometry>
-        <cylinder length="0.1" radius="0.05"/>
-      </geometry>
-    </collision>
   </link>
 
   <joint name="joint_c4_c5" type="revolute">
     <parent link="c4_muneca"/>
     <child link="c5_muneca2_gira"/>
     <origin xyz="0 0 0.1" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/> <limit lower="-1.57" upper="1.57" effort="0.25" velocity="2.0"/>
+    <axis xyz="0 1 0"/> <!-- Pitch de la muñeca -->
+    <limit lower="-3.14" upper="3.14" effort="0.25" velocity="2.0"/>
   </joint>
 
+  <!-- ================= ESLABÓN 6 (Brida/Herramienta - Roll) ================= -->
+  <link name="c6_herramienta">
+    <visual>
+      <origin xyz="0 0 0.025" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.05" radius="0.05"/>
+      </geometry>
+      <material name="cian"/>
+    </visual>
+  </link>
+
+  <joint name="joint_c5_c6" type="revolute">
+    <parent link="c5_muneca2_gira"/>
+    <child link="c6_herramienta"/>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/> <!-- Roll de la herramienta final -->
+    <limit lower="-3.14" upper="3.14" effort="0.25" velocity="2.0"/>
+  </joint>
+
+  <!-- ================= END EFFECTOR (Mano) ================= -->
   <link name="mano">
     <visual>
       <origin xyz="0 0 0.005" rpy="0 0 0"/>
@@ -150,12 +174,10 @@
     </visual>
   </link>
 
-  <joint name="joint_c5_mano" type="fixed">
-    <parent link="c5_muneca2_gira"/>
+  <joint name="joint_c6_mano" type="fixed">
+    <parent link="c6_herramienta"/>
     <child link="mano"/>
-    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
   </joint>
-
-  
 
 </robot>

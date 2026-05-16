@@ -1,0 +1,19 @@
+move_arm_node:
+  ros__parameters:
+    num_joints: 6 # Aquí defines el tamaño de current_angles_
+    
+rviz_bridge_node:
+  ros__parameters:
+    joint_names: [
+      "joint_base_c1", 
+      "joint_c1_c2", 
+      "joint_c2_c3", 
+      "joint_c3_c4", 
+      "joint_c4_c5", 
+      "joint_c5_c6"
+    ]
+servo_bridge_node:
+  ros__parameters:
+    num_joints: 6 # Aquí defines el tamaño de current_angles_
+    
+

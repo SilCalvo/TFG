@@ -1,0 +1,22 @@
+rutina:
+  - tipo: "moveJ"
+    x: -0.4
+    y: 0.0
+    z: 0.3
+    qx: 0.0
+    qy: 1.0
+    qz: 0.0
+    qw: 0.0
+
+  - tipo: "go_home"
+    index: 0      
+    degrees: 0.0
+
+  - tipo: "moveJ"
+    x: -0.4
+    y: 0.0
+    z: 0.3
+    qx: 0.0
+    qy: 1.0
+    qz: 0.0
+    qw: 0.0

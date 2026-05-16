@@ -69,7 +69,7 @@ private:
     std::shared_ptr<robot_interfaces::srv::MoveJoint::Response> response);
 
 
-  std::vector<double> current_angles_ = std::vector<double>(5, 0.0);
+  std::vector<double> current_angles_;
   Point calculate_dk(const std::vector<double>& angles);
   std::vector<std::vector<double>> get_trajectory_moveJ(geometry_msgs::msg::Pose target_pose);
   std::vector<std::vector<double>> get_trajectory_moveL(Point target);

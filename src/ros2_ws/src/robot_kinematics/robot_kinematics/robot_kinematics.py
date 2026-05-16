@@ -110,10 +110,15 @@ class PyBulletKinematics(Node):
 
       if (not angles_matered):
         self.get_logger().info(f'No importa orientacion')
-        joint_poses = p.calculateInverseKinematics(self.robot_id, self.end_effector_index, wrist_target_pos)
+        joint_poses = p.calculateInverseKinematics(self.robot_id, 
+                  self.end_effector_index, wrist_target_pos,
+    maxNumIterations=2000,      # <--- AÑADE ESTO (Súbelo a 2000 o 3000)
+    residualThreshold=0.001)
       else:
         self.get_logger().info(f'Si importa orientacion')
-        joint_poses = p.calculateInverseKinematics(self.robot_id, self.end_effector_index, wrist_target_pos, wrist_target_orn)
+        joint_poses = p.calculateInverseKinematics(self.robot_id, self.end_effector_index, wrist_target_pos, wrist_target_orn,
+    maxNumIterations=2000,      # <--- AÑADE ESTO (Súbelo a 2000 o 3000)
+    residualThreshold=0.001)
       
       if any(math.isnan(ang) for ang in joint_poses):
         self.get_logger().error("IK devolvió NaN. Objetivo inalcanzable.")

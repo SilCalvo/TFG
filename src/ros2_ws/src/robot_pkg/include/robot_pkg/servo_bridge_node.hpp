@@ -27,13 +27,14 @@ public:
 private:
   void robot_cmd_callback(const std_msgs::msg::Int16MultiArray::SharedPtr msg);
   void timer_callback();
-  void add_wall_point(int v[5]);
+  void add_wall_point(const std::vector<int>& v);
   void configure_serial(int fd);
   
   int serial_port_;
   int robot_mode = 2; // 0 manual, 1 automatic, 2 init
   int wall_count_ = 0; // CORREGIDO: Añadido guión bajo para ser consistente
   std::string read_buffer_; 
+  size_t num_joints_;
   
   rclcpp::Subscription<std_msgs::msg::Int16MultiArray>::SharedPtr subscription_;
   rclcpp::Publisher<std_msgs::msg::Int16MultiArray>::SharedPtr publisher_;

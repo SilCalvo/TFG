@@ -20,10 +20,13 @@ RvizBridgeNode::RvizBridgeNode()
   rclcpp::QoS qos_pub(10);
   publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/joint_states", qos_pub);
 
-  joint_names_ = {"joint_base_c1", "joint_c1_c2", "joint_c2_c3", "joint_c3_c4", "joint_c4_c5"};
+  std::vector<std::string> default_joints = {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5"};
+  this->declare_parameter("joint_names", default_joints);
+  joint_names_ = this->get_parameter("joint_names").as_string_array();
 
+  // Asignar los nombres al mensaje
   last_joint_msg_.name = joint_names_;
-  last_joint_msg_.position = {0.0, 0.0, 0.0, 0.0, 0.0};
+  last_joint_msg_.position.resize(joint_names_.size(), 0.0);
 
   timer_ = this->create_wall_timer(
     100ms, std::bind(&RvizBridgeNode::timer_callback, this)

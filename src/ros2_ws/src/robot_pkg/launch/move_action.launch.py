@@ -11,7 +11,14 @@ def generate_launch_description():
     with open(urdf_file, 'r') as infp:
         robot_desc = infp.read()
 
+    config = os.path.join(
+        get_package_share_directory('robot_pkg'),
+        'config',
+        'robot_params.yaml'
+    )
+
     return LaunchDescription([
+
         
         # 1. ESTADO DEL ROBOT 
         # Lee el URDF y publica la estructura estática del robot
@@ -52,8 +59,9 @@ def generate_launch_description():
         Node(
             package='robot_pkg',
             executable='move_arm_node',
-            name='move_action_server',
-            output='screen'
+            name='move_arm_node',
+            output='screen',
+            parameters=[config]
         ),
 
         # 5. NODO PUENTE 
@@ -61,15 +69,17 @@ def generate_launch_description():
         Node(
             package='robot_pkg',
             executable='rviz_bridge_node',
-            name='rviz_bridge',
-            output='screen'
+            name='rviz_bridge_node',
+            output='screen',
+            parameters=[config]
         ),
 
         Node(
             package='robot_pkg',
-            executable='servo_node',
-            name='servo_node',
-            output='screen'
+            executable='servo_bridge_node',
+            name='servo_bridge_node',
+            output='screen',
+            parameters=[config]
         )
         
     ])

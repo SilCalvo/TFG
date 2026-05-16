@@ -18,6 +18,9 @@ RoutineExecutor::RoutineExecutor() : Node("routine_executor_node"), current_step
   // Iniciar clientes
   client_moveJ_ = rclcpp_action::create_client<NavigateToPose>(this, "/moveJ");
   client_moveL_ = rclcpp_action::create_client<NavigateToPose>(this, "/moveL");
+
+  client_control_joint_ = this->create_client<robot_interfaces::srv::MoveJoint>("control_joint");
+  client_go_home_ = this->create_client<robot_interfaces::srv::MoveJoint>("go_home");
   
   client_add_wall_ = this->create_client<robot_interfaces::srv::AddObstacle>("add_wall");
   client_remove_wall_ = this->create_client<robot_interfaces::srv::RemoveObstacle>("remove_wall");
@@ -95,6 +98,18 @@ void RoutineExecutor::load_routine(const std::string& file_path) {
       // --- 5. BORRAR O SELECCIONAR HERRAMIENTA ---
       else if (step.type == "delete_tool" || step.type == "set_tool") {
         step.name = node["name"].as<std::string>();
+      }
+      // --- 6. CONTROL DE ARTICULACIÓN INDIVIDUAL ---
+      else if (step.type == "control_joint") {
+        step.index = node["index"] ? node["index"].as<int>() : 0;
+        step.degrees = node["degrees"] ? node["degrees"].as<double>() : 0.0;
+      }
+      // --- 7. RETORNO A HOME ---
+      else if (step.type == "go_home") {
+        // Tu servicio pide obligatoriamente los parámetros index y degrees aunque no los use internamente,
+        // así que los leemos o los inicializamos a 0 por defecto.
+        step.index = node["index"] ? node["index"].as<int>() : 0;
+        step.degrees = node["degrees"] ? node["degrees"].as<double>() : 0.0;
       }
       routine_steps_.push_back(step);
     }
@@ -197,6 +212,39 @@ void RoutineExecutor::execute_next_step() {
               }
           }
       );
+  }// --- NUEVO: 5. SERVICIO CONTROL_JOINT ---
+  else if (step.type == "control_joint") {
+    auto request = std::make_shared<robot_interfaces::srv::MoveJoint::Request>();
+    request->index = step.index;
+    request->degrees = step.degrees;
+
+    RCLCPP_INFO(this->get_logger(), "Llamando a /control_joint -> Motor %d a %.2f°", step.index, step.degrees);
+    client_control_joint_->async_send_request(request, [this](rclcpp::Client<robot_interfaces::srv::MoveJoint>::SharedFuture future) {
+      if (future.get()->success) {
+        this->current_step_++;
+        this->execute_next_step();
+      } else {
+        RCLCPP_ERROR(this->get_logger(), "Fallo en el servicio /control_joint. Abortando rutina.");
+        rclcpp::shutdown();
+      }
+    });
+  }
+  // --- NUEVO: 6. SERVICIO GO_HOME ---
+  else if (step.type == "go_home") {
+    auto request = std::make_shared<robot_interfaces::srv::MoveJoint::Request>();
+    request->index = step.index;       // Aunque tu nodo original lo ignora,
+    request->degrees = step.degrees;   // llenamos el request para respetar la interfaz.
+
+    RCLCPP_INFO(this->get_logger(), "Llamando a /go_home...");
+    client_go_home_->async_send_request(request, [this](rclcpp::Client<robot_interfaces::srv::MoveJoint>::SharedFuture future) {
+      if (future.get()->success) {
+        this->current_step_++;
+        this->execute_next_step();
+      } else {
+        RCLCPP_ERROR(this->get_logger(), "Fallo en el servicio /go_home. Abortando rutina.");
+        rclcpp::shutdown();
+      }
+    });
   }
 }
 

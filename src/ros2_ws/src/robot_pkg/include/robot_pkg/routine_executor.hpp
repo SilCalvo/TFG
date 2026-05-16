@@ -10,6 +10,7 @@
 #include "robot_interfaces/srv/add_obstacle.hpp"
 #include "robot_interfaces/srv/remove_obstacle.hpp"
 #include "robot_interfaces/srv/manage_tool.hpp"
+#include "robot_interfaces/srv/move_joint.hpp"
 
 #include <yaml-cpp/yaml.h>
 #include <string>
@@ -20,6 +21,9 @@ struct RoutineStep {
     
     double x = 0.0, y = 0.0, z = 0.0;
     double qx = 0.0, qy = 0.0, qz = 0.0, qw = 1.0;
+
+    int index;
+    double degrees;
     
     std::string name = "";
     
@@ -42,6 +46,8 @@ private:
     // Movimiento
     rclcpp_action::Client<NavigateToPose>::SharedPtr client_moveJ_;
     rclcpp_action::Client<NavigateToPose>::SharedPtr client_moveL_;
+    rclcpp::Client<robot_interfaces::srv::MoveJoint>::SharedPtr client_control_joint_;
+    rclcpp::Client<robot_interfaces::srv::MoveJoint>::SharedPtr client_go_home_;
 
     // Obstáculos y Herramientas
     rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedPtr client_add_wall_;
