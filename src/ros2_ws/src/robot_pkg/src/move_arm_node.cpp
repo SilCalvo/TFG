@@ -46,7 +46,7 @@ MoveArmNode::MoveArmNode()
   Tool_Config default_cfg;
   default_cfg.name = "default";
   default_cfg.type = 1; 
-  default_cfg.dimensions = {0.1, 0.05}; 
+  default_cfg.dimensions = {0.01, 0.01}; 
   default_cfg.offset = default_pose;
   tool_library_["default"] = default_cfg;
 

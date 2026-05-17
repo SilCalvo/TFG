@@ -286,7 +286,7 @@ void TicTacToeNode::ejecutar_turno_robot() {
     imprimir_tablero_debug();
 
     // Comprobamos resultados al final del turno
-    char g = comprobar_ganador(tablero_);
+    g = comprobar_ganador(tablero_);
     if (g != '-') { 
         RCLCPP_INFO(this->get_logger(), "GANADOR: %c", g); 
         estado_actual_ = FIN_JUEGO; 

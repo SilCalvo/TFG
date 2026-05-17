@@ -28,17 +28,19 @@ void manual_control(){
 
   
   if(wall_button.isPressed()) {
-    Serial.print("WALL,");
+    Serial.print("WALL");
   }
+  Serial.print("(");
 
   // Send servos angles via Serial
   for (int i = 0; i < NUMBER_SERVOS; i++) {
     Serial.print(actual_position[i]);
     // Add a comma after the number
-    if (i < NUMBER_SERVOS - 1) {
+    if (i < NUMBER_SERVOS -1 ) {
       Serial.print(",");
     }
   }
+  Serial.print(")");
   
   // End the message with a New Line so ROS2 knows the packet is finished
   Serial.println(); 

@@ -6,7 +6,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     # --- LECTURA DEL URDF ---
     pkg_mi_robot = get_package_share_directory('robot_pkg')
-    urdf_file = os.path.join(pkg_mi_robot, 'urdf', 'robot.urdf')
+    urdf_file = os.path.join(pkg_mi_robot, 'urdf', 'robotfisico.urdf')
 
     with open(urdf_file, 'r') as infp:
         robot_desc = infp.read()

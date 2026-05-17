@@ -51,21 +51,13 @@ Para cambiar el robot solo hay que cambiar el urdf , la cinemática directa y en
 
 Falta: ----------------------------------------
 
-- Current angles en move_node en get trayectory que los coja bien. 
 - Falta lo de +90 grados al enviar al arduino
 - Añadir paredes virtuales - manual 
-- Juego 3 en raya virtual mover robot
 - URDF del robot real
 - Limpiar codigo
 
-- digital twin, publicar imagenes y transform
-- falta esquema con nuevos topic de y transform
-- cerrar pinza y abrir pinza y go home y añadirlo a la documentacion
+- falta esquema con nuevos topic de y transform y tipo de mensaje
 - cambiar diagramas a lo real 
+- mas detallado investaigacion y metricas del cnn...
 
 
-ros2 service call /control_joint robot_interfaces/srv/MoveJoint "{index: 2, degrees: 45.0}"
-
-ros2 service call /go_home robot_interfaces/srv/MoveJoint "{index: 2, degrees: 45.0}"
-- 
-- 

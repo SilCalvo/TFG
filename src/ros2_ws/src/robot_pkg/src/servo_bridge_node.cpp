@@ -118,9 +118,9 @@ void ServoBridgeNode::timer_callback()
         std::string data_str = line;
 
         // Detectar si es un punto de pared y extraer solo los números
-        if (line.find("WALL(") == 0) {
+        if (line.find("WALL,") == 0) {
           is_wall = true;
-          // Quita "WALL(" y el ")" del final
+          // Quita "WALL," y el ")" del final
           data_str = line.substr(5, line.length() - 6); 
         }
 
