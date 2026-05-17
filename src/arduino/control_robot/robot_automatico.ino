@@ -8,9 +8,9 @@
 
 void automatic_control(){
 
-  int target_position[5]= {0,0,0,0,0};
+  int target_position[NUMBER_SERVOS]= {0,0,0,0};
   if (Serial.available() > 0) {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < NUMBER_SERVOS; i++) {
       int lectura = Serial.parseInt();
       target_position[i] = lectura;
       
@@ -23,7 +23,7 @@ void automatic_control(){
     while(Serial.available()) { Serial.read(); }
 
     // Move servos
-    for(int i=0; i<5; i++){
+    for(int i=0; i<NUMBER_SERVOS; i++){
       servos[i].write(target_position[i]);
       actual_position[i] = target_position[i];
       delay(10); ////////////////////////////////////////////////////////////////////////////////
