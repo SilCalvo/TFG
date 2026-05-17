@@ -17,7 +17,7 @@ int parse_potenciometer(int pin) {
 void manual_control(){
 
   // Control servos
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < NUMBER_SERVOS; i++) {
     int angle = parse_potenciometer(ROBOT_POTENCIOMETERS[i]);
     if (abs(angle - actual_position[i]) >=1) {
       servos[i].write(angle); 
@@ -26,11 +26,16 @@ void manual_control(){
     delay(10);
   }
 
+  
+  if(wall_button.isPressed()) {
+    Serial.print("WALL,");
+  }
+
   // Send servos angles via Serial
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < NUMBER_SERVOS; i++) {
     Serial.print(actual_position[i]);
     // Add a comma after the number
-    if (i < 4) {
+    if (i < NUMBER_SERVOS - 1) {
       Serial.print(",");
     }
   }
