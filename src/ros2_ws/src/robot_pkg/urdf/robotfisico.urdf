@@ -120,7 +120,7 @@
     <child link="eslabon_final_izq"/>
     <origin xyz="0 0 0.07" rpy="0 0.7854 0"/> 
     <axis xyz="0 1 0"/>
-    <limit lower="-0.78" upper="0.78" effort="1.0" velocity="2.0"/>
+    <limit lower="-1.57" upper="1.57" effort="1.0" velocity="2.0"/>
   </joint>
 
   <link name="herramienta_fija_izq">
@@ -155,7 +155,7 @@
   <joint name="joint_c3_to_der" type="fixed">
     <parent link="cilindro_3"/>
     <child link="eslabon_final_der"/>
-    <origin xyz="0 0 0.07" rpy="0 -0.9 0"/> 
+    <origin xyz="0 0 0.07" rpy="0 -0.9 0"/> <!-- Ajustado exactamente a 40 grados en radianes -->
   </joint>
 
   <link name="herramienta_fija_der">

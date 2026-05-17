@@ -129,7 +129,9 @@ void MoveArmNode::handle_control_joint(
 
   // 4. Publicar inmediatamente el array completo en grados a robot_cmd
   publisher_->publish(cmd_msg);
-
+  RCLCPP_INFO(this->get_logger(), "Publicado en robot_cmd: Motor [%d] a %.2f grados (el resto mantiene su posición actual).", 
+              request->index, request->degrees);
+  
   RCLCPP_INFO(this->get_logger(), "Publicado en robot_cmd: Motor [%d] a %.2f grados (el resto mantiene su posición actual).", 
               request->index, request->degrees);
   

@@ -67,8 +67,8 @@ ServoBridgeNode::~ServoBridgeNode() {
 // --- COM: ROS2 -> ARDUINO ---
 void ServoBridgeNode::robot_cmd_callback(const std_msgs::msg::Int16MultiArray::SharedPtr msg)
 {
-  if (serial_port_ < 0) return;
-  if (robot_mode == 0) return;
+  //if (serial_port_ < 0) return;
+  if (robot_mode != 1 ) return;
 
   if (msg->data.size() != num_joints_) { 
     RCLCPP_WARN(this->get_logger(), "Ignorando comando: Se esperaban %zu angulos", num_joints_);
@@ -77,10 +77,12 @@ void ServoBridgeNode::robot_cmd_callback(const std_msgs::msg::Int16MultiArray::S
 
   std::string command = "";
   for (size_t i = 0; i < msg->data.size(); ++i) {
-    command += std::to_string(msg->data[i]);
+    command += std::to_string(msg->data[i] +90);
     if (i < msg->data.size() - 1) command += ","; 
   }
   command += "\n"; 
+  RCLCPP_INFO(this->get_logger(), "comand: angles %s",command.c_str());
+
   write(serial_port_, command.c_str(), command.size());
 }
 
@@ -137,7 +139,7 @@ void ServoBridgeNode::timer_callback()
         
         while (std::getline(ss, token, ',')) {
           try {
-            v.push_back(std::stoi(token)); // Convertir texto a número
+            v.push_back(std::stoi(token)-90); // Convertir texto a número
           } catch (...) {
             break; // Si hay basura en el serial, rompemos el bucle
           }
