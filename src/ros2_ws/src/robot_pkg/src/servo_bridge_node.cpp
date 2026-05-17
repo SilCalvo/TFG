@@ -186,19 +186,34 @@ void ServoBridgeNode::timer_callback()
   }
 }
 
-// --- LÓGICA ASÍNCRONA PARA AÑADIR PARED ---
-void ServoBridgeNode::add_wall_point(const std::vector<int>& v) { // FIRMA ACTUALIZADA
-  
-  // Pasar de vector<int> a vector<double> automáticamente
-  std::vector<double> angles(v.begin(), v.end());
 
-  // 1. Configurar la petición de Cinemática (SolveDK)
+// --- LÓGICA ASÍNCRONA PARA AÑADIR PARED ---
+void ServoBridgeNode::add_wall_point(const std::vector<int>& v) { 
+  
+  // LOG 1: Ver los grados originales que llegaron del Arduino
+  std::string grados_str = "";
+  for (int val : v) grados_str += std::to_string(val) + " ";
+  RCLCPP_INFO(this->get_logger(), "1. Grados recibidos: [ %s]", grados_str.c_str());
+
+  // 1. CONVERSIÓN DE GRADOS A RADIANES
+  std::vector<double> angles;
+  std::string rad_str = "";
+  for (int angle_deg : v) {
+    double rad = angle_deg * M_PI / 180.0;
+    angles.push_back(rad);
+    rad_str += std::to_string(rad) + " ";
+  }
+  
+  // LOG 2: Ver la conversión a Radianes
+  RCLCPP_INFO(this->get_logger(), "2. Radianes enviados a DK: [ %s]", rad_str.c_str());
+
+  // Configurar la petición de Cinemática (SolveDK)
   Tool_Config default_cfg;
   default_cfg.name = "default";
   default_cfg.type = 1; 
   default_cfg.dimensions = {0.01, 0.01}; 
   
-  geometry_msgs::msg::Pose default_pose; // Pose vacía en ceros (CORREGIDO)
+  geometry_msgs::msg::Pose default_pose; 
   default_cfg.offset = default_pose;
 
   auto request_dk = std::make_shared<robot_interfaces::srv::SolveDK::Request>();
@@ -215,7 +230,6 @@ void ServoBridgeNode::add_wall_point(const std::vector<int>& v) { // FIRMA ACTUA
   dk_client_->async_send_request(request_dk, 
     [this](rclcpp::Client<robot_interfaces::srv::SolveDK>::SharedFuture future_dk) {
       
-      // Dentro de este callback, .get() es totalmente seguro porque ya resolvió
       auto response_dk = future_dk.get();
 
       if (response_dk && response_dk->success) {
@@ -229,6 +243,15 @@ void ServoBridgeNode::add_wall_point(const std::vector<int>& v) { // FIRMA ACTUA
           response_dk->target_pose.orientation.w
         );
         tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
+
+        // LOG 3: IMPRIMIR X, Y, Z y R, P, Y calculados por la cinemática
+        RCLCPP_INFO(this->get_logger(), "3. RESULTADO DK -> Posicion (X: %.3f, Y: %.3f, Z: %.3f)", 
+                    response_dk->target_pose.position.x, 
+                    response_dk->target_pose.position.y, 
+                    response_dk->target_pose.position.z);
+                    
+        RCLCPP_INFO(this->get_logger(), "                 -> Rotacion (Roll: %.3f, Pitch: %.3f, Yaw: %.3f)", 
+                    roll, pitch, yaw);
 
         // 3. Crear petición para AddObstacle
         auto request_wall = std::make_shared<robot_interfaces::srv::AddObstacle::Request>();
@@ -257,7 +280,7 @@ void ServoBridgeNode::add_wall_point(const std::vector<int>& v) { // FIRMA ACTUA
             auto response = future_wall.get();
             
             if (response && response->success) {
-              RCLCPP_INFO(this->get_logger(), "Pared %d añadida rotada correctamente.", wall_count_);
+              RCLCPP_INFO(this->get_logger(), "Pared %d añadida.", wall_count_);
               wall_count_++; 
             } else {
               RCLCPP_ERROR(this->get_logger(), "Fallo al añadir la pared en el simulador.");
