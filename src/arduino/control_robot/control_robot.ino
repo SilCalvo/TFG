@@ -78,6 +78,7 @@ void loop() {
     automatic_mode = true;
     manual_mode = false;
     digitalWrite(LED_AUTOMATIC, HIGH);
+    smooth_manual_control();
     digitalWrite(LED_MANUAL, LOW);
     Serial.println("AUTO"); 
   }
