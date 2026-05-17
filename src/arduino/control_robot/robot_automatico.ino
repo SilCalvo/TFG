@@ -26,12 +26,9 @@ void automatic_control(){
     for(int i=0; i<NUMBER_SERVOS; i++){
       servos[i].write(target_position[i]);
       actual_position[i] = target_position[i];
-      delay(10); ////////////////////////////////////////////////////////////////////////////////
     }
 
   }
-  delay(15);
-
 }
 /*
   if (stringComplete) {
