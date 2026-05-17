@@ -96,6 +96,12 @@ void ServoBridgeNode::timer_callback()
     buffer[n] = '\0'; 
     read_buffer_ += buffer; 
 
+    if (read_buffer_.size() > 1000) {
+      RCLCPP_WARN(this->get_logger(), "¡Buffer saturado! Descartando datos viejos para evitar lag.");
+      read_buffer_.clear(); // Vaciamos el cubo
+      return;               // Salimos y esperamos a la siguiente lectura limpia
+    }
+
     size_t pos = read_buffer_.find('\n');
     while (pos != std::string::npos) {
       std::string line = read_buffer_.substr(0, pos);
@@ -118,9 +124,9 @@ void ServoBridgeNode::timer_callback()
         std::string data_str = line;
 
         // Detectar si es un punto de pared y extraer solo los números
-        if (line.find("WALL,") == 0) {
+        if (line.find("WALL(") == 0) {
           is_wall = true;
-          // Quita "WALL," y el ")" del final
+          // Quita "WALL" y el ")" del final
           data_str = line.substr(5, line.length() - 6); 
         }
 
