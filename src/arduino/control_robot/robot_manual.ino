@@ -32,11 +32,11 @@ void smooth_manual_control() {
       else {
         actual_position[i] -= 5;
       }
-      // servos[i].write(actual_position[i]);
+      servos[i].write(actual_position[i]);
       delay(20); // suavidad
     }
     actual_position[i] = target_angle;
-    // servos[i].write(actual_position[i]);
+    servos[i].write(actual_position[i]);
   }
 }
 
@@ -51,7 +51,7 @@ void manual_control(){
   for (int i = 0; i < NUMBER_SERVOS; i++) {
     int angle = parse_potenciometer(ROBOT_POTENCIOMETERS[i]);
     if (abs(angle - actual_position[i]) >=1) {
-      //servos[i].write(angle); 
+      servos[i].write(angle); 
       actual_position[i]=angle;
     }
   }

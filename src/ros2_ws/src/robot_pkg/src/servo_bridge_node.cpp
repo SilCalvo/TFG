@@ -67,7 +67,7 @@ ServoBridgeNode::~ServoBridgeNode() {
 // --- COM: ROS2 -> ARDUINO ---
 void ServoBridgeNode::robot_cmd_callback(const std_msgs::msg::Int16MultiArray::SharedPtr msg)
 {
-  //if (serial_port_ < 0) return;
+  if (serial_port_ < 0) return;
   if (robot_mode != 1 ) return;
 
   if (msg->data.size() != num_joints_) { 
@@ -131,21 +131,37 @@ void ServoBridgeNode::timer_callback()
           // Quita "WALL" y el ")" del final
           data_str = line.substr(5, line.length() - 6); 
         }
+        data_str.erase(std::remove(data_str.begin(), data_str.end(), '('), data_str.end());
+        data_str.erase(std::remove(data_str.begin(), data_str.end(), ')'), data_str.end());
 
-        // Dividir el string por las comas y guardarlo en un vector dinámico
         std::vector<int> v;
         std::stringstream ss(data_str);
         std::string token;
-        
+
         while (std::getline(ss, token, ',')) {
           try {
-            v.push_back(std::stoi(token)-90); // Convertir texto a número
+            v.push_back(std::stoi(token) - 90);
           } catch (...) {
-            break; // Si hay basura en el serial, rompemos el bucle
+            RCLCPP_WARN(this->get_logger(), "Token inválido: '%s'", token.c_str());
+            continue;
           }
         }
 
         // Si la cantidad de números leídos coincide con num_joints_
+        std::stringstream debug;
+
+        for (size_t i = 0; i < v.size(); i++) {
+            debug << v[i];
+
+            if (i < v.size() - 1) {
+                debug << ", ";
+            }
+        }
+
+        RCLCPP_INFO(this->get_logger(), "size: %zu | values: [%s]",
+                    v.size(),
+                    debug.str().c_str());
+
         if (v.size() == num_joints_) {
           
           if (is_wall) {
