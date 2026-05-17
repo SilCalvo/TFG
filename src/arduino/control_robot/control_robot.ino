@@ -34,12 +34,14 @@ int LED_WALL = 13;
 // ROBOT MODE FLAGS
 bool automatic_mode = false;
 bool manual_mode = false;
+bool wall = false;
+
 
 // ROBOT CONTROL ARRAYS
 Servo servos[NUMBER_SERVOS];
 int ROBOT_PINS[NUMBER_SERVOS] = {BASE_SERVO, SHOULDER_SERVO, ELBOW_SERVO, END_EFFECTOR_SERVO};
 int ROBOT_POTENCIOMETERS[NUMBER_SERVOS] = {BASE_POTENCIOMETER, SHOULDER_POTENCIOMETER, ELBOW_POTENCIOMETER, END_EFFECTOR_POTENCIOMETER};
-int actual_position[NUMBER_SERVOS]= {90,90,90,90};
+int actual_position[NUMBER_SERVOS]= {90,90,90,135};
 
 ezButton automatic_button(PIN_AUTOMATIC);
 ezButton manual_button(PIN_MANUAL);
@@ -50,9 +52,9 @@ void setup() {
   Serial.setTimeout(10);
 
   // BUTTONS MODE INIT
-  automatic_button.setDebounceTime(50);
-  manual_button.setDebounceTime(50);
-  wall_button.setDebounceTime(50);
+  automatic_button.setDebounceTime(75);
+  manual_button.setDebounceTime(75);
+  wall_button.setDebounceTime(75);
 
   pinMode(LED_AUTOMATIC, OUTPUT);
   pinMode(LED_MANUAL, OUTPUT);
@@ -61,8 +63,7 @@ void setup() {
   // SERVOS INIT 
   for(int i=0; i<NUMBER_SERVOS; i++){
     servos[i].attach(ROBOT_PINS[i]);
-    servos[i].write(90); 
-    actual_position[i]=90;
+    servos[i].write(actual_position[i]); 
   }
 }
 
@@ -87,6 +88,11 @@ void loop() {
     digitalWrite(LED_AUTOMATIC, LOW);
     digitalWrite(LED_MANUAL, HIGH);
     Serial.println("MANUAL"); 
+  }
+
+  if (wall_button.isPressed() && manual_mode) {
+    wall = true;
+    digitalWrite(LED_WALL, HIGH);
   }
 
   // EXECUTE CONTROL 
