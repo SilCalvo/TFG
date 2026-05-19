@@ -31,7 +31,7 @@ class PyBulletKinematics(Node):
     self.cameras_config = {}
     self.camera_publishers = {}
     self.camera_timer = None
-    self.physicsClient = p.connect(p.GUI)
+    self.physicsClient = p.connect(p.DIRECT)
     
     # Configuración del Robot
     pkg_path = get_package_share_directory('robot_pkg') 

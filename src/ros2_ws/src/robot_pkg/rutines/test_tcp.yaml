@@ -31,3 +31,6 @@ rutina:
     qy: 1.0
     qz: 0.0
     qw: 0.0
+
+  - tipo: "set_tool"
+    name: "default"

@@ -39,13 +39,13 @@ Existen 2 modos de probarlo:
 **COMANDOS**
 
 ```bash
-ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
+ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
 ```
 ```bash
-ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: -0.2, y: 0.0, z: 1.4}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}"
+ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: -0.2, y: 0.0, z: 1.1}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}"
 ```
 ```bash
-ros2 action send_goal /moveL nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.3, y: 0.0, z: 1.4}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}"
+ros2 action send_goal /moveL nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: 0.3, y: 0.0, z: 1.1}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}"
 ```
 **RUTINA**
 
@@ -95,20 +95,26 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_go_home.yaml"
 **COMANDOS**
 
 ```bash
-ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
+ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
 ```
 ```bash
-ros2 service call /add_tool robot_interfaces/srv/ManageTool "{name: 'pinza', type: 1, dimensions: [0.1, 0.05], offset: {position: {z: 0.0}, orientation: {w: 1.0}}}"
+ros2 service call /add_tool robot_interfaces/srv/ManageTool "{name: 'pinza', type: 1, dimensions: [0.11, 0.05], offset: {position: {z: 0.0}, orientation: {w: 1.0}}}"
 ```
 ```bash
 ros2 param set /move_action_server active_tool "pinza"
 ```
 
 ```bash
-ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
+ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
 ```
 
-Se puede observar como el brazo baja la diferencia de 0.15 que es la diferencia del tamaño de las herramientas.
+
+Se puede observar como el brazo baja la diferencia de 0.10 que es la diferencia del tamaño de las herramientas.
+
+
+```bash
+ros2 param set /move_action_server active_tool "default"
+```
 
 **RUTINA**
 ```bash
@@ -125,11 +131,22 @@ Aqui habrá una diferencia porque la rutina da error ya que no podrá moverse po
 **COMANDOS**
 
 ```bash
-ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.7, y: 0.0, z: 0.9}, orientation: {x: 0.707, y: 0.0, z: 0.707, w: 0.0}}}}"
+ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: 0.6, y: 0.0, z: 0.9}, orientation: {x: 0.707, y: 0.0, z: 0.707, w: 0.0}}}}"
 ```
 
 ```bash
-ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.0, y: 0.0, z: 1.4}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}"
+ros2 service call /go_home robot_interfaces/srv/MoveJoint "{index: 0, degrees: 0.0}"
+```
+
+Como la pared virtual se asegura que el end effector es el que no atraviese la pared, pondremos una herramienta más grande para comprobar su funcionamiento
+
+
+```bash
+ros2 service call /add_tool robot_interfaces/srv/ManageTool "{name: 'pinza', type: 1, dimensions: [0.2, 0.05], offset: {position: {z: 0.0}, orientation: {w: 1.0}}}"
+```
+
+```bash
+ros2 param set /move_action_server active_tool "pinza"
 ```
 
 ```bash
@@ -148,18 +165,18 @@ ros2 service call /add_wall robot_interfaces/srv/AddObstacle "{
 
 ```
 
-Puedes obbservar la pared virtual en pybullet 
+Puedes observar la pared virtual en pybullet 
 
 
 ```bash
-ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.7, y: 0.0, z: 0.9}, orientation: {x: 0.707, y: 0.0, z: 0.707, w: 0.0}}}}"
+ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: 0.6, y: 0.0, z: 0.9}, orientation: {x: 0.707, y: 0.0, z: 0.707, w: 0.0}}}}"
 ```
 
 ```bash
 ros2 service call /remove_wall robot_interfaces/srv/RemoveObstacle "{name: 'pared_frontal'}"
 ```
 ```bash
-ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.7, y: 0.0, z: 0.9}, orientation: {x: 0.707, y: 0.0, z: 0.707, w: 0.0}}}}"
+ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: 0.6, y: 0.0, z: 0.9}, orientation: {x: 0.707, y: 0.0, z: 0.707, w: 0.0}}}}"
 ```
 
 **RUTINA**
