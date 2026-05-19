@@ -30,30 +30,12 @@ En las siguientes carpetas encontrarás todos los recursos del proyecto:
 
 Para más información sobre el proyecto acuda a [`documentacion/`](./doc/) 
 
-## ----------------------- TEMPORAL para probar ahora -----------------------
-
-## Como funciona:
-1. Compilar workspace
-2. Hacer launch del paquete robot_pkg 
-3. Eviar una petición de accion a un punto en x,y,z
-4. Calcula la cinematica inversa con pybullet (es un servicio)
-5. Se mueve a la posision y se puede ver mediante rviz2, en pybullet se ve las pruebas que hace para llegar a los objetivos y las herramientas que se vayan seleccionado. 
-
-
-#### Por que pybullet
-Para cambiar el robot solo hay que cambiar el urdf , la cinemática directa y en el nodo rviz_bridge cambiar a los nuevos nombres. De esta manera el software es lo más indepediente posible al robot fisico y cambiarlo no supondía más de 2 minutos.
-
-
-
-
 
 ## FALTA
 
 Falta: ----------------------------------------
 
-- Falta lo de +90 grados al enviar al arduino
 - Añadir paredes virtuales - manual 
-- URDF del robot real
 - Limpiar codigo
 
 - falta esquema con nuevos topic de y transform y tipo de mensaje
