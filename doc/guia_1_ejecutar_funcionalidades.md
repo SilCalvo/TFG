@@ -78,7 +78,7 @@ ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {f
 ros2 service call /add_tool robot_interfaces/srv/ManageTool "{name: 'pinza', type: 1, dimensions: [0.20, 0.05], offset: {position: {z: 0.0}, orientation: {w: 1.0}}}"
 ```
 ```bash
-ros2 param set /move_arm_noder active_tool "pinza"
+ros2 param set /move_arm_node active_tool "pinza"
 ```
 
 ```bash
