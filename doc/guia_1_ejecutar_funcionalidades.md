@@ -75,10 +75,10 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_go_home.yaml"
 ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
 ```
 ```bash
-ros2 service call /add_tool robot_interfaces/srv/ManageTool "{name: 'pinza', type: 1, dimensions: [0.11, 0.05], offset: {position: {z: 0.0}, orientation: {w: 1.0}}}"
+ros2 service call /add_tool robot_interfaces/srv/ManageTool "{name: 'pinza', type: 1, dimensions: [0.20, 0.05], offset: {position: {z: 0.0}, orientation: {w: 1.0}}}"
 ```
 ```bash
-ros2 param set /move_action_server active_tool "pinza"
+ros2 param set /move_arm_noder active_tool "pinza"
 ```
 
 ```bash
@@ -90,7 +90,7 @@ Se puede observar como el brazo baja la diferencia de 0.10 que es la diferencia 
 
 
 ```bash
-ros2 param set /move_action_server active_tool "default"
+ros2 param set /move_arm_node active_tool "default"
 ```
 
 **RUTINA**
@@ -123,7 +123,7 @@ ros2 service call /add_tool robot_interfaces/srv/ManageTool "{name: 'pinza', typ
 ```
 
 ```bash
-ros2 param set /move_action_server active_tool "pinza"
+ros2 param set /move_arm_node active_tool "pinza"
 ```
 
 ```bash
