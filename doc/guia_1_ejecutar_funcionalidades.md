@@ -1,32 +1,9 @@
-# Requisitos del sistema
 
-Debes tener todos ellos instalados en tu máquina local. 
-- LINUX UBUNTU 2024
-- Ros2 Jazzy
-- Pybullet
-- Rvizz
-- Arduino
+# GUIA 1 EJECUTAR FUNCIONALIDADES
 
-# Ejecutar Código:
+A continuación se mostrará una guia para probar las direfentes funcionalidades y las rutinas asociadas a ellas. Se recomienda empezar por los comandos sin modificar entiendiedno su funcion y en la siguiente guia ya modficarlo.
 
-```bash
-git clone <repo_url>
-cd TFG/src/ros2_ws
-colcon build
-```
-```bash
-ros2 launch robot_pkg move_action.launch.py
-```
-## Pestañas abiertas
-
-Se abren 2 pestañas:
-- **Rvizz**: Muestra el estado actual de los ejes del robot. Moviemiento acorde con los comandos enviados, si se usa un robot fisico, se moverá acorde al robot fisico tambien. Ajustalo a tu gusto.
-
-Recomendacion: Añade el topic de TF ... y el topic de robot model, seleccionado en la pesataña de topic, el topic que aparezca. 
-
-- **Pybullet**: Gemelo digital del robot...
-
-## Modos de Uso
+# Modos de Uso
 
 Existen 2 modos de probarlo:
 
@@ -34,7 +11,7 @@ Existen 2 modos de probarlo:
 - **Rutina**: Ejecutando una rutina ya escrita
 
 
-### Probar Move J y Move L con TCP default
+## Probar Move J y Move L con TCP default
 
 **COMANDOS**
 
@@ -54,7 +31,7 @@ ros2 run robot_pkg rutine_node
 ```
 
 
-### Mover una articulacion
+## Mover una articulacion
 
 Sirve para mover una articulación a un grado dado, como por ejemplo cerrar la pinza que sea x grados
 
@@ -72,7 +49,7 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_move_articulations.y
 ```
 
 
-### Mover robot a posicion segura HOME
+## Mover robot a posicion segura HOME
 
 Coloca al robot en posision segura home 
 
@@ -90,7 +67,7 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_go_home.yaml"
 ```
 
 
-### Probar TCP nuevo
+## Probar TCP nuevo
 
 **COMANDOS**
 
@@ -124,7 +101,7 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_tcp.yaml"
 Se puede observar como el brazo baja la diferencia de 0.15 que es la diferencia del tamaño de las herramientas.
 
 
-### Probar añadir pared virtual
+## Probar añadir pared virtual
 
 Aqui habrá una diferencia porque la rutina da error ya que no podrá moverse por la pared virtual y no seguirá ejecutandose. Mientras que por comandos puedes seguir enviando el siguiente
 
@@ -184,7 +161,7 @@ ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {f
 ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_wall.yaml"
 ```
 
-### Jugar al 3 en raya
+## Jugar al 3 en raya
 
 **COMANDOS**
 
@@ -232,24 +209,3 @@ ros2 service call /add_object robot_interfaces/srv/SpawnObject "{name: 'ficha_o_
 
 ```
 
-
-### Funcionalidades
-**Añadir TCP**
-
-**Selecionar TCP**
-
-**Borrar TCP**
-
-**Añadir pared**
-
-**Borrar pared**
-
-**Ejecutar rutina**
-
-**Añadir camara**
-
-**Borrar camara**
-
-**Añadir objeto**
-
-**Borrar objeto**
