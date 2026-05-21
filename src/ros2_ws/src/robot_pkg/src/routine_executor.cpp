@@ -28,11 +28,11 @@ RoutineExecutor::RoutineExecutor() : Node("routine_executor_node"), current_step
   client_add_tool_ = this->create_client<robot_interfaces::srv::ManageTool>("add_tool");
   client_delete_tool_ = this->create_client<robot_interfaces::srv::ManageTool>("delete_tool");
 
-  // Cliente de parámetros apuntando explícitamente a tu "move_action_server"
-  param_client_ = std::make_shared<rclcpp::AsyncParametersClient>(this, "move_action_server");
+  // Cliente de parámetros apuntando explícitamente a tu "move_arm_node"
+  param_client_ = std::make_shared<rclcpp::AsyncParametersClient>(this, "move_arm_node");
   RCLCPP_INFO(this->get_logger(), "Sincronizando con el servidor de parámetros...");
   if (!param_client_->wait_for_service(std::chrono::seconds(5))) {
-    RCLCPP_ERROR(this->get_logger(), "No se encontró el servidor de parámetros de move_action_server.");
+    RCLCPP_ERROR(this->get_logger(), "No se encontró el servidor de parámetros de move_arm_node.");
     rclcpp::shutdown();
     exit(1);
     return;

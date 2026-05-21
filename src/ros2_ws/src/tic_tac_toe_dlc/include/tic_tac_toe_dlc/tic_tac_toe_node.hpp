@@ -21,6 +21,7 @@
 
 #include "robot_interfaces/srv/spawn_object.hpp"
 #include "robot_interfaces/srv/put_piece.hpp"
+#include "robot_interfaces/srv/move_joint.hpp"
 
 struct Point3D {
     double x, y, z;
@@ -43,6 +44,7 @@ private:
     
     rclcpp::Client<robot_interfaces::srv::SpawnObject>::SharedPtr spawn_client_;
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr ia_client_;
+    rclcpp::Client<robot_interfaces::srv::MoveJoint>::SharedPtr go_home_client_;
     rclcpp::Service<robot_interfaces::srv::PutPiece>::SharedPtr put_piece_service_;
     
     // --- Clientes de accion delmovieminto ---
@@ -81,6 +83,7 @@ private:
     int minimax(char tab[3][3], int profundidad, bool es_maximizador);
     std::pair<int, int> encontrar_mejor_movimiento();
     bool send_move_action(double x, double y, double z, std::string action_name);
+    bool call_go_home();
 
     // --- Visión y Transformaciones ---
     Point3D get_pixel_xyz_in_robot_frame(int u, int v, const std::string& camera_frame, const std::string& robot_frame);

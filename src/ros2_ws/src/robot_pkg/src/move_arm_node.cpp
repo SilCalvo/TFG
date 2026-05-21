@@ -93,7 +93,6 @@ void MoveArmNode::joint_state_callback(const sensor_msgs::msg::JointState::Share
         current_angles_[i] = msg->position[i];  
     }
 }
-
 void MoveArmNode::handle_control_joint(
   const std::shared_ptr<robot_interfaces::srv::MoveJoint::Request> request,
   std::shared_ptr<robot_interfaces::srv::MoveJoint::Response> response) 
@@ -113,31 +112,52 @@ void MoveArmNode::handle_control_joint(
     return;
   }
 
-  // 3. Crear el mensaje MultiArray para Arduino transformando TODO a grados
-  std_msgs::msg::Int16MultiArray cmd_msg;
-  
-  for (size_t i = 0; i < current_angles_.size(); ++i) {
-    if (i == static_cast<size_t>(request->index)) {
-      // Si es el motor que ha pedido el usuario, metemos DIRECTAMENTE los grados del request
-      cmd_msg.data.push_back(static_cast<int16_t>(std::round(request->degrees)));
+  // 3. Obtener el ángulo actual y el ángulo objetivo en grados para la articulación solicitada
+  int target_index = request->index;
+  int16_t target_deg = static_cast<int16_t>(std::round(request->degrees));
+  int16_t current_step_deg = static_cast<int16_t>(std::round(current_angles_[target_index] * 180.0 / PI));
+
+  RCLCPP_INFO(this->get_logger(), "Moviendo Motor [%d] de %d a %d grados...", target_index, current_step_deg, target_deg);
+
+  // 4. Bucle para ir moviendo de 5 en 5 grados
+  while (current_step_deg != target_deg) {
+    int diff = target_deg - current_step_deg;
+
+    // Si la diferencia es mayor a 5 (en valor absoluto), damos un paso de 5. Si no, saltamos directamente al objetivo.
+    if (std::abs(diff) > 5) {
+      current_step_deg += (diff > 0) ? 5 : -5;
     } else {
-      // Para los demás motores, convertimos sus radianes actuales a grados
-      int16_t angle_deg = static_cast<int16_t>(std::round(current_angles_[i] * 180.0 / PI));
-      cmd_msg.data.push_back(angle_deg);
+      current_step_deg = target_deg;
     }
+
+    // Crear el mensaje MultiArray para este paso
+    std_msgs::msg::Int16MultiArray cmd_msg;
+    
+    for (size_t i = 0; i < current_angles_.size(); ++i) {
+      if (i == static_cast<size_t>(target_index)) {
+        // Ponemos el grado del paso actual para el motor que se está moviendo
+        cmd_msg.data.push_back(current_step_deg);
+      } else {
+        // Para los demás motores, mantenemos sus grados originales
+        int16_t angle_deg = static_cast<int16_t>(std::round(current_angles_[i] * 180.0 / PI));
+        cmd_msg.data.push_back(angle_deg);
+      }
+    }
+
+    // Publicar el array con el paso actual
+    publisher_->publish(cmd_msg);
+    RCLCPP_INFO(this->get_logger(), "Paso enviado: Motor [%d] a %d grados.", target_index, current_step_deg);
+
+    // Pausa entre cada pequeño paso (ajusta los milisegundos para que sea más rápido o más lento)
+    std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
   }
 
-  // 4. Publicar inmediatamente el array completo en grados a robot_cmd
-  publisher_->publish(cmd_msg);
-  RCLCPP_INFO(this->get_logger(), "Publicado en robot_cmd: Motor [%d] a %.2f grados (el resto mantiene su posición actual).", 
-              request->index, request->degrees);
-  
-  RCLCPP_INFO(this->get_logger(), "Publicado en robot_cmd: Motor [%d] a %.2f grados (el resto mantiene su posición actual).", 
-              request->index, request->degrees);
-  
+  // 5. Responder al cliente
   response->success = true;
-  response->message = "Comando mixto (Postura actual + Motor modificado) enviado a robot_cmd.";
+  response->message = "Comando mixto enviado: Movimiento escalonado completado.";
+  RCLCPP_INFO(this->get_logger(), "Movimiento completado con éxito.");
 }
+
 
 void MoveArmNode::handle_go_home(
   const std::shared_ptr<robot_interfaces::srv::MoveJoint::Request> request,
@@ -186,7 +206,7 @@ void MoveArmNode::handle_go_home(
     publisher_->publish(cmd_msg);
 
     // PAUSA CRÍTICA: Esperar 80 milisegundos para que los servos tengan tiempo de moverse
-    std::this_thread::sleep_for(std::chrono::milliseconds(80));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
   // Imprimir logs informativos al terminar
@@ -194,6 +214,7 @@ void MoveArmNode::handle_go_home(
   for (size_t i = 0; i < target_angles.size(); ++i) {
     RCLCPP_INFO(this->get_logger(), "  Joint %zu: %f rad (0 deg)", i, target_angles[i]);
   }
+  std::this_thread::sleep_for(std::chrono::milliseconds(750));
 
   RCLCPP_INFO(this->get_logger(), "¡El robot ha llegado a HOME de forma segura!");
   
@@ -374,11 +395,6 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveJ(geometry_msgs
     }
     trajectory.push_back(step_angles);
   }
-  RCLCPP_INFO(this->get_logger(), "Angulos:");
-  for (size_t i = 0; i < target_angles.size(); ++i) {
-      RCLCPP_INFO(this->get_logger(), "  Joint %zu: %f rad", i, target_angles[i]);
-  }
-  
   //current_angles_ = target_angles;
   return trajectory;
 }
@@ -502,7 +518,7 @@ void MoveArmNode::execute_moveJ(const std::shared_ptr<GoalHandleNav> goal_handle
     }
 
     publisher_->publish(cmd_msg);
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     Point current_xyz = calculate_dk(angles); 
     feedback->current_pose.pose.position.x = current_xyz.x;
@@ -511,9 +527,10 @@ void MoveArmNode::execute_moveJ(const std::shared_ptr<GoalHandleNav> goal_handle
 
     goal_handle->publish_feedback(feedback);
   }
+  std::this_thread::sleep_for(std::chrono::milliseconds(750));
+
 
   if (rclcpp::ok()) {
-    RCLCPP_INFO(this->get_logger(), "Angulos joint:");
     goal_handle->succeed(result);
     RCLCPP_INFO(this->get_logger(), "Trayectoria completada y Arduino posicionado!");
   }
@@ -578,7 +595,7 @@ void MoveArmNode::execute_moveL(const std::shared_ptr<GoalHandleNav> goal_handle
     }
 
     publisher_->publish(cmd_msg);
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     Point current_xyz = calculate_dk(angles); 
     feedback->current_pose.pose.position.x = current_xyz.x;
@@ -587,6 +604,8 @@ void MoveArmNode::execute_moveL(const std::shared_ptr<GoalHandleNav> goal_handle
 
     goal_handle->publish_feedback(feedback);
   }
+  std::this_thread::sleep_for(std::chrono::milliseconds(750));
+
 
   if (rclcpp::ok()) {
     goal_handle->succeed(result);

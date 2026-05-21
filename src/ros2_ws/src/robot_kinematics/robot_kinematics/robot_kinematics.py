@@ -198,7 +198,6 @@ class PyBulletKinematics(Node):
         else:
           self.get_logger().warn(f'Meta inalcanzable (Error: {error_dist:.3f}m)')
         
-        time.sleep(10) #############################################################################################################################
         # REBOBINAR
         for i, joint_idx in enumerate(self.movable_joints):
           p.resetJointState(self.robot_id, joint_idx, saved_joint_states[i])

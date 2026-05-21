@@ -138,18 +138,48 @@ class DigitalTwinVisualizer(Node):
 
     # --- SISTEMA DE CÁMARAS RGB-D ---
     
-
     def add_camera_callback(self, request, response):
         try:
             fov = 60.0
             near = 0.01
             far = 10.0
 
+            # 1. Definir posición y objetivo
+            pos = np.array([request.x, request.y, request.z])
+            target = np.array([request.target_x, request.target_y, request.target_z])
+            
+            # 2. Calcular los vectores base originales (sin rotación)
+            forward = target - pos
+            forward = forward / np.linalg.norm(forward)
+            
+            world_up = np.array([0.0, 0.0, 1.0])
+            # Prevención de singularidad: si la cámara mira exactamente hacia abajo/arriba
+            if abs(np.dot(forward, world_up)) > 0.999:
+                world_up = np.array([1.0, 0.0, 0.0])
+                
+            right_base = np.cross(forward, world_up)
+            right_base = right_base / np.linalg.norm(right_base)
+            up_base = np.cross(right_base, forward)
+
+            # 3. Aplicar rotación de 90 grados en el eje Z (Roll / Eje óptico)
+            roll_angle = math.radians(90.0) # Cambia a -90.0 si el giro es en la dirección opuesta
+            
+            # Calculamos el nuevo vector Up aplicando la Fórmula de Rodrigues
+            camera_up = up_base * math.cos(roll_angle) + right_base * math.sin(roll_angle)
+            camera_up = camera_up / np.linalg.norm(camera_up)
+
+            # Recalculamos ejes Right y Down tras el giro para el TF de ROS
+            new_right = np.cross(forward, camera_up)
+            new_right = new_right / np.linalg.norm(new_right)
+            new_down = np.cross(forward, new_right)
+
+            # 4. Generar matrices de PyBullet con la cámara girada
             view_matrix = p.computeViewMatrix(
-                cameraEyePosition=[request.x, request.y, request.z],
-                cameraTargetPosition=[request.target_x, request.target_y, request.target_z],
-                cameraUpVector=[0, 0, 1]
+                cameraEyePosition=pos.tolist(),
+                cameraTargetPosition=target.tolist(),
+                cameraUpVector=camera_up.tolist()
             )
+            
             proj_matrix = p.computeProjectionMatrixFOV(
                 fov=fov, 
                 aspect=float(request.width)/float(request.height), 
@@ -157,51 +187,18 @@ class DigitalTwinVisualizer(Node):
                 farVal=far
             )
 
-            # CÁLCULO DE INTRÍNSECAS (Modelo Pinhole)
+            # 5. CÁLCULO DE INTRÍNSECAS (Modelo Pinhole)
             fov_rad = math.radians(fov)
             f_y = (request.height / 2.0) / math.tan(fov_rad / 2.0)
             f_x = f_y  # Asumimos píxeles cuadrados
             c_x = request.width / 2.0
             c_y = request.height / 2.0
 
-            self.cameras_config[request.name] = {
-                'view': view_matrix,
-                'proj': proj_matrix,
-                'width': request.width,
-                'height': request.height,
-                'near': near,
-                'far': far,
-                'fx': f_x, 'fy': f_y, 'cx': c_x, 'cy': c_y
-            }
-
-            # Creamos los 3 publicadores estándar de una cámara ROS 2
-            if request.name not in self.camera_publishers:
-                self.camera_publishers[request.name] = {
-                    'rgb': self.create_publisher(Image, f'/camera/{request.name}/color/image_raw', 10),
-                    'depth': self.create_publisher(Image, f'/camera/{request.name}/depth/image_raw', 10),
-                    'info': self.create_publisher(CameraInfo, f'/camera/{request.name}/camera_info', 10)
-                }
-
-            if self.camera_timer is None:
-                self.get_logger().info("Detectada primera cámara. Activando sistema de visión RGB-D (10Hz)...")
-                self.camera_timer = self.create_timer(0.1, self.publish_camera_images)
-
-            self.get_logger().info(f"Cámara RGB-D '{request.name}' configurada correctamente.")
-            
-            pos = np.array([request.x, request.y, request.z])
-            target = np.array([request.target_x, request.target_y, request.target_z])
-            forward = (target - pos)
-            forward = forward / np.linalg.norm(forward)
-            
-            world_up = np.array([0.0, 0.0, 1.0])
-            right = np.cross(forward, world_up)
-            right = right / np.linalg.norm(right)
-            down = np.cross(forward, right)
-            
+            # 6. Cálculo del cuaternión para la transformada (TF) usando los ejes rotados
             rot_matrix = np.array([
-                [right[0], down[0], forward[0]],
-                [right[1], down[1], forward[1]],
-                [right[2], down[2], forward[2]]
+                [new_right[0], new_down[0], forward[0]],
+                [new_right[1], new_down[1], forward[1]],
+                [new_right[2], new_down[2], forward[2]]
             ])
             
             tr = np.trace(rot_matrix)
@@ -214,7 +211,7 @@ class DigitalTwinVisualizer(Node):
             else:
                 qx, qy, qz, qw = 0.0, 0.707, 0.0, 0.707 
 
-            # En vez de publicar, lo GUARDAMOS en la configuración de esta cámara
+            # 7. Guardar configuración general y Publishers
             self.cameras_config[request.name] = {
                 'view': view_matrix,
                 'proj': proj_matrix,
@@ -223,14 +220,28 @@ class DigitalTwinVisualizer(Node):
                 'near': near,
                 'far': far,
                 'fx': f_x, 'fy': f_y, 'cx': c_x, 'cy': c_y,
-                'pos': [request.x, request.y, request.z], # <-- Guardamos Posición
-                'quat': [qx, qy, qz, qw]                  # <-- Guardamos Rotación
+                'pos': pos.tolist(),
+                'quat': [qx, qy, qz, qw]
             }
+
+            if request.name not in self.camera_publishers:
+                self.camera_publishers[request.name] = {
+                    'rgb': self.create_publisher(Image, f'/camera/{request.name}/color/image_raw', 10),
+                    'depth': self.create_publisher(Image, f'/camera/{request.name}/depth/image_raw', 10),
+                    'info': self.create_publisher(CameraInfo, f'/camera/{request.name}/camera_info', 10)
+                }
+
+            if self.camera_timer is None:
+                self.get_logger().info("Detectada primera cámara. Activando sistema de visión RGB-D (10Hz)...")
+                self.camera_timer = self.create_timer(0.1, self.publish_camera_images)
+
+            self.get_logger().info(f"Cámara RGB-D '{request.name}' configurada con rotación de 90 grados.")
             response.success = True
 
         except Exception as e:
             self.get_logger().error(f"Error al añadir cámara: {str(e)}")
             response.success = False
+            
         return response
     
     def publish_camera_images(self):

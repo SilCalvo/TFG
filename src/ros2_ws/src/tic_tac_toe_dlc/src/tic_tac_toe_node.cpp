@@ -252,19 +252,24 @@ void TicTacToeNode::ejecutar_turno_robot() {
     
     // Lógica con comprobación de errores. Si alguno falla, reinicia todo de cero.
     RCLCPP_INFO(this->get_logger(), "Moviendo brazo a aproximación...");
+    if (!send_move_action(pm.x, pm.y, pm.z + 0.4, "moveJ")) {
+        RCLCPP_ERROR(this->get_logger(), "Error físico al ir al punto de aproximación. Abortando turno.");
+        estado_actual_ = INICIALIZANDO;
+
+        return;
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000)); 
+
+    
+    RCLCPP_INFO(this->get_logger(), "Bajando al tablero...");
     if (!send_move_action(pm.x, pm.y, pm.z + 0.1, "moveJ")) {
         RCLCPP_ERROR(this->get_logger(), "Error físico al ir al punto de aproximación. Abortando turno.");
         estado_actual_ = INICIALIZANDO;
 
         return;
     }
-    
-    RCLCPP_INFO(this->get_logger(), "Bajando al tablero...");
-    if (!send_move_action(pm.x, pm.y, pm.z, "moveL")) {
-        RCLCPP_ERROR(this->get_logger(), "Error físico al bajar. Abortando turno.");
-        estado_actual_ = INICIALIZANDO;
-        return;
-    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(500)); 
+
     
 
     auto spawn_piece = std::make_shared<robot_interfaces::srv::SpawnObject::Request>();
@@ -273,14 +278,17 @@ void TicTacToeNode::ejecutar_turno_robot() {
     spawn_piece->piece_type = "ficha_x";
     spawn_piece->x = pm.x; spawn_piece->y = pm.y; spawn_piece->z = pm.z + 0.002;
     spawn_client_->async_send_request(spawn_piece);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500)); 
+
 
 
     RCLCPP_INFO(this->get_logger(), "Retirando brazo...");
-    if (!send_move_action(pm.x, pm.y, pm.z + 0.1, "moveL")) {
-        RCLCPP_ERROR(this->get_logger(), "Error físico al retirar el brazo. Abortando turno.");
+    if (!send_move_action(pm.x, pm.y, pm.z + 0.6, "moveJ")) {
+        RCLCPP_ERROR(this->get_logger(), "Error físico al ir al punto de aproximación. Abortando turno.");
         estado_actual_ = INICIALIZANDO;
         return;
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(500)); 
 
 
     imprimir_tablero_debug();
