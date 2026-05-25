@@ -6,6 +6,11 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
+from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, accuracy_score
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 # --- CONFIGURACIÓN ---
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 RUTA_DATASET = './train' 
@@ -95,6 +100,34 @@ def predecir_imagen(ruta_imagen):
         print(f"Error prediciendo {ruta_imagen}: {e}")
         return "error", 0.0
 
+def generar_graficas_entrenamiento(historial_loss, historial_acc):
+    epocas = range(1, len(historial_loss) + 1)
+    
+    plt.figure(figsize=(12, 5))
+    
+    # Gráfic Evolución del Loss (Pérdida)
+    plt.subplot(1, 2, 1)
+    plt.plot(epocas, historial_loss, 'r-', marker='o', markersize=4, label='Pérdida (Loss)')
+    plt.title('Evolución de la Función de Pérdida', fontsize=12)
+    plt.xlabel('Época', fontsize=10)
+    plt.ylabel('Pérdida (CrossEntropy)', fontsize=10)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+    
+    # Gráfica Evolución de la Exactitud (Accuracy)
+    plt.subplot(1, 2, 2)
+    plt.plot(epocas, historial_acc, 'b-', marker='o', markersize=4, label='Exactitud (Accuracy)')
+    plt.title('Evolución de la Exactitud', fontsize=12)
+    plt.xlabel('Época', fontsize=10)
+    plt.ylabel('Exactitud (%)', fontsize=10)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+    
+    plt.tight_layout()
+    plt.savefig('graficas_entrenamiento.png', dpi=300)
+    print("\nGráficas de entrenamiento guardadas como 'graficas_entrenamiento.png'")
+    plt.show()
+
 def entrenar():
     if not os.path.exists(RUTA_DATASET):
         print(f"Error: No encuentro la carpeta '{RUTA_DATASET}'")
@@ -114,9 +147,12 @@ def entrenar():
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model_train.parameters(), lr=0.001)
 
-    print("Iniciando entrenamiento (20 épocas)...")
+    print("Iniciando entrenamiento (5 épocas)...")
     
-    for epoch in range(35): 
+    historial_loss = []
+    historial_acc = []
+    
+    for epoch in range(5):  
         total_loss = 0
         correct = 0
         total = 0
@@ -136,10 +172,80 @@ def entrenar():
             correct += (predicted == labels).sum().item()
             
         acc = 100 * correct / total
-        print(f"Epoch {epoch+1}/20 -> Loss: {total_loss/len(dataloader):.4f} | Acc: {acc:.2f}%")
+        epoch_loss = total_loss / len(dataloader)
+        
+        print(f"Epoch {epoch+1}/5 -> Loss: {epoch_loss:.4f} | Acc: {acc:.2f}%")
+        
+        historial_loss.append(epoch_loss)
+        historial_acc.append(acc)
 
     torch.save(model_train.state_dict(), NOMBRE_MODELO)
     print(f"Modelo guardado en '{NOMBRE_MODELO}'")
+    
+    generar_graficas_entrenamiento(historial_loss, historial_acc)
+
+def evaluar():
+    print("\n--- GENERANDO TABLAS DE EVALUACIÓN ---")
+    if not os.path.exists(RUTA_DATASET):
+        print(f"Error: No encuentro la carpeta '{RUTA_DATASET}'")
+        return
+
+    dataset = datasets.ImageFolder(root=RUTA_DATASET, transform=transform)
+    dataloader = DataLoader(dataset, batch_size=16, shuffle=False) 
+    
+    cargar_modelo(NOMBRE_MODELO)
+    
+    y_true = []
+    y_pred = []
+
+    print("Calculando predicciones...")
+    with torch.no_grad():
+        for inputs, labels in dataloader:
+            inputs = inputs.to(DEVICE)
+            outputs = model(inputs)
+            _, predicted = torch.max(outputs, 1)
+            
+            y_true.extend(labels.cpu().numpy())
+            y_pred.extend(predicted.cpu().numpy())
+
+    # --- CÁLCULO DE MÉTRICAS ---
+    acc = accuracy_score(y_true, y_pred) * 100
+    precisiones = precision_score(y_true, y_pred, average=None, zero_division=0)
+    sensibilidades = recall_score(y_true, y_pred, average=None, zero_division=0)
+    f1_global = f1_score(y_true, y_pred, average='weighted')
+    cm = confusion_matrix(y_true, y_pred)
+
+    # --- IMPRESIÓN DE LA TABLA DE MÉTRICAS ---
+    print("\nEvaluación del modelo")
+    print("---------------------------------------------------------")
+    print(f"{'Métrica':<35} | Valor Obtenido")
+    print("---------------------------------------------------------")
+    print(f"{'Exactitud Global (Accuracy)':<35} | {acc:.2f} %")
+    print(f"{'Precisión - Clase Vacía (-)':<35} | {precisiones[0]:.4f}")
+    print(f"{'Precisión - Clase O':<35} | {precisiones[1]:.4f}")
+    print(f"{'Precisión - Clase X':<35} | {precisiones[2]:.4f}")
+    print(f"{'Sensibilidad (Recall) - Clase (-)':<35} | {sensibilidades[0]:.4f}")
+    print(f"{'Sensibilidad (Recall) - Clase O':<35} | {sensibilidades[1]:.4f}")
+    print(f"{'Sensibilidad (Recall) - Clase X':<35} | {sensibilidades[2]:.4f}")
+    print(f"{'F1-Score Global':<35} | {f1_global:.4f}")
+    print("---------------------------------------------------------")
+
+    # --- GENERAR Y GUARDAR LA GRÁFICA DE LA MATRIZ DE CONFUSIÓN ---
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+                xticklabels=['Vacío (-)', 'O', 'X'], 
+                yticklabels=['Vacío (-)', 'O', 'X'])
+    
+    plt.title('Matriz de Confusión - Reconocimiento Tres en Raya', fontsize=14)
+    plt.ylabel('Etiqueta Real', fontsize=12)
+    plt.xlabel('Predicción del Modelo', fontsize=12)
+    
+    plt.tight_layout()
+    plt.savefig('grafica_matriz_confusion.png', dpi=300)
+    print("\nGráfica guardada como 'grafica_matriz_confusion.png'")
+    
+    plt.show()
 
 if __name__ == "__main__":
     entrenar()
+    evaluar()

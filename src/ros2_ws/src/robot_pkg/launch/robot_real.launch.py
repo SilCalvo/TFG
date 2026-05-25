@@ -37,15 +37,7 @@ def generate_launch_description():
             name='robot_kinematics',
             output='screen'
         ),
-
-        Node(
-            package='robot_digital_twin',
-            executable='robot_digital_twin_node',
-            name='digital_twin',
-            output='screen'
-        ),
-
-
+        
         Node(
             package='robot_pkg',
             executable='move_arm_node',
@@ -62,4 +54,12 @@ def generate_launch_description():
             parameters=[config]
         ),
 
+        Node(
+            package='robot_pkg',
+            executable='servo_bridge_node',
+            name='servo_bridge_node',
+            output='screen',
+            parameters=[config]
+        )
+        
     ])

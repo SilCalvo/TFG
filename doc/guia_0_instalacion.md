@@ -32,14 +32,20 @@ Existen varias maneras de ejecutar el codigo:
 Solo virtual:
 
 ```bash
-ros2 launch robot_pkg move_action.launch.py
+ros2 launch robot_pkg simulation.launch.py
 ```
 
 Solo fisico:
 
+```bash
+ros2 launch robot_pkg robot_real.launch.py
+```
 
 Hibrido:
 
+```bash
+ros2 launch robot_pkg hibrid.launch.py
+```
 
 ## Pestañas abiertas
 

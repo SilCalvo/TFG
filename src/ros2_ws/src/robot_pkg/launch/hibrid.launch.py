@@ -62,4 +62,12 @@ def generate_launch_description():
             parameters=[config]
         ),
 
+        #Node(
+        #    package='robot_pkg',
+        #    executable='servo_bridge_node',
+        #    name='servo_bridge_node',
+        #    output='screen',
+        #    parameters=[config]
+        #)
+        
     ])

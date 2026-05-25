@@ -38,8 +38,10 @@ Falta: ----------------------------------------
 - Añadir paredes virtuales - manual 
 - Limpiar codigo
 
-- falta esquema con nuevos topic de y transform y tipo de mensaje
-- cambiar diagramas a lo real 
+- falta esquema del 3 en raya
 - mas detallado investaigacion y metricas del cnn...
+- Apartado 6
+- Tablas TFG 
+- Rutina pick and plce
 
 
