@@ -1,58 +1,58 @@
-# Manual de Uso — Plataforma SURI
+# Manual de uso — Plataforma SURI
 
 ---
 
 ## Índice
 
 1. [Introducción a SURI](#1-introducción-a-suri)
-   - [1.1 ¿Qué es la Plataforma SURI?](#11-qué-es-la-plataforma-suri)
-   - [1.2 Enfoques de uso: Usuario y Desarrollador](#12-enfoques-de-uso-usuario-y-desarrollador)
-   - [1.3 Modos de simulación: Virtual y Físico](#13-modos-de-simulación-virtual-y-físico)
+   - [1.1 ¿Qué es la plataforma SURI?](#11-qué-es-la-plataforma-suri)
+   - [1.2 Enfoques de uso: Usuario y desarrollador](#12-enfoques-de-uso-usuario-y-desarrollador)
+   - [1.3 Modos de simulación: Virtual y físico](#13-modos-de-simulación-virtual-y-físico)
    - [1.4 Tecnologías empleadas](#14-tecnologías-empleadas)
-   - [Arquitectura del Sistema](#arquitectura-del-sistema)
-2. [Primeros Pasos y Configuración](#2-primeros-pasos-y-configuración)
+   - [Arquitectura del sistema](#arquitectura-del-sistema)
+2. [Primeros pasos y configuración](#2-primeros-pasos-y-configuración)
    - [2.1 Requisitos del sistema](#21-requisitos-del-sistema)
    - [2.2 Instalación y compilación del entorno](#22-instalación-y-compilación-del-entorno)
    - [2.3 Ejecución del código base](#23-ejecución-del-código-base)
    - [2.4 Entendiendo la interfaz gráfica](#24-entendiendo-la-interfaz-gráfica)
    - [2.5 Interfaz HMI y control del robot físico](#25-interfaz-hmi-y-control-del-robot-físico)
-3. [Metodología de Uso](#3-metodología-de-uso)
-   - [3.1 Modo Comandos (Ejecución vía terminal)](#31-modo-comandos-ejecución-vía-terminal)
-   - [3.2 Modo Rutina (Ejecución de archivos .yaml)](#32-modo-rutina-ejecución-de-archivos-yaml)
-4. [Pruebas y Casos de Uso Prácticos](#4-pruebas-y-casos-de-uso-prácticos)
+3. [Metodología de uso](#3-metodología-de-uso)
+   - [3.1 Modo comandos (ejecución vía terminal)](#31-modo-comandos-ejecución-vía-terminal)
+   - [3.2 Modo rutina (ejecución de archivos .yaml)](#32-modo-rutina-ejecución-de-archivos-yaml)
+4. [Pruebas y casos de uso prácticos](#4-pruebas-y-casos-de-uso-prácticos)
    - [4.1 Movimientos cinemáticos básicos](#41-movimientos-cinemáticos-básicos)
    - [4.2 Posición segura: HOME](#42-posición-segura-home)
    - [4.3 Mover articulaciones por separado](#43-mover-articulaciones-por-separado)
-   - [4.4 Gestión de Herramientas: Añadir y probar un nuevo TCP](#44-gestión-de-herramientas-añadir-y-probar-un-nuevo-tcp)
-   - [4.5 Gestión de Colisiones: Creación de paredes virtuales](#45-gestión-de-colisiones-creación-de-paredes-virtuales)
-   - [4.6 Caso de Estudio Avanzado: Jugar al 3 en Raya](#46-caso-de-estudio-avanzado-jugar-al-3-en-raya)
-     - [4.6.1 Configuración del entorno y Machine Learning (PyTorch)](#461-configuración-del-entorno-y-machine-learning-pytorch)
-     - [4.6.2 Configuración de la visión (Cámaras y Tablero)](#462-configuración-de-la-visión-cámaras-y-tablero)
+   - [4.4 Gestión de herramientas: Añadir y probar un nuevo TCP](#44-gestión-de-herramientas-añadir-y-probar-un-nuevo-tcp)
+   - [4.5 Gestión de colisiones: Creación de paredes virtuales](#45-gestión-de-colisiones-creación-de-paredes-virtuales)
+   - [4.6 Caso de estudio avanzado: Jugar al 3 en raya](#46-caso-de-estudio-avanzado-jugar-al-3-en-raya)
+     - [4.6.1 Configuración del entorno y machine learning (PyTorch)](#461-configuración-del-entorno-y-machine-learning-pytorch)
+     - [4.6.2 Configuración de la visión (cámaras y tablero)](#462-configuración-de-la-visión-cámaras-y-tablero)
      - [4.6.3 Ejecución de la partida e interacción](#463-ejecución-de-la-partida-e-interacción)
-5. [Lista de Comandos](#5-lista-de-comandos)
+5. [Lista de comandos](#5-lista-de-comandos)
    - [5.1 Comandos de terminal](#51-comandos-de-terminal)
-     - [5.1.1 Movimientos del Robot](#511-movimientos-del-robot)
-     - [5.1.2 Entorno y Colisiones](#512-entorno-y-colisiones)
-     - [5.1.3 Configuración de Herramientas (TCP)](#513-configuración-de-herramientas-tcp)
-     - [5.1.4 Cámaras y Objetos](#514-cámaras-y-objetos)
-     - [5.1.5 Módulo 3 en Raya (DLC)](#515-módulo-3-en-raya-dlc)
+     - [5.1.1 Movimientos del robot](#511-movimientos-del-robot)
+     - [5.1.2 Entorno y colisiones](#512-entorno-y-colisiones)
+     - [5.1.3 Configuración de herramientas (TCP)](#513-configuración-de-herramientas-tcp)
+     - [5.1.4 Cámaras y objetos](#514-cámaras-y-objetos)
+     - [5.1.5 Módulo 3 en raya (DLC)](#515-módulo-3-en-raya-dlc)
    - [5.2 Rutinas (.yaml)](#52-rutinas-yaml)
      - [5.2.1 Cómo ejecutar una rutina](#521-cómo-ejecutar-una-rutina)
      - [5.2.2 Estructura de una rutina](#522-estructura-de-una-rutina)
-     - [5.2.3 Movimientos del Robot](#523-movimientos-del-robot)
-     - [5.2.4 Entorno y Colisiones](#524-entorno-y-colisiones)
-     - [5.2.5 Configuración de Herramientas (TCP)](#525-configuración-de-herramientas-tcp)
-6. [Guía Básica para Desarrolladores](#6-guía-básica-para-desarrolladores)
+     - [5.2.3 Movimientos del robot](#523-movimientos-del-robot)
+     - [5.2.4 Entorno y colisiones](#524-entorno-y-colisiones)
+     - [5.2.5 Configuración de herramientas (TCP)](#525-configuración-de-herramientas-tcp)
+6. [Guía básica para desarrolladores](#6-guía-básica-para-desarrolladores)
    - [6.1 Cómo cambiar el modelo del robot](#61-cómo-cambiar-el-modelo-del-robot)
    - [6.2 Comunicación serial con el robot físico](#62-comunicación-serial-con-el-robot-físico)
-   - [6.3 Añadir funcionalidades y Módulos Adicionales (DLCs)](#63-añadir-funcionalidades-y-módulos-adicionales-dlcs)
+   - [6.3 Añadir funcionalidades y módulos adicionales (DLCs)](#63-añadir-funcionalidades-y-módulos-adicionales-dlcs)
 7. [Anexos](#7-anexos)
 
 ---
 
 ## 1. Introducción a SURI
 
-### 1.1 ¿Qué es la Plataforma SURI?
+### 1.1 ¿Qué es la plataforma SURI?
 
 **SURI** (Simulación Universal para Robótica Industrial) es una plataforma de simulación, control y aprendizaje para brazos robóticos. Tiene una interfaz amigable para el usuario y una escalabilidad grande que permite a los estudiantes seguir formándose y crear nuevas funcionalidades. Lo que diferencia a esta plataforma de otras es que gracias a su diseño modular hace que se pueda cambiar, añadir o eliminar configuraciones muy cómodamente sin afectar al resto del programa.
 
@@ -60,7 +60,7 @@ Una de las características más destacadas es la facilidad de cambiar el robot.
 
 ---
 
-### 1.2 Enfoques de uso: Usuario y Desarrollador
+### 1.2 Enfoques de uso: Usuario y desarrollador
 
 Este proyecto tiene dos enfoques de uso:
 
@@ -70,7 +70,7 @@ Este proyecto tiene dos enfoques de uso:
 
 ---
 
-### 1.3 Modos de simulación: Virtual y Físico
+### 1.3 Modos de simulación: Virtual y físico
 
 Este proyecto tiene varias maneras de ejecutarse:
 
@@ -88,7 +88,7 @@ Gracias a su estructura modular permite que se pueda funcionar de varias maneras
 
 Para lograr que SURI sea accesible, modular y no requiera un superordenador, se ha seleccionado cuidadosamente las tecnologías base. Cada pieza cumple una función específica y ha sido elegida pensando en mantener una curva de aprendizaje amigable y fluida.
 
-### Arquitectura del Sistema
+### Arquitectura del sistema
 
 | Componente | Tecnología | Función |
 |---|---|---|
@@ -100,7 +100,7 @@ De esta manera, se obtiene una plataforma con una curva de aprendizaje baja, que
 
 ---
 
-## 2. Primeros Pasos y Configuración
+## 2. Primeros pasos y configuración
 
 Esta sección es una guía del proceso de instalación, compilación y puesta en marcha de la plataforma. El objetivo es dejar el entorno completamente operativo en el equipo local.
 
@@ -211,11 +211,11 @@ Mientras este ajuste gradual se está llevando a cabo, los LEDs azul y amarillo 
 
 ---
 
-## 3. Metodología de Uso
+## 3. Metodología de uso
 
 La plataforma SURI ofrece dos metodologías principales para enviar instrucciones al robot. La elección entre una u otra dependerá de si se busca realizar pruebas puntuales o automatizar un proceso completo.
 
-### 3.1 Modo Comandos (Ejecución vía terminal)
+### 3.1 Modo comandos (ejecución vía terminal)
 
 Este modo permite una interacción directa y manual con el sistema a través de la terminal de comandos.
 
@@ -227,7 +227,7 @@ Consiste en introducir las instrucciones de movimiento o acción una a una. Al s
 
 ---
 
-### 3.2 Modo Rutina (Ejecución de archivos .yaml)
+### 3.2 Modo rutina (ejecución de archivos .yaml)
 
 Este modo está diseñado para la **automatización de tareas**. En lugar de escribir los comandos uno a uno, el sistema lee y ejecuta de forma secuencial una lista de instrucciones predefinidas guardadas en un archivo de configuración con formato `.yaml`.
 
@@ -241,7 +241,7 @@ robot_ws/src/robot_pkg/rutines/
 
 ---
 
-## 4. Pruebas y Casos de Uso Prácticos
+## 4. Pruebas y casos de uso prácticos
 
 Una vez configurado el entorno, es el momento de poner a prueba el sistema. En esta sección se detallan las operaciones fundamentales que puede realizar el brazo robótico, desde movimientos básicos hasta la integración de inteligencia artificial.
 
@@ -317,7 +317,7 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_move_articulations.y
 ```
 ---
 
-### 4.4 Gestión de Herramientas: Añadir y probar un nuevo TCP
+### 4.4 Gestión de herramientas: Añadir y probar un nuevo TCP
 
 El **TCP** (Tool Center Point o Punto Central de la Herramienta) es el punto exacto de la herramienta que el robot utiliza para interactuar con el entorno. Para el sistema de control, este punto virtual es el verdadero final del brazo robótico, y todos los cálculos matemáticos de movimiento y orientación se realizan tomando exclusivamente este punto de referencia.
 
@@ -360,7 +360,7 @@ Se puede observar como el brazo baja la diferencia de 0.15 que es la diferencia 
 
 ---
 
-### 4.5 Gestión de Colisiones: Creación de paredes virtuales
+### 4.5 Gestión de colisiones: Creación de paredes virtuales
 
 La seguridad es el factor más crítico en robótica. Tradicionalmente, esto se soluciona instalando una celda física de metal alrededor del robot; si un humano entra, la máquina se apaga de golpe. Sin embargo, esto requiere construcción física, ocupa espacio y anula la interactividad.
 
@@ -431,13 +431,13 @@ ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_wall.yaml"
 
 ---
 
-### 4.6 Caso de Estudio Avanzado: Jugar al 3 en Raya
+### 4.6 Caso de estudio avanzado: Jugar al 3 en raya
 
 Para demostrar la capacidad de SURI al integrar robótica, visión artificial y toma de decisiones, se ha incluido un módulo adicional (DLC) que permite jugar partidas de **3 en raya** (Tic-Tac-Toe) contra el robot.
 
 La ejecución de este caso requiere configurar varios elementos del entorno:
 
-#### 4.6.1 Configuración del entorno y Machine Learning (PyTorch)
+#### 4.6.1 Configuración del entorno y machine learning (PyTorch)
 
 Para que el robot sea capaz de distinguir entre una "X" y una "O", se utiliza un modelo ligero de Inteligencia Artificial (Machine Learning) que clasifica las piezas visualmente. Para evitar problemas de compatibilidad y facilitar su uso, se ha preparado un entorno virtual de Python que contiene todas las librerías necesarias (como PyTorch).
 
@@ -448,7 +448,7 @@ chmod +x src/tic_tac_toe_dlc/launch/init_python.sh
 ./src/tic_tac_toe_dlc/launch/init_python.sh
 ```
 
-#### 4.6.2 Configuración de la visión (Cámaras y Tablero)
+#### 4.6.2 Configuración de la visión (cámaras y tablero)
 
 El siguiente paso es añadir la escena de juego. Esto despliega el tablero virtual y posiciona una cámara RGB-D. El uso de este tipo de cámara es clave: captura los colores para identificar las piezas y utiliza la **profundidad (Depth)** para calcular la distancia exacta a la que se encuentran en el espacio 3D.
 
@@ -483,7 +483,7 @@ ros2 service call /put_piece_virtual robot_interfaces/srv/PutPiece \
 
 ---
 
-## 5. Lista de Comandos
+## 5. Lista de comandos
 
 Esta sección recoge todos los comandos disponibles en la plataforma SURI, tanto para su uso directo desde la terminal como para incluirlos en archivos de rutina `.yaml`.
 
@@ -491,7 +491,7 @@ Esta sección recoge todos los comandos disponibles en la plataforma SURI, tanto
 
 ### 5.1 Comandos de terminal
 
-#### 5.1.1 Movimientos del Robot
+#### 5.1.1 Movimientos del robot
 
 - **`moveJ`** — Movimiento articular a una pose cartesiana.
 
@@ -519,7 +519,7 @@ Esta sección recoge todos los comandos disponibles en la plataforma SURI, tanto
 
 ---
 
-#### 5.1.2 Entorno y Colisiones
+#### 5.1.2 Entorno y colisiones
 
 - **`add_wall`** — Crea una pared virtual de colisión.
 
@@ -546,7 +546,7 @@ Esta sección recoge todos los comandos disponibles en la plataforma SURI, tanto
 
 ---
 
-#### 5.1.3 Configuración de Herramientas (TCP)
+#### 5.1.3 Configuración de herramientas (TCP)
 
 - **`add_tool`** — Define un nuevo TCP (herramienta).
 
@@ -568,7 +568,7 @@ Esta sección recoge todos los comandos disponibles en la plataforma SURI, tanto
 
 ---
 
-#### 5.1.4 Cámaras y Objetos
+#### 5.1.4 Cámaras y objetos
 
 - **`add_camera`** — Añade una cámara RGB-D a la escena de simulación.
 
@@ -589,7 +589,7 @@ Esta sección recoge todos los comandos disponibles en la plataforma SURI, tanto
 
 ---
 
-#### 5.1.5 Módulo 3 en Raya (DLC)
+#### 5.1.5 Módulo 3 en raya (DLC)
 
 - **`init_python`** — Activa el entorno virtual de Python con PyTorch para el modelo de clasificación.
 
@@ -649,7 +649,7 @@ rutina:
     degrees: 0.0
 ```
 
-#### 5.2.3 Movimientos del Robot
+#### 5.2.3 Movimientos del robot
 
 | Comando | Descripción | Parámetros |
 |---|---|---|
@@ -658,14 +658,14 @@ rutina:
 | **`control_joint`** | Mueve una articulación concreta a un ángulo. | `index`, `degrees` |
 | **`go_home`** | Devuelve el robot a la posición de reposo. | *Sin parámetros* |
 
-#### 5.2.4 Entorno y Colisiones
+#### 5.2.4 Entorno y colisiones
 
 | Comando | Descripción | Parámetros |
 |---|---|---|
 | **`add_wall`** | Crea una pared virtual de colisión. | `name`, `x`, `y`, `z`, `width`, `depth`, `height` |
 | **`remove_wall`** | Elimina una pared virtual existente. | `name` |
 
-#### 5.2.5 Configuración de Herramientas (TCP)
+#### 5.2.5 Configuración de herramientas (TCP)
 
 | Comando | Descripción | Parámetros |
 |---|---|---|
@@ -675,7 +675,7 @@ rutina:
 
 ---
 
-## 6. Guía Básica para Desarrolladores
+## 6. Guía básica para desarrolladores
 
 Esta sección está orientada a usuarios con un perfil técnico o desarrolladores que deseen escalar la plataforma. Aunque poseer conocimientos previos de ROS 2 facilita enormemente el proceso, la arquitectura modular de SURI está diseñada para que implementar modificaciones estructurales sea lo más intuitivo posible, evitando reescribir código complejo.
 
@@ -711,7 +711,7 @@ Este nodo se encarga de abrir el puerto serie y establecer la velocidad de trans
 
 ---
 
-### 6.3 Añadir funcionalidades y Módulos Adicionales (DLCs)
+### 6.3 Añadir funcionalidades y módulos adicionales (DLCs)
 
 La escalabilidad del proyecto permite dos vías principales de desarrollo. Es importante diferenciar entre ampliar las capacidades del sistema y crear aplicaciones de usuario final:
 
@@ -733,4 +733,7 @@ El objetivo a largo plazo es que la comunidad pueda crear y añadir nuevos paque
 
 ## 7. Anexos
 
-> *(Contenido de anexos pendiente de añadir: esquema eléctrico del HMI, diagrama de arquitectura ROS 2, etc.)*
+- Anexo conexiones eléctricas : [`esquema_arduino.md`](./esquema_arduino.pdf)  
+
+- Esquema topics ROS2 : 
+  
