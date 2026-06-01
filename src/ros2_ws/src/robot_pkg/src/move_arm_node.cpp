@@ -448,10 +448,6 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveL(Point target)
       auto response = result_future.get();
       if (response->success) {
         std::vector<double> angles = response->joint_angles;
-        // Filtro de seguridad
-        for (size_t j = 0; j < angles.size(); ++j) {
-          angles[j] = std::clamp(atan2(sin(angles[j]), cos(angles[j])), -PI/2.0, PI/2.0);
-        }
         current_angles_1= angles;
         trajectory.push_back(angles);
       } else {
@@ -463,7 +459,6 @@ std::vector<std::vector<double>> MoveArmNode::get_trajectory_moveL(Point target)
       return {}; 
     }
   }
-  //if (!trajectory.empty()) current_angles_ = trajectory.back(); 
   return trajectory;
 }
 

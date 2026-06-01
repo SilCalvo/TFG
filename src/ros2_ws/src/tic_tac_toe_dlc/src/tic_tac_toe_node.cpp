@@ -233,11 +233,6 @@ void TicTacToeNode::ejecutar_turno_robot() {
     } else if (hay_empate(tablero_)) { 
         RCLCPP_INFO(this->get_logger(), "EMPATE"); 
         estado_actual_ = FIN_JUEGO; 
-    } else { 
-        // Si sigue el juego, devolvemos el turno al humano
-        tiempo_inicio_turno_ = this->get_clock()->now(); 
-        ultimo_segundo_impreso_ = -1;
-        estado_actual_ = ESPERANDO_HUMANO; 
     }
     
     tablero_[f][c] = 'x'; 
@@ -262,13 +257,13 @@ void TicTacToeNode::ejecutar_turno_robot() {
 
     
     RCLCPP_INFO(this->get_logger(), "Bajando al tablero...");
-    if (!send_move_action(pm.x, pm.y, pm.z + 0.1, "moveJ")) {
+    if (!send_move_action(pm.x, pm.y, pm.z + 0.1, "moveL")) {
         RCLCPP_ERROR(this->get_logger(), "Error físico al ir al punto de aproximación. Abortando turno.");
         estado_actual_ = INICIALIZANDO;
 
         return;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(500)); 
+    std::this_thread::sleep_for(std::chrono::milliseconds(300)); 
 
     
 
@@ -278,7 +273,7 @@ void TicTacToeNode::ejecutar_turno_robot() {
     spawn_piece->piece_type = "ficha_x";
     spawn_piece->x = pm.x; spawn_piece->y = pm.y; spawn_piece->z = pm.z + 0.002;
     spawn_client_->async_send_request(spawn_piece);
-    std::this_thread::sleep_for(std::chrono::milliseconds(500)); 
+    std::this_thread::sleep_for(std::chrono::milliseconds(200)); 
 
 
 
