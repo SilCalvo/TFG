@@ -38,6 +38,7 @@ public:
     double yaw;
   };
 
+  // Define a struct to represent tool configurations
   struct Tool_Config {
     std::string name;
     geometry_msgs::msg::Pose offset;
@@ -48,6 +49,7 @@ public:
   MoveArmNode();
 
 private:
+  // Action Servers
   rclcpp_action::Server<NavigateToPose>::SharedPtr action_server_moveJ;
   rclcpp_action::Server<NavigateToPose>::SharedPtr action_server_moveL;
   rclcpp::Publisher<std_msgs::msg::Int16MultiArray>::SharedPtr publisher_;
@@ -74,9 +76,8 @@ private:
   std::vector<std::vector<double>> get_trajectory_moveJ(geometry_msgs::msg::Pose target_pose);
   std::vector<std::vector<double>> get_trajectory_moveL(Point target);
 
-
+  // Tool management
   std::map<std::string, Tool_Config> tool_library_;
-  // Métodos para gestionar la librería
   rclcpp::Service<robot_interfaces::srv::ManageTool>::SharedPtr add_tool_service_;
   rclcpp::Service<robot_interfaces::srv::ManageTool>::SharedPtr delete_tool_service_;
   OnSetParametersCallbackHandle::SharedPtr parameter_callback_handle_;
@@ -89,7 +90,7 @@ private:
 
   rcl_interfaces::msg::SetParametersResult on_set_parameters(const std::vector<rclcpp::Parameter> &parameters);
 
-
+  // Action Server Callbacks
   rclcpp_action::GoalResponse handle_goal_moveJ(
     const rclcpp_action::GoalUUID & uuid,
     std::shared_ptr<const NavigateToPose::Goal> goal);

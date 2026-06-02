@@ -8,7 +8,7 @@ const double PI = 3.14159265358979323846;
 RvizBridgeNode::RvizBridgeNode() 
 : Node("rviz_bridge_node") {
   
-  // 1. Suscriptor
+  // Suscription
   rclcpp::QoS qos_sub(1);
   qos_sub.transient_local();
   subscription_ = this->create_subscription<std_msgs::msg::Int16MultiArray>(
@@ -16,7 +16,7 @@ RvizBridgeNode::RvizBridgeNode()
     std::bind(&RvizBridgeNode::robot_cmd_callback, this, std::placeholders::_1)
   );
 
-  // 2. Publicador a /joint_states
+  // Publisher to /joint_states
   rclcpp::QoS qos_pub(10);
   publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/joint_states", qos_pub);
 
@@ -24,7 +24,7 @@ RvizBridgeNode::RvizBridgeNode()
   this->declare_parameter("joint_names", default_joints);
   joint_names_ = this->get_parameter("joint_names").as_string_array();
 
-  // Asignar los nombres al mensaje
+  // Assign names to the message
   last_joint_msg_.name = joint_names_;
   last_joint_msg_.position.resize(joint_names_.size(), 0.0);
 
@@ -32,7 +32,7 @@ RvizBridgeNode::RvizBridgeNode()
     100ms, std::bind(&RvizBridgeNode::timer_callback, this)
   );
 
-  RCLCPP_INFO(this->get_logger(), "Nodo Puente iniciado con publicador continuo a 10Hz");
+  RCLCPP_INFO(this->get_logger(), "Rviz Bridge Node started with continuous publisher at 10Hz");
 }
 
 void RvizBridgeNode::robot_cmd_callback(const std_msgs::msg::Int16MultiArray::SharedPtr msg) {

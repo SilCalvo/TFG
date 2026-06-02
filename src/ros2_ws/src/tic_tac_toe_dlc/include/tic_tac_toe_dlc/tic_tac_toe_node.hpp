@@ -32,12 +32,12 @@ public:
     TicTacToeNode();
 
 private:
-    // --- Estados del Juego  ---
-    enum Estado { INICIALIZANDO, ESPERANDO_HUMANO, ANALIZANDO_IA, PENSANDO_JUGADA, MOVIENDO_ROBOT, FIN_JUEGO };
-    Estado estado_actual_;
+    // --- Game States ---
+    enum State { INITIALIZING, WAITING_FOR_HUMAN, ANALYZING_AI, THINKING_MOVE, MOVING_ROBOT, GAME_OVER };
+    State current_state_;
     bool first_time_;
 
-    // --- ROS 2: Subs, Servs y Clients ---
+    // --- ROS 2: Subscriptions, Services and Clients ---
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr color_sub_;
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr depth_sub_;
     rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr info_sub_;
@@ -47,7 +47,7 @@ private:
     rclcpp::Client<robot_interfaces::srv::MoveJoint>::SharedPtr go_home_client_;
     rclcpp::Service<robot_interfaces::srv::PutPiece>::SharedPtr put_piece_service_;
     
-    // --- Clientes de accion delmovieminto ---
+    // --- Movement action clients ---
     rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SharedPtr client_moveJ_;
     rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SharedPtr client_moveL_;
 
@@ -55,44 +55,44 @@ private:
     std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
     std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
 
-    // --- Datos de Sensores ---
+    // --- Sensor Data ---
     sensor_msgs::msg::Image last_color_image_;
     sensor_msgs::msg::Image last_depth_image_;
     sensor_msgs::msg::CameraInfo last_camera_info_;
     bool color_received_ = false, depth_received_ = false, info_received_ = false;
 
-    // --- Lógica de Juego ---
-    char tablero_[3][3];
-    int cantidad_fichas_humanas_;
-    int turnos_jugados_;
-    rclcpp::Time tiempo_inicio_turno_;
-    int ultimo_segundo_impreso_;
-    std::vector<cv::Point2f> ultimas_esquinas_tablero_;
+    // --- Game Logic ---
+    char board_[3][3];
+    int human_piece_count_;
+    int turns_played_;
+    rclcpp::Time turn_start_time_;
+    int last_second_printed_;
+    std::vector<cv::Point2f> last_board_corners_;
 
-    // --- Funciones Principales ---
+    // --- Main Functions ---
     void game_loop();
-    void reiniciar_juego();
-    void ia_response_callback(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future);
+    void reset_game();
+    void ai_response_callback(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future);
     void handle_put_piece(const std::shared_ptr<robot_interfaces::srv::PutPiece::Request> request,
                           std::shared_ptr<robot_interfaces::srv::PutPiece::Response> response);
     
-    // --- Lógica del Robot ---
-    void ejecutar_turno_robot();
-    char comprobar_ganador(char tab[3][3]);
-    bool hay_empate(char tab[3][3]);
-    int minimax(char tab[3][3], int profundidad, bool es_maximizador);
-    std::pair<int, int> encontrar_mejor_movimiento();
+    // --- Robot Logic ---
+    void execute_robot_turn();
+    char check_winner(char tab[3][3]);
+    bool is_draw(char tab[3][3]);
+    int minimax(char tab[3][3], int depth, bool is_maximizer);
+    std::pair<int, int> find_best_move();
     bool send_move_action(double x, double y, double z, std::string action_name);
     bool call_go_home();
 
-    // --- Visión y Transformaciones ---
+    // --- Vision and Transforms ---
     Point3D get_pixel_xyz_in_robot_frame(int u, int v, const std::string& camera_frame, const std::string& robot_frame);
-    cv::Mat extraer_tablero_robusto(cv::Mat& img);
-    std::vector<cv::Mat> dividir_tablero(cv::Mat& img);
-    std::vector<cv::Point2f> ordenar_puntos(const std::vector<cv::Point2f>& puntos);
-    void imprimir_tablero_debug();
+    cv::Mat extract_board_robust(cv::Mat& img);
+    std::vector<cv::Mat> split_board(cv::Mat& img);
+    std::vector<cv::Point2f> sort_points(const std::vector<cv::Point2f>& points);
+    void print_board_debug();
 
-    // --- Callbacks Sensores ---
+    // --- Sensor Callbacks ---
     void color_callback(const sensor_msgs::msg::Image::SharedPtr msg);
     void depth_callback(const sensor_msgs::msg::Image::SharedPtr msg);
     void info_callback(const sensor_msgs::msg::CameraInfo::SharedPtr msg);

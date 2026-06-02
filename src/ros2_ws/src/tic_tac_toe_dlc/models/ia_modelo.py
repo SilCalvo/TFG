@@ -88,7 +88,6 @@ def predecir_imagen(ruta_imagen):
             confianza, indice = torch.max(probs, 0)
             
         # --- LISTA FIJA (HARDCODED) ---
-        # Asumiendo carpetas: 'nada', 'o', 'x' (orden alfabético)
         clases = ['-', 'o', 'x'] 
         
         nombre_clase = clases[indice.item()]

@@ -8,6 +8,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(robot_interfaces REQUIRED)
+find_package(robot_pkg REQUIRED)
+find_package(robot_digital_twin REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
@@ -33,6 +35,8 @@ ament_target_dependencies(tic_tac_toe_node
   std_srvs
   rclcpp_action
   nav2_msgs
+  robot_pkg
+  robot_digital_twin
 )
 
 target_link_libraries(tic_tac_toe_node ${OpenCV_LIBRARIES})

@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 
+// Define a struct to represent each step in the routine
 struct RoutineStep {
     std::string type;
     
@@ -43,19 +44,19 @@ public:
     RoutineExecutor();
 
 private:
-    // Movimiento
+    // Movement
     rclcpp_action::Client<NavigateToPose>::SharedPtr client_moveJ_;
     rclcpp_action::Client<NavigateToPose>::SharedPtr client_moveL_;
     rclcpp::Client<robot_interfaces::srv::MoveJoint>::SharedPtr client_control_joint_;
     rclcpp::Client<robot_interfaces::srv::MoveJoint>::SharedPtr client_go_home_;
 
-    // Obstáculos y Herramientas
+    // Obstacles and Tools
     rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedPtr client_add_wall_;
     rclcpp::Client<robot_interfaces::srv::RemoveObstacle>::SharedPtr client_remove_wall_;
     rclcpp::Client<robot_interfaces::srv::ManageTool>::SharedPtr client_add_tool_;
     rclcpp::Client<robot_interfaces::srv::ManageTool>::SharedPtr client_delete_tool_;
 
-    // Cliente para modificar parámetros asíncronamente en move_arm_node
+    // Client to modify parameters in move_arm_node
     rclcpp::AsyncParametersClient::SharedPtr param_client_;
 
     std::vector<RoutineStep> routine_steps_;

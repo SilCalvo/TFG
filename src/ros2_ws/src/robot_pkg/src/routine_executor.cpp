@@ -13,9 +13,9 @@ RoutineExecutor::RoutineExecutor() : Node("routine_executor_node"), current_step
     file_path = pkg_share_dir + "/rutines/" + file_name;
   }
 
-  RCLCPP_INFO(this->get_logger(), "Intentando leer la rutina desde: %s", file_path.c_str());
+  RCLCPP_INFO(this->get_logger(), "Trying to load routine from: %s", file_path.c_str());
 
-  // Iniciar clientes
+  // Init clients
   client_moveJ_ = rclcpp_action::create_client<NavigateToPose>(this, "/moveJ");
   client_moveL_ = rclcpp_action::create_client<NavigateToPose>(this, "/moveL");
 
@@ -28,17 +28,17 @@ RoutineExecutor::RoutineExecutor() : Node("routine_executor_node"), current_step
   client_add_tool_ = this->create_client<robot_interfaces::srv::ManageTool>("add_tool");
   client_delete_tool_ = this->create_client<robot_interfaces::srv::ManageTool>("delete_tool");
 
-  // Cliente de parámetros apuntando explícitamente a tu "move_arm_node"
+  // Parameter client to change active tool in move_arm_node"
   param_client_ = std::make_shared<rclcpp::AsyncParametersClient>(this, "move_arm_node");
-  RCLCPP_INFO(this->get_logger(), "Sincronizando con el servidor de parámetros...");
+  RCLCPP_INFO(this->get_logger(), "Synchronizing with the parameter server...");
   if (!param_client_->wait_for_service(std::chrono::seconds(5))) {
-    RCLCPP_ERROR(this->get_logger(), "No se encontró el servidor de parámetros de move_arm_node.");
+    RCLCPP_ERROR(this->get_logger(), "Parameter server for move_arm_node not found.");
     rclcpp::shutdown();
     exit(1);
     return;
   }
 
-  RCLCPP_INFO(this->get_logger(), " Conexión de parámetros establecida.");
+  RCLCPP_INFO(this->get_logger(), "Parameter server connection established. Starting routine execution...");
   load_routine(file_path);
   execute_next_step();
 }
@@ -47,7 +47,7 @@ void RoutineExecutor::load_routine(const std::string& file_path) {
   try {
     YAML::Node config = YAML::LoadFile(file_path);
     if (!config["rutina"]) {
-      RCLCPP_ERROR(this->get_logger(), "Falta la clave 'rutina' en el YAML.");
+      RCLCPP_ERROR(this->get_logger(), "Missing 'rutina' key in YAML.");
       rclcpp::shutdown(); return;
     }
 
@@ -55,7 +55,7 @@ void RoutineExecutor::load_routine(const std::string& file_path) {
       RoutineStep step;
       step.type = node["tipo"].as<std::string>();
 
-      // --- 1. MOVIMIENTO ---
+      // --- MOVEMENT ---
       if (step.type == "moveJ" || step.type == "moveL") {
         step.x = node["x"] ? node["x"].as<double>() : 0.0;
         step.y = node["y"] ? node["y"].as<double>() : 0.0;
@@ -65,7 +65,7 @@ void RoutineExecutor::load_routine(const std::string& file_path) {
         step.qz = node["qz"] ? node["qz"].as<double>() : 0.0;
         step.qw = node["qw"] ? node["qw"].as<double>() : 1.0;
       }
-      // --- 2. AÑADIR PARED ---
+      // --- ADD WALL ---
       else if (step.type == "add_wall") {
         step.name = node["name"] ? node["name"].as<std::string>() : "muro_default";
         step.x = node["x"] ? node["x"].as<double>() : 0.0;
@@ -75,11 +75,11 @@ void RoutineExecutor::load_routine(const std::string& file_path) {
         step.depth = node["depth"] ? node["depth"].as<double>(): 0.1;
         step.height = node["height"] ? node["height"].as<double>() : 0.1;
       }
-      // --- 3. QUITAR PARED ---
+      // --- REMOVE WALL ---
       else if (step.type == "remove_wall") {
         step.name = node["name"].as<std::string>();
       }
-      // --- 4. AÑADIR HERRAMIENTA ---
+      // --- ADD TOOL ---
       else if (step.type == "add_tool") {
         step.name = node["name"].as<std::string>();
         step.tool_type = node["tool_type"] ? node["tool_type"].as<int>() : 1;
@@ -95,34 +95,32 @@ void RoutineExecutor::load_routine(const std::string& file_path) {
         step.off_z = node["off_z"] ? node["off_z"].as<double>() : 0.0;
         step.off_qw = node["off_qw"] ? node["off_qw"].as<double>() : 1.0;
       }
-      // --- 5. BORRAR O SELECCIONAR HERRAMIENTA ---
+      // --- DELETE OR SELECT TOOL ---
       else if (step.type == "delete_tool" || step.type == "set_tool") {
         step.name = node["name"].as<std::string>();
       }
-      // --- 6. CONTROL DE ARTICULACIÓN INDIVIDUAL ---
+      // --- INDIVIDUAL JOINT CONTROL ---
       else if (step.type == "control_joint") {
         step.index = node["index"] ? node["index"].as<int>() : 0;
         step.degrees = node["degrees"] ? node["degrees"].as<double>() : 0.0;
       }
-      // --- 7. RETORNO A HOME ---
+      // --- RETURN TO HOME ---
       else if (step.type == "go_home") {
-        // Tu servicio pide obligatoriamente los parámetros index y degrees aunque no los use internamente,
-        // así que los leemos o los inicializamos a 0 por defecto.
         step.index = node["index"] ? node["index"].as<int>() : 0;
         step.degrees = node["degrees"] ? node["degrees"].as<double>() : 0.0;
       }
       routine_steps_.push_back(step);
     }
-    RCLCPP_INFO(this->get_logger(), "Rutina cargada. Pasos totales: %zu", routine_steps_.size());
+    RCLCPP_INFO(this->get_logger(), "Rutine loaded. Total steps: %zu", routine_steps_.size());
   } catch (const YAML::Exception& e) {
-    RCLCPP_ERROR(this->get_logger(), "Error YAML: %s", e.what());
+    RCLCPP_ERROR(this->get_logger(), "YAML Error: %s", e.what());
     rclcpp::shutdown();
   }
 }
 
 void RoutineExecutor::execute_next_step() {
   if (current_step_ >= routine_steps_.size()) {
-    RCLCPP_INFO(this->get_logger(), "RUTINA COMPLETADA CON ÉXITO.");
+    RCLCPP_INFO(this->get_logger(), "ROUTINE COMPLETED SUCCESSFULLY.");
     rclcpp::shutdown();
     return;
   }
@@ -130,7 +128,7 @@ void RoutineExecutor::execute_next_step() {
   const auto& step = routine_steps_[current_step_];
   RCLCPP_INFO(this->get_logger(), " [%zu/%zu] %s", current_step_ + 1, routine_steps_.size(), step.type.c_str());
 
-  // --- 1. MOVIMIENTO ---
+  // --- MOVEMENT ---
   if (step.type == "moveJ" || step.type == "moveL") {
     auto client = (step.type == "moveJ") ? client_moveJ_ : client_moveL_;
     client->wait_for_action_server();
@@ -144,7 +142,7 @@ void RoutineExecutor::execute_next_step() {
     send_options.result_callback = std::bind(&RoutineExecutor::result_callback, this, std::placeholders::_1);
     client->async_send_goal(goal_msg, send_options);
   }
-  // --- 2. OBSTÁCULOS ---
+  // --- OBSTACLES ---
   else if (step.type == "add_wall") {
     auto request = std::make_shared<robot_interfaces::srv::AddObstacle::Request>();
     request->name = step.name; request->x = step.x; request->y = step.y; request->z = step.z;
@@ -166,7 +164,7 @@ void RoutineExecutor::execute_next_step() {
       }
     });
   }
-  // --- 3. GESTIÓN DE HERRAMIENTAS ---
+  // --- TOOL MANAGEMENT ---
   else if (step.type == "add_tool") {
     auto request = std::make_shared<robot_interfaces::srv::ManageTool::Request>();
     request->name = step.name;
@@ -191,11 +189,11 @@ void RoutineExecutor::execute_next_step() {
       }
     });
   }
-  // --- 4. CAMBIAR HERRAMIENTA ACTIVA ---
+  // --- CHANGE ACTIVE TOOL ---
   else if (step.type == "set_tool") {
 
       if (!param_client_->service_is_ready()) {
-          RCLCPP_ERROR(this->get_logger(), "El servidor de parámetros no está listo.");
+          RCLCPP_ERROR(this->get_logger(), "The parameter server is not ready.");
           rclcpp::shutdown();
           return;
       }
@@ -203,45 +201,45 @@ void RoutineExecutor::execute_next_step() {
           [this](std::shared_future<std::vector<rcl_interfaces::msg::SetParametersResult>> future) {
               auto results = future.get();
               if (results[0].successful) {
-                  RCLCPP_INFO(this->get_logger(), " Herramienta cambiada a '%s'", this->routine_steps_[this->current_step_].name.c_str());
+                  RCLCPP_INFO(this->get_logger(), " Active tool changed to '%s'", this->routine_steps_[this->current_step_].name.c_str());
                   this->current_step_++;
                   this->execute_next_step();
               } else {
-                  RCLCPP_ERROR(this->get_logger(), " Fallo al establecer herramienta.");
+                  RCLCPP_ERROR(this->get_logger(), " Failed to set active tool.");
                   rclcpp::shutdown();
               }
           }
       );
-  }// --- NUEVO: 5. SERVICIO CONTROL_JOINT ---
+  }// --- JOINT CONTROL SERVICE ---
   else if (step.type == "control_joint") {
     auto request = std::make_shared<robot_interfaces::srv::MoveJoint::Request>();
     request->index = step.index;
     request->degrees = step.degrees;
 
-    RCLCPP_INFO(this->get_logger(), "Llamando a /control_joint -> Motor %d a %.2f°", step.index, step.degrees);
+    RCLCPP_INFO(this->get_logger(), "Calling /control_joint -> Motor %d to %.2f°", step.index, step.degrees);
     client_control_joint_->async_send_request(request, [this](rclcpp::Client<robot_interfaces::srv::MoveJoint>::SharedFuture future) {
       if (future.get()->success) {
         this->current_step_++;
         this->execute_next_step();
       } else {
-        RCLCPP_ERROR(this->get_logger(), "Fallo en el servicio /control_joint. Abortando rutina.");
+        RCLCPP_ERROR(this->get_logger(), "Failed to call /control_joint service. Aborting routine.");
         rclcpp::shutdown();
       }
     });
   }
-  // --- NUEVO: 6. SERVICIO GO_HOME ---
+  // --- GO_HOME SERVICE ---
   else if (step.type == "go_home") {
     auto request = std::make_shared<robot_interfaces::srv::MoveJoint::Request>();
-    request->index = step.index;       // Aunque tu nodo original lo ignora,
-    request->degrees = step.degrees;   // llenamos el request para respetar la interfaz.
+    request->index = step.index;       
+    request->degrees = step.degrees;   
 
-    RCLCPP_INFO(this->get_logger(), "Llamando a /go_home...");
+    RCLCPP_INFO(this->get_logger(), "Calling /go_home...");
     client_go_home_->async_send_request(request, [this](rclcpp::Client<robot_interfaces::srv::MoveJoint>::SharedFuture future) {
       if (future.get()->success) {
         this->current_step_++;
         this->execute_next_step();
       } else {
-        RCLCPP_ERROR(this->get_logger(), "Fallo en el servicio /go_home. Abortando rutina.");
+        RCLCPP_ERROR(this->get_logger(), "Failed to call /go_home service. Aborting routine.");
         rclcpp::shutdown();
       }
     });
@@ -249,14 +247,14 @@ void RoutineExecutor::execute_next_step() {
 }
 
 void RoutineExecutor::goal_response_callback(const GoalHandleNavigate::SharedPtr& goal_handle) {
-  if (!goal_handle) { RCLCPP_ERROR(this->get_logger(), " Meta rechazada."); rclcpp::shutdown(); }
+  if (!goal_handle) { RCLCPP_ERROR(this->get_logger(), " Goal rejected."); rclcpp::shutdown(); }
 }
 void RoutineExecutor::result_callback(const GoalHandleNavigate::WrappedResult& result) {
   if (result.code == rclcpp_action::ResultCode::SUCCEEDED) {
     current_step_++; 
     execute_next_step();
   } else {
-    RCLCPP_ERROR(this->get_logger(), " Error en movimiento."); rclcpp::shutdown();
+    RCLCPP_ERROR(this->get_logger(), " Error in movement."); rclcpp::shutdown();
   }
 }
 
