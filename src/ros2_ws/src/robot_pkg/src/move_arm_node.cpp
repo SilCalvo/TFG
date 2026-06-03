@@ -235,7 +235,6 @@ MoveArmNode::Point MoveArmNode::calculate_dk(const std::vector<double>& angles) 
   auto current_tcp = tool_library_[current_tool_name];
   request->tcp_offset = current_tcp.offset;
   request->tool_dimensions = current_tcp.dimensions;
-  request->tool_type = current_tcp.type; ////////////////////////////////////////////////////////////////////////////////////////////
 
   if (!dk_client_->wait_for_service(std::chrono::seconds(2))) {
     RCLCPP_ERROR(this->get_logger(), "DK service is not responding.");

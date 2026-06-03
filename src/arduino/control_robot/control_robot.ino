@@ -86,7 +86,7 @@ void loop() {
     automatic_mode = false;
     manual_mode = true;
     digitalWrite(LED_MANUAL, HIGH);
-    smooth_manual_control();
+    smooth_manual_control(parse_potenciometer(ROBOT_POTENCIOMETERS[i]));
     digitalWrite(LED_AUTOMATIC, LOW);
     Serial.println("MANUAL"); 
   }

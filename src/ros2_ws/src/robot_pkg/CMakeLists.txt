@@ -19,7 +19,6 @@ find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(robot_kinematics REQUIRED)
 
 include_directories(include)
 
@@ -33,7 +32,6 @@ ament_target_dependencies(move_arm_node
   robot_interfaces
   nav2_msgs
   sensor_msgs
-  robot_kinematics
 )
 
 add_executable(rviz_bridge_node src/rviz_bridge_node.cpp)

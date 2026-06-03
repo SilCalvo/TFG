@@ -4,10 +4,10 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/int16_multi_array.hpp"
 #include <geometry_msgs/msg/pose.hpp>
+#include <tf2/LinearMath/Vector3.h> //
 #include <string>
 #include <vector>
 
-// Asegúrate de que los nombres de las cabeceras coincidan con tu paquete
 #include "robot_interfaces/srv/add_obstacle.hpp"
 #include "robot_interfaces/srv/solve_dk.hpp"
 
@@ -32,7 +32,8 @@ private:
   
   int serial_port_;
   int robot_mode = 2; // 0 manual, 1 automatic, 2 init
-  int wall_count_ = 0; // CORREGIDO: Añadido guión bajo para ser consistente
+  int wall_count_ = 0; 
+  std::vector<tf2::Vector3> current_wall_points_;
   std::string read_buffer_; 
   size_t num_joints_;
   

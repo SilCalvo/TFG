@@ -250,45 +250,92 @@ void ServoBridgeNode::add_wall_point(const std::vector<int>& v) {
                     response_dk->target_pose.position.y, 
                     response_dk->target_pose.position.z);
                     
-        RCLCPP_INFO(this->get_logger(), "                 -> Rotacion (Roll: %.3f, Pitch: %.3f, Yaw: %.3f)", 
+        RCLCPP_INFO(this->get_logger(), "                -> Rotacion (Roll: %.3f, Pitch: %.3f, Yaw: %.3f)", 
                     roll, pitch, yaw);
 
-        // 3. Crear petición para AddObstacle
-        auto request_wall = std::make_shared<robot_interfaces::srv::AddObstacle::Request>();
-        request_wall->name = "pared_arduino_" + std::to_string(wall_count_);
-        request_wall->x = response_dk->target_pose.position.x;
-        request_wall->y = response_dk->target_pose.position.y;
-        request_wall->z = response_dk->target_pose.position.z;
-        request_wall->roll = roll;
-        request_wall->pitch = pitch;
-        request_wall->yaw = yaw;
-        
-        // Dimensiones: 1m x 1m x 5cm
-        request_wall->width = 1.0;  
-        request_wall->height = 1.0; 
-        request_wall->depth = 0.05; 
-
-        if (!add_wall_client_->wait_for_service(std::chrono::seconds(2))) {
-          RCLCPP_ERROR(this->get_logger(), "El servicio /add_wall no responde.");
-          return;
-        }
-
-        // 4. Enviar petición asíncrona a AddObstacle
-        add_wall_client_->async_send_request(request_wall, 
-          [this](rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedFuture future_wall) {
-            
-            auto response = future_wall.get();
-            
-            if (response && response->success) {
-              RCLCPP_INFO(this->get_logger(), "Pared %d añadida.", wall_count_);
-              wall_count_++; 
-            } else {
-              RCLCPP_ERROR(this->get_logger(), "Fallo al añadir la pared en el simulador.");
-            }
-
-          }
+        // 1. Guardar el punto actual (solo nos importa X, Y, Z)
+        tf2::Vector3 new_point(
+            response_dk->target_pose.position.x,
+            response_dk->target_pose.position.y,
+            response_dk->target_pose.position.z
         );
 
+        current_wall_points_.push_back(new_point);
+        RCLCPP_INFO(this->get_logger(), "Punto de pared %zu/3 registrado.", current_wall_points_.size());
+
+        // 2. Comprobar si ya tenemos los 3 puntos
+        if (current_wall_points_.size() == 3) {
+            RCLCPP_INFO(this->get_logger(), "3 puntos obtenidos. Calculando plano...");
+
+            tf2::Vector3 p1 = current_wall_points_[0];
+            tf2::Vector3 p2 = current_wall_points_[1];
+            tf2::Vector3 p3 = current_wall_points_[2];
+
+            // Calcular vectores del plano
+            tf2::Vector3 v1 = p2 - p1;
+            tf2::Vector3 v2 = p3 - p1;
+
+            // Calcular vector normal (Eje Z de la pared) y normalizarlo
+            tf2::Vector3 normal = v1.cross(v2).normalized();
+
+            // Crear el sistema de coordenadas de la pared
+            // Eje X = dirección de P1 a P2
+            tf2::Vector3 x_axis = v1.normalized();
+            // Eje Y = perpendicular a Z y X
+            tf2::Vector3 y_axis = normal.cross(x_axis).normalized();
+
+            // Crear matriz de rotación con los 3 ejes
+            tf2::Matrix3x3 rot_matrix(
+                x_axis.x(), y_axis.x(), normal.x(),
+                x_axis.y(), y_axis.y(), normal.y(),
+                x_axis.z(), y_axis.z(), normal.z()
+            );
+
+            // Extraer Roll, Pitch, Yaw
+            double r_wall, p_wall, y_wall;
+            rot_matrix.getRPY(r_wall, p_wall, y_wall);
+
+            // Calcular el centro del obstáculo (promedio de los 3 puntos)
+            tf2::Vector3 center = (p1 + p2 + p3) / 3.0;
+
+            // 3. Crear petición para AddObstacle
+            auto request_wall = std::make_shared<robot_interfaces::srv::AddObstacle::Request>();
+            request_wall->name = "pared_arduino_" + std::to_string(wall_count_);
+            request_wall->x = center.x();
+            request_wall->y = center.y();
+            request_wall->z = center.z();
+            request_wall->roll = r_wall;
+            request_wall->pitch = p_wall;
+            request_wall->yaw = y_wall;
+            
+            request_wall->width = 1.0;  // 1 metro de ancho
+            request_wall->height = 1.0; // 1 metro de alto
+            request_wall->depth = 0.025; // 5 cm de grosor (Eje Z)
+
+            RCLCPP_INFO(this->get_logger(), "Enviando Pared a PyBullet -> Centro(X: %.3f, Y: %.3f, Z: %.3f) | RPY(R: %.3f, P: %.3f, Y: %.3f)", 
+                        request_wall->x, request_wall->y, request_wall->z, 
+                        request_wall->roll, request_wall->pitch, request_wall->yaw);
+            // --- AÑADE ESTO PARA ENVIAR REALMENTE LA PARED ---
+            if (!add_wall_client_->wait_for_service(std::chrono::seconds(2))) {
+              RCLCPP_ERROR(this->get_logger(), "El servicio /add_wall no responde.");
+              current_wall_points_.clear(); // Limpiamos para no quedarnos atascados
+              return;
+            }
+
+            add_wall_client_->async_send_request(request_wall, 
+              [this](rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedFuture future_wall) {
+                auto response = future_wall.get();
+                if (response && response->success) {
+                  RCLCPP_INFO(this->get_logger(), "Pared %d añadida mediante 3 puntos.", wall_count_);
+                  wall_count_++; 
+                } else {
+                  RCLCPP_ERROR(this->get_logger(), "Fallo al añadir la pared en el simulador.");
+                }
+              }
+            );
+            current_wall_points_.clear();
+
+        }
       } else {
         RCLCPP_ERROR(this->get_logger(), "Fallo en la respuesta del servicio DK.");
       }
