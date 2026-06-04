@@ -35,13 +35,13 @@ Para más información sobre el proyecto acuda a [`documentacion/`](./doc/)
 
 Falta: ----------------------------------------
 
-- Añadir paredes virtuales - manual 
-- Limpiar codigo
 
 - falta esquema del 3 en raya
-- mas detallado investaigacion y metricas del cnn...
-- Apartado 6
-- Tablas TFG 
-- Rutina pick and plce
+- diagrama de estados arduino
+- escribir ecuaciones bien
+- testers
+- Rutina pick and plce fisico con videos
+- limpiar repo
+- tabla denavit de nuevo urdfs
 
 
