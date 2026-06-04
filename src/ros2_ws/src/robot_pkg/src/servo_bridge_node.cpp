@@ -24,11 +24,11 @@ ServoBridgeNode::ServoBridgeNode()
   serial_port_ = open(port_name, O_RDWR | O_NOCTTY | O_NDELAY);
   
   if (serial_port_ < 0) {
-    RCLCPP_ERROR(this->get_logger(), "Error fatal: No se puede abrir %s", port_name);
+    RCLCPP_ERROR(this->get_logger(), "Fatal error: cannot open %s", port_name);
   } else {
     fcntl(serial_port_, F_SETFL, 0); 
     configure_serial(serial_port_);
-    RCLCPP_INFO(this->get_logger(), "Arduino conectado en %s", port_name);
+    RCLCPP_INFO(this->get_logger(), "Arduino connected on %s", port_name);
   }
 
   this->declare_parameter("num_joints", 5);
@@ -50,9 +50,8 @@ ServoBridgeNode::ServoBridgeNode()
     qos_profile
   );
 
-  // Inicialización de ambos clientes
   add_wall_client_ = this->create_client<robot_interfaces::srv::AddObstacle>("/add_wall");
-  dk_client_ = this->create_client<robot_interfaces::srv::SolveDK>("/solve_dk"); // AÑADIDO
+  dk_client_ = this->create_client<robot_interfaces::srv::SolveDK>("/solve_dk");
 
   timer_ = this->create_wall_timer(
     20ms, std::bind(&ServoBridgeNode::timer_callback, this));
@@ -64,14 +63,14 @@ ServoBridgeNode::~ServoBridgeNode() {
   if (serial_port_ >= 0) close(serial_port_);
 }
 
-// --- COM: ROS2 -> ARDUINO ---
+// ROS2 -> Arduino
 void ServoBridgeNode::robot_cmd_callback(const std_msgs::msg::Int16MultiArray::SharedPtr msg)
 {
   if (serial_port_ < 0) return;
   if (robot_mode != 1 ) return;
 
   if (msg->data.size() != num_joints_) { 
-    RCLCPP_WARN(this->get_logger(), "Ignorando comando: Se esperaban %zu angulos", num_joints_);
+    RCLCPP_WARN(this->get_logger(), "Ignoring command: expected %zu angles", num_joints_);
     return; 
   }
 
@@ -81,12 +80,12 @@ void ServoBridgeNode::robot_cmd_callback(const std_msgs::msg::Int16MultiArray::S
     if (i < msg->data.size() - 1) command += ","; 
   }
   command += "\n"; 
-  RCLCPP_INFO(this->get_logger(), "comand: angles %s",command.c_str());
+  RCLCPP_INFO(this->get_logger(), "Sending angles: %s", command.c_str());
 
   write(serial_port_, command.c_str(), command.size());
 }
 
-// --- COM: ARDUINO -> ROS2  ---
+// Arduino -> ROS2
 void ServoBridgeNode::timer_callback()
 {
   if (serial_port_ < 0) return;
@@ -99,9 +98,9 @@ void ServoBridgeNode::timer_callback()
     read_buffer_ += buffer; 
 
     if (read_buffer_.size() > 1000) {
-      RCLCPP_WARN(this->get_logger(), "¡Buffer saturado! Descartando datos viejos para evitar lag.");
-      read_buffer_.clear(); // Vaciamos el cubo
-      return;               // Salimos y esperamos a la siguiente lectura limpia
+      RCLCPP_WARN(this->get_logger(), "Buffer overflow! Discarding stale data.");
+      read_buffer_.clear();
+      return;
     }
 
     size_t pos = read_buffer_.find('\n');
@@ -125,10 +124,9 @@ void ServoBridgeNode::timer_callback()
         bool is_wall = false;
         std::string data_str = line;
 
-        // Detectar si es un punto de pared y extraer solo los números
+        // Parse WALL prefix if present
         if (line.find("WALL(") == 0) {
           is_wall = true;
-          // Quita "WALL" y el ")" del final
           data_str = line.substr(5, line.length() - 6); 
         }
         data_str.erase(std::remove(data_str.begin(), data_str.end(), '('), data_str.end());
@@ -142,39 +140,30 @@ void ServoBridgeNode::timer_callback()
           try {
             v.push_back(std::stoi(token) - 90);
           } catch (...) {
-            RCLCPP_WARN(this->get_logger(), "Token inválido: '%s'", token.c_str());
+            RCLCPP_WARN(this->get_logger(), "Invalid token: '%s'", token.c_str());
             continue;
           }
         }
 
-        // Si la cantidad de números leídos coincide con num_joints_
         std::stringstream debug;
-
         for (size_t i = 0; i < v.size(); i++) {
             debug << v[i];
-
             if (i < v.size() - 1) {
-                debug << ", ";
+              debug << ", ";
             }
         }
-
-        RCLCPP_INFO(this->get_logger(), "size: %zu | values: [%s]",
-                    v.size(),
-                    debug.str().c_str());
+        RCLCPP_INFO(this->get_logger(), "size: %zu | values: [%s]", v.size(), debug.str().c_str());
 
         if (v.size() == num_joints_) {
-          
           if (is_wall) {
             RCLCPP_INFO(this->get_logger(), "Wall point received");
             add_wall_point(v); 
           }
-          
           std_msgs::msg::Int16MultiArray msg_out;
-          msg_out.data.assign(v.begin(), v.end()); // Asignar el vector dinámico
+          msg_out.data.assign(v.begin(), v.end());
           publisher_->publish(msg_out);
-
         } else {
-          RCLCPP_WARN(this->get_logger(), "Formato incorrecto o cantidad de joints no coincide: %s", line.c_str());
+          RCLCPP_WARN(this->get_logger(), "Unexpected format or joint count mismatch: %s", line.c_str());
         }
       }
       else {
@@ -187,32 +176,29 @@ void ServoBridgeNode::timer_callback()
 }
 
 
-// --- LÓGICA ASÍNCRONA PARA AÑADIR PARED ---
+// Async wall-building logic
 void ServoBridgeNode::add_wall_point(const std::vector<int>& v) { 
   
-  // LOG 1: Ver los grados originales que llegaron del Arduino
-  std::string grados_str = "";
-  for (int val : v) grados_str += std::to_string(val) + " ";
-  RCLCPP_INFO(this->get_logger(), "1. Grados recibidos: [ %s]", grados_str.c_str());
+  std::string degrees_str = "";
+  for (int val : v) {
+    degrees_str += std::to_string(val) + " ";
+  }
+  RCLCPP_INFO(this->get_logger(), "Degrees received: [ %s]", degrees_str.c_str());
 
-  // 1. CONVERSIÓN DE GRADOS A RADIANES
+  // Convert degrees to radians
   std::vector<double> angles;
-  std::string rad_str = "";
+  std::string radians_str = "";
   for (int angle_deg : v) {
     double rad = angle_deg * M_PI / 180.0;
     angles.push_back(rad);
-    rad_str += std::to_string(rad) + " ";
+    radians_str += std::to_string(rad) + " ";
   }
-  
-  // LOG 2: Ver la conversión a Radianes
-  RCLCPP_INFO(this->get_logger(), "2. Radianes enviados a DK: [ %s]", rad_str.c_str());
+  RCLCPP_INFO(this->get_logger(), "Radians sent to DK: [ %s]", radians_str.c_str());
 
-  // Configurar la petición de Cinemática (SolveDK)
   Tool_Config default_cfg;
   default_cfg.name = "default";
   default_cfg.type = 1; 
   default_cfg.dimensions = {0.01, 0.01}; 
-  
   geometry_msgs::msg::Pose default_pose; 
   default_cfg.offset = default_pose;
 
@@ -222,11 +208,11 @@ void ServoBridgeNode::add_wall_point(const std::vector<int>& v) {
   request_dk->tool_dimensions = default_cfg.dimensions;
 
   if (!dk_client_->wait_for_service(std::chrono::seconds(2))) {
-    RCLCPP_ERROR(this->get_logger(), "El servicio DK no responde. Abortando pared.");
+    RCLCPP_ERROR(this->get_logger(), "DK service not available. Aborting wall.");
     return;
   }
 
-  // 2. Enviar petición asíncrona a DK
+  // Send async DK request
   dk_client_->async_send_request(request_dk, 
     [this](rclcpp::Client<robot_interfaces::srv::SolveDK>::SharedFuture future_dk) {
       
@@ -234,7 +220,7 @@ void ServoBridgeNode::add_wall_point(const std::vector<int>& v) {
 
       if (response_dk && response_dk->success) {
         
-        // Extraer RPY usando TF2
+        // Extract RPY from quaternion
         double roll, pitch, yaw;
         tf2::Quaternion q(
           response_dk->target_pose.orientation.x,
@@ -244,16 +230,13 @@ void ServoBridgeNode::add_wall_point(const std::vector<int>& v) {
         );
         tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
 
-        // LOG 3: IMPRIMIR X, Y, Z y R, P, Y calculados por la cinemática
-        RCLCPP_INFO(this->get_logger(), "3. RESULTADO DK -> Posicion (X: %.3f, Y: %.3f, Z: %.3f)", 
+        RCLCPP_INFO(this->get_logger(), "DK result -> Position (X: %.3f, Y: %.3f, Z: %.3f)", 
                     response_dk->target_pose.position.x, 
                     response_dk->target_pose.position.y, 
                     response_dk->target_pose.position.z);
-                    
-        RCLCPP_INFO(this->get_logger(), "                -> Rotacion (Roll: %.3f, Pitch: %.3f, Yaw: %.3f)", 
+        RCLCPP_INFO(this->get_logger(), "          -> Rotation (Roll: %.3f, Pitch: %.3f, Yaw: %.3f)", 
                     roll, pitch, yaw);
 
-        // 1. Guardar el punto actual (solo nos importa X, Y, Z)
         tf2::Vector3 new_point(
             response_dk->target_pose.position.x,
             response_dk->target_pose.position.y,
@@ -261,44 +244,36 @@ void ServoBridgeNode::add_wall_point(const std::vector<int>& v) {
         );
 
         current_wall_points_.push_back(new_point);
-        RCLCPP_INFO(this->get_logger(), "Punto de pared %zu/3 registrado.", current_wall_points_.size());
+        RCLCPP_INFO(this->get_logger(), "Wall point %zu/3 registered.", current_wall_points_.size());
 
-        // 2. Comprobar si ya tenemos los 3 puntos
+        // Check if 3 points collected
         if (current_wall_points_.size() == 3) {
-            RCLCPP_INFO(this->get_logger(), "3 puntos obtenidos. Calculando plano...");
+            RCLCPP_INFO(this->get_logger(), "3 points collected, computing plane...");
 
             tf2::Vector3 p1 = current_wall_points_[0];
             tf2::Vector3 p2 = current_wall_points_[1];
             tf2::Vector3 p3 = current_wall_points_[2];
 
-            // Calcular vectores del plano
+            // Compute plane vectors, normal and wall coordinate system
             tf2::Vector3 v1 = p2 - p1;
             tf2::Vector3 v2 = p3 - p1;
-
-            // Calcular vector normal (Eje Z de la pared) y normalizarlo
             tf2::Vector3 normal = v1.cross(v2).normalized();
 
-            // Crear el sistema de coordenadas de la pared
-            // Eje X = dirección de P1 a P2
             tf2::Vector3 x_axis = v1.normalized();
-            // Eje Y = perpendicular a Z y X
             tf2::Vector3 y_axis = normal.cross(x_axis).normalized();
 
-            // Crear matriz de rotación con los 3 ejes
             tf2::Matrix3x3 rot_matrix(
                 x_axis.x(), y_axis.x(), normal.x(),
                 x_axis.y(), y_axis.y(), normal.y(),
                 x_axis.z(), y_axis.z(), normal.z()
             );
 
-            // Extraer Roll, Pitch, Yaw
             double r_wall, p_wall, y_wall;
             rot_matrix.getRPY(r_wall, p_wall, y_wall);
 
-            // Calcular el centro del obstáculo (promedio de los 3 puntos)
             tf2::Vector3 center = (p1 + p2 + p3) / 3.0;
 
-            // 3. Crear petición para AddObstacle
+            // Build AddObstacle request
             auto request_wall = std::make_shared<robot_interfaces::srv::AddObstacle::Request>();
             request_wall->name = "pared_arduino_" + std::to_string(wall_count_);
             request_wall->x = center.x();
@@ -307,18 +282,17 @@ void ServoBridgeNode::add_wall_point(const std::vector<int>& v) {
             request_wall->roll = r_wall;
             request_wall->pitch = p_wall;
             request_wall->yaw = y_wall;
-            
-            request_wall->width = 1.0;  // 1 metro de ancho
-            request_wall->height = 1.0; // 1 metro de alto
-            request_wall->depth = 0.025; // 5 cm de grosor (Eje Z)
+            request_wall->width = 1.0;
+            request_wall->height = 1.0;
+            request_wall->depth = 0.025;
 
-            RCLCPP_INFO(this->get_logger(), "Enviando Pared a PyBullet -> Centro(X: %.3f, Y: %.3f, Z: %.3f) | RPY(R: %.3f, P: %.3f, Y: %.3f)", 
+            RCLCPP_INFO(this->get_logger(), "Sending wall -> Center(X: %.3f, Y: %.3f, Z: %.3f) | RPY(R: %.3f, P: %.3f, Y: %.3f)", 
                         request_wall->x, request_wall->y, request_wall->z, 
                         request_wall->roll, request_wall->pitch, request_wall->yaw);
-            // --- AÑADE ESTO PARA ENVIAR REALMENTE LA PARED ---
+
             if (!add_wall_client_->wait_for_service(std::chrono::seconds(2))) {
-              RCLCPP_ERROR(this->get_logger(), "El servicio /add_wall no responde.");
-              current_wall_points_.clear(); // Limpiamos para no quedarnos atascados
+              RCLCPP_ERROR(this->get_logger(), "Service /add_wall not available.");
+              current_wall_points_.clear();
               return;
             }
 
@@ -326,24 +300,23 @@ void ServoBridgeNode::add_wall_point(const std::vector<int>& v) {
               [this](rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedFuture future_wall) {
                 auto response = future_wall.get();
                 if (response && response->success) {
-                  RCLCPP_INFO(this->get_logger(), "Pared %d añadida mediante 3 puntos.", wall_count_);
+                  RCLCPP_INFO(this->get_logger(), "Wall %d added via 3 points.", wall_count_);
                   wall_count_++; 
                 } else {
-                  RCLCPP_ERROR(this->get_logger(), "Fallo al añadir la pared en el simulador.");
+                  RCLCPP_ERROR(this->get_logger(), "Failed to add wall in simulator.");
                 }
               }
             );
             current_wall_points_.clear();
-
         }
       } else {
-        RCLCPP_ERROR(this->get_logger(), "Fallo en la respuesta del servicio DK.");
+        RCLCPP_ERROR(this->get_logger(), "DK service response failed.");
       }
     }
   );
 }
 
-// --- SERIAL CONFIGURATION  ---
+// Serial port configuration
 void ServoBridgeNode::configure_serial(int fd) {
   struct termios tty;
   if(tcgetattr(fd, &tty) != 0) return;
