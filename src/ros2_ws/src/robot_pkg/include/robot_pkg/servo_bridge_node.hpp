@@ -4,7 +4,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/int16_multi_array.hpp"
 #include <geometry_msgs/msg/pose.hpp>
-#include <tf2/LinearMath/Vector3.h> //
+#include <tf2/LinearMath/Vector3.h> 
 #include <string>
 #include <vector>
 
@@ -21,7 +21,7 @@ public:
     std::string name;
     geometry_msgs::msg::Pose offset;
     std::vector<double> dimensions;
-    int type; // 0: Caja, 1: Cilindro
+    int type; // 0: box, 1: cylinder
   };
 
 private:
@@ -40,9 +40,9 @@ private:
   rclcpp::Subscription<std_msgs::msg::Int16MultiArray>::SharedPtr subscription_;
   rclcpp::Publisher<std_msgs::msg::Int16MultiArray>::SharedPtr publisher_;
   
-  // Clientes de servicio
+  // Service clients
   rclcpp::Client<robot_interfaces::srv::AddObstacle>::SharedPtr add_wall_client_;
-  rclcpp::Client<robot_interfaces::srv::SolveDK>::SharedPtr dk_client_; // AÑADIDO
+  rclcpp::Client<robot_interfaces::srv::SolveDK>::SharedPtr dk_client_;
   
   rclcpp::TimerBase::SharedPtr timer_;
 };
