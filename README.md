@@ -36,12 +36,12 @@ Para más información sobre el proyecto acuda a [`documentacion/`](./doc/)
 Falta: ----------------------------------------
 
 
-- falta esquema del 3 en raya
-- diagrama de estados arduino
 - escribir ecuaciones bien
 - testers
 - Rutina pick and plce fisico con videos
 - limpiar repo
 - tabla denavit de nuevo urdfs
+- Añadir esquema ros2
+- repasar tfg
 
 
