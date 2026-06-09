@@ -74,12 +74,13 @@ void ServoBridgeNode::robot_cmd_callback(const std_msgs::msg::Int16MultiArray::S
     return; 
   }
 
-  std::string command = "";
+  std::string command = "D{";
   for (size_t i = 0; i < msg->data.size(); ++i) {
-    command += std::to_string(msg->data[i] +90);
+    command += std::to_string(msg->data[i] + 90);
     if (i < msg->data.size() - 1) command += ","; 
   }
-  command += "\n"; 
+  
+  command += "}\n";
   RCLCPP_INFO(this->get_logger(), "Sending angles: %s", command.c_str());
 
   write(serial_port_, command.c_str(), command.size());

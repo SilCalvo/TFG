@@ -41,7 +41,7 @@ bool wall = false;
 Servo servos[NUMBER_SERVOS];
 int ROBOT_PINS[NUMBER_SERVOS] = {BASE_SERVO, SHOULDER_SERVO, ELBOW_SERVO, END_EFFECTOR_SERVO};
 int ROBOT_POTENCIOMETERS[NUMBER_SERVOS] = {BASE_POTENCIOMETER, SHOULDER_POTENCIOMETER, ELBOW_POTENCIOMETER, END_EFFECTOR_POTENCIOMETER};
-int actual_position[NUMBER_SERVOS]= {90,90,90,135};
+int actual_position[NUMBER_SERVOS]= {90,90,90,145};
 
 ezButton automatic_button(PIN_AUTOMATIC);
 ezButton manual_button(PIN_MANUAL);
@@ -86,7 +86,12 @@ void loop() {
     automatic_mode = false;
     manual_mode = true;
     digitalWrite(LED_MANUAL, HIGH);
-    smooth_manual_control(parse_potenciometer(ROBOT_POTENCIOMETERS[i]));
+    int target[NUMBER_SERVOS]= {0,0,0,0};
+    for (int i = 0; i < NUMBER_SERVOS; i++) {
+      int angle = parse_potenciometer(ROBOT_POTENCIOMETERS[i]);
+      target[i]= angle;
+    }
+    smooth_manual_control(target);
     digitalWrite(LED_AUTOMATIC, LOW);
     Serial.println("MANUAL"); 
   }

@@ -74,7 +74,7 @@ void manual_control(){
   // Control servos
   for (int i = 0; i < NUMBER_SERVOS; i++) {
     int angle = parse_potenciometer(ROBOT_POTENCIOMETERS[i]);
-    if (abs(angle - actual_position[i]) >=1) {
+    if (abs(angle - actual_position[i]) >= 2) {
       servos[i].write(angle); 
       actual_position[i]=angle;
     }

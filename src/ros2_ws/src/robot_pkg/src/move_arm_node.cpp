@@ -148,7 +148,7 @@ void MoveArmNode::handle_control_joint(
     RCLCPP_INFO(this->get_logger(), "Step sent: Motor [%d] to %d degrees.", target_index, current_step_deg);
 
     // Pause between each small step to allow the servos to move
-    std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
+    std::this_thread::sleep_for(std::chrono::milliseconds(200)); 
   }
 
   response->success = true;
@@ -200,7 +200,7 @@ void MoveArmNode::handle_go_home(
     publisher_->publish(cmd_msg);
 
     // Pause 100 milliseconds to allow the servos to move
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
 
   RCLCPP_INFO(this->get_logger(), "Final target angles:");
