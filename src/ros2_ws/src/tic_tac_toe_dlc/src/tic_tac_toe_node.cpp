@@ -287,7 +287,6 @@ void TicTacToeNode::execute_robot_turn() {
         return;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1000)); 
-
     
     RCLCPP_INFO(this->get_logger(), "Lowering to board...");
     if (!send_move_action(pm.x, pm.y, pm.z + 0.1, "moveL")) {
@@ -298,8 +297,6 @@ void TicTacToeNode::execute_robot_turn() {
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(300)); 
 
-    
-
     // Spawn 'x' piece at the computed 3D position
     auto spawn_piece = std::make_shared<robot_interfaces::srv::SpawnObject::Request>();
     spawn_piece->name = "ficha_x_" + std::to_string(turns_played_);
@@ -308,9 +305,8 @@ void TicTacToeNode::execute_robot_turn() {
     spawn_piece->x = pm.x;
     spawn_piece->y = pm.y;
     spawn_piece->z = pm.z + 0.002;
+    spawn_client_->async_send_request(spawn_piece);
     std::this_thread::sleep_for(std::chrono::milliseconds(200)); 
-
-
 
     RCLCPP_INFO(this->get_logger(), "Retracting arm...");
     if (!send_move_action(pm.x, pm.y, pm.z + 0.6, "moveJ")) {

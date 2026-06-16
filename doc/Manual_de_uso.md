@@ -104,8 +104,6 @@ De esta manera, se obtiene una plataforma con una curva de aprendizaje baja, que
 
 Esta sección es una guía del proceso de instalación, compilación y puesta en marcha de la plataforma. El objetivo es dejar el entorno completamente operativo en el equipo local.
 
-> Se recomienda seguir la guía en: https://github.com/SilCalvo/TFG/tree/main/doc
-
 ### 2.1 Requisitos del sistema
 
 Para que SURI funcione correctamente, es necesario tener instalados los siguientes componentes en la máquina local. En caso de usar Windows, es posible ejecutarlo utilizando el subsistema de Linux (WSL2):
@@ -164,6 +162,14 @@ Existen diferentes formas de lanzar el código de SURI dependiendo de las necesi
 
 ---
 
+**AVISO**: Una vez ejecutado el comando, no se podrán ejecutar nuevos comandos en esa terminal, es necesario abrir una nueva.
+
+
+**RECOMENDACION**: Cada vez que se abra una terminal nueva ejecutar: 
+```bash
+cd TFG/src/ros2_ws
+```
+
 ### 2.4 Entendiendo la interfaz gráfica
 
 Al lanzar la simulación, se trabajará con dos ventanas principales que tienen propósitos muy distintos:
@@ -187,7 +193,7 @@ En esta ventana se muestra un entorno en el que se pueden observar las paredes v
 
 La plataforma SURI permite el control de un brazo robótico físico mediante un panel de control o interfaz HMI (Human-Machine Interface) gestionado por una placa Arduino.
 
-**Montaje y configuración inicial:** Para el ensamblaje del robot real, se deben seguir las instrucciones detalladas en el [vídeo de montaje — añadir enlace aquí]. La única modificación respecto al diseño del vídeo original es la sustitución del motor paso a paso por un servomotor **MSG90**. Es importante recordar que las dimensiones de esta modificación deben actualizarse en el archivo `.urdf`. El esquema eléctrico completo para realizar las conexiones se encuentra disponible en el apartado de [Anexos](#6-anexos).
+**Montaje y configuración inicial:** Para el ensamblaje del robot real, se deben seguir las instrucciones detalladas en el [vídeo de montaje](https://www.youtube.com/watch?v=JBl7gwf7ORU). La única modificación respecto al diseño del vídeo original es la sustitución del motor paso a paso por un servomotor **MSG90**. Es importante recordar que las dimensiones de esta modificación deben actualizarse en el archivo `.urdf`. El esquema eléctrico completo para realizar las conexiones se encuentra disponible en el apartado de [Anexos](#6-anexos).
 
 **Controles físicos:** El panel está diseñado para facilitar el manejo manual y la interacción con la simulación. Sus componentes principales son:
 
@@ -285,7 +291,18 @@ Esta posición no solo sirve para guardar el robot, sino que actúa como un **"r
 **COMANDOS**
 
 ```bash
+ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
+
+```
+
+```bash
 ros2 service call /go_home robot_interfaces/srv/MoveJoint "{index: 0, degrees: 0.0}"
+
+```
+
+
+```bash
+ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'base'}, pose: {position: {x: -0.4, y: 0.0, z: 0.3}, orientation: {x: 0.0, y: 1.0, z: 0.0, w: 0.0}}}}"
 
 ```
 
@@ -309,7 +326,14 @@ Para ello, basta con seleccionar el **índice de la articulación** (la numeraci
 ros2 service call /control_joint robot_interfaces/srv/MoveJoint "{index: 2, degrees: 45.0}"
 
 ```
+```bash
+ros2 service call /control_joint robot_interfaces/srv/MoveJoint "{index: 1, degrees: 45.0}"
 
+```
+```bash
+ros2 service call /control_joint robot_interfaces/srv/MoveJoint "{index: 4, degrees: 70.0}"
+
+```
 **RUTINA**
 
 ```bash
@@ -428,6 +452,7 @@ ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {f
 ros2 run robot_pkg rutine_node --ros-args -p archivo:="test_wall.yaml"
 ```
 
+**AVISO:** La rutina dará fallo ya que intentará ir a una posición inalcanzable por colisión. Es correcto, esto demuestra que las rutinas deben ser depuradas con anterioridad o pararán su ejecución.
 
 ---
 
@@ -441,7 +466,7 @@ La ejecución de este caso requiere configurar varios elementos del entorno:
 
 Para que el robot sea capaz de distinguir entre una "X" y una "O", se utiliza un modelo ligero de Inteligencia Artificial (Machine Learning) que clasifica las piezas visualmente. Para evitar problemas de compatibilidad y facilitar su uso, se ha preparado un entorno virtual de Python que contiene todas las librerías necesarias (como PyTorch).
 
-Para activar el entorno y cargar el modelo de clasificación, ejecuta:
+Para activar el entorno y cargar el modelo de clasificación, ejecuta **en una terminal nueva**:
 
 ```bash
 chmod +x src/tic_tac_toe_dlc/launch/init_python.sh
@@ -452,7 +477,7 @@ chmod +x src/tic_tac_toe_dlc/launch/init_python.sh
 
 El siguiente paso es añadir la escena de juego. Esto despliega el tablero virtual y posiciona una cámara RGB-D. El uso de este tipo de cámara es clave: captura los colores para identificar las piezas y utiliza la **profundidad (Depth)** para calcular la distancia exacta a la que se encuentran en el espacio 3D.
 
-Para cargar el tablero y la cámara en la simulación, ejecuta:
+Para cargar el tablero y la cámara en la simulación, ejecuta **en una terminal nueva**:
 
 
 ```bash
@@ -461,7 +486,9 @@ ros2 service call /add_camera robot_interfaces/srv/AddCamera \
   "{name: 'camara_tablero', x: 0.35, y: 0.01, z: 0.45, \
     target_x: 0.35, target_y: 0.0, target_z: 0.0, \
     width: 640, height: 480}"
+```
 
+```bash
 # Añadir el tablero:
 ros2 service call /add_object robot_interfaces/srv/SpawnObject \
   "{name: 'tablero_principal', package_name: 'tic_tac_toe_dlc', \
@@ -472,10 +499,15 @@ ros2 service call /add_object robot_interfaces/srv/SpawnObject \
 
 Una vez que el entorno físico, la visión y la inteligencia artificial están funcionando, se puede iniciar el bucle del juego. El sistema analizará el estado del tablero mediante la cámara, decidirá su próximo movimiento y el brazo robótico colocará su pieza.
 
+Para lanzar el juego ejecuta en **una terminal nueva**:
+
 ```bash
 # Lanzar el juego:
 ros2 launch tic_tac_toe_dlc init_game.launch.py
+```
+Para colocar una ficha ejecuta en **una terminal nueva**:
 
+```bash
 # Colocar ficha (ejemplo: fila 1, columna 1):
 ros2 service call /put_piece_virtual robot_interfaces/srv/PutPiece \
   "{fila: 1, columna: 1}"
