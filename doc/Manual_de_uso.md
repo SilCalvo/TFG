@@ -176,16 +176,20 @@ Al lanzar la simulación, se trabajará con dos ventanas principales que tienen 
 
 #### 2.4.1 RViz: Visualización de ejes, TFs y modelo del robot
 
-Aquí no se muestra un entorno fotorrealista. RViz visualiza la **"intención"** del robot. Es la herramienta ideal para:
+Aquí no se muestra un entorno fotorrealista. RViz visualiza la el estado del robot. Es la herramienta ideal para:
 
 - Ver los ejes de coordenadas (Frames/TFs).
 - Planificar trayectorias.
 - Observar la estructura cinemática.
 - Depurar el funcionamiento interno de ROS 2.
 
+[Visualización del robot y TFs en RViz](multimedia/rviz_photo.png)
+
 #### 2.4.2 PyBullet: El gemelo digital
 
 En esta ventana se muestra un entorno en el que se pueden observar las paredes virtuales, introducir objetos en escena, ver cámaras RGBD, etc. Se mueve al recibir los comandos, que los recibe a la vez que el robot real.
+
+[Visualización del robot y entorno en Pybullet](multimedia/digital_twin_photo.png)
 
 ---
 
@@ -214,6 +218,8 @@ La plataforma SURI permite el control de un brazo robótico físico mediante un 
 Durante el funcionamiento automático, el robot puede moverse a posiciones muy distintas a las que marcan los potenciómetros en ese momento. Si se cambiara al modo manual de forma directa, el robot intentaría corregir su posición de golpe, provocando un salto brusco. Para evitarlo, el sistema realiza una **transición suave**: mueve cada articulación gradualmente desde su posición actual hasta la posición que indican los potenciómetros.
 
 Mientras este ajuste gradual se está llevando a cabo, los LEDs azul y amarillo permanecerán encendidos simultáneamente hasta que el robot finalice el movimiento y pase de forma definitiva al control manual.
+
+[Visualización del robot fisico usado de ejemplo](multimedia/real_robot_photo.png)
 
 ---
 
@@ -731,7 +737,7 @@ Una de las grandes ventajas de SURI es que, para cambiar el modelo cinemático y
 
 ### 6.2 Comunicación serial con el robot físico
 
-SURI utiliza Arduino por defecto para el control de los motores, pero su arquitectura es **agnóstica respecto al hardware**. Esto permite sustituir el microcontrolador por cualquier otro (como un ESP32, un STM32, etc.).
+SURI utiliza Arduino por defecto para el control de los motores, pero su arquitectura es **independiente respecto al hardware**. Esto permite sustituir el microcontrolador por cualquier otro (como un ESP32, un STM32, etc.).
 
 Para realizar este cambio, la única pieza de software que necesita ser adaptada es el nodo escrito en C++ que actúa como puente de comunicación serial entre ROS 2 y la placa física:
 
@@ -767,5 +773,5 @@ El objetivo a largo plazo es que la comunidad pueda crear y añadir nuevos paque
 
 - Anexo conexiones eléctricas : [`esquema_arduino.md`](./esquema_arduino.pdf)  
 
-- Esquema topics ROS2 : 
+- Esquema topics ROS 2 :  [`esquema_ROS 2.md`](./esquema_ROS_2.pdf)  
   
