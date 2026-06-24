@@ -219,7 +219,7 @@ Durante el funcionamiento automático, el robot puede moverse a posiciones muy d
 
 Mientras este ajuste gradual se está llevando a cabo, los LEDs azul y amarillo permanecerán encendidos simultáneamente hasta que el robot finalice el movimiento y pase de forma definitiva al control manual.
 
-![Visualización del robot fisico usado de ejemplo](multimedia/real_robot_photo.png)
+<img src="multimedia/real_robot_photo.png" alt="Visualización del robot físico usado de ejemplo" width="50%">
 
 ---
 
