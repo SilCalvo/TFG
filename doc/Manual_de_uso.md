@@ -165,7 +165,7 @@ Existen diferentes formas de lanzar el código de SURI dependiendo de las necesi
 **AVISO**: Una vez ejecutado el comando, no se podrán ejecutar nuevos comandos en esa terminal, es necesario abrir una nueva.
 
 
-**RECOMENDACION**: Cada vez que se abra una terminal nueva ejecutar: 
+**RECOMENDACIÓNN**: Cada vez que se abra una terminal nueva ejecutar: 
 ```bash
 cd TFG/src/ros2_ws
 ```
@@ -176,7 +176,7 @@ Al lanzar la simulación, se trabajará con dos ventanas principales que tienen 
 
 #### 2.4.1 RViz: Visualización de ejes, TFs y modelo del robot
 
-Aquí no se muestra un entorno fotorrealista. RViz visualiza la el estado del robot. Es la herramienta ideal para:
+Aquí no se muestra un entorno fotorrealista. RViz visualiza el estado del robot. Es la herramienta ideal para:
 
 - Ver los ejes de coordenadas (Frames/TFs).
 - Planificar trayectorias.
@@ -374,7 +374,7 @@ ros2 action send_goal /moveJ nav2_msgs/action/NavigateToPose "{pose: {header: {f
 ```
 
 
-Se puede observar como el brazo baja la diferencia de 0.10 que es la diferencia del tamaño de las herramientas.
+Se puede observar cómo el brazo baja la diferencia de 0.10 que es la diferencia del tamaño de las herramientas.
 
 
 ```bash
@@ -771,7 +771,7 @@ El objetivo a largo plazo es que la comunidad pueda crear y añadir nuevos paque
 
 ## 7. Anexos
 
-- Anexo conexiones eléctricas : [`esquema_arduino.md`](./esquema_arduino.pdf)  
+- Anexo conexiones eléctricas : [`esquema_arduino.pdf`](./esquema_arduino.pdf)  
 
-- Esquema topics ROS 2 :  [`esquema_ROS 2.md`](./esquema_ROS_2.pdf)  
+- Esquema topics ROS 2 :  [`esquema_ROS 2.pdf`](./esquema_ROS_2.pdf)  
   
