@@ -401,6 +401,11 @@ SURI utiliza un enfoque mucho más moderno: las **paredes virtuales** (geofencin
 - No requieren instalaciones físicas costosas.
 - Permiten que el entorno de trabajo cambie dinámicamente.
 
+Para ver como funcionan las paredes virtuales se muestra el siguiente ejemplo, en el cual, primero mueve al robot a una posición para que se vea que llega sin problemas.
+
+Después de poner la pared virtual en su camino, se puede comprobar que el robot ya no puede ir a esa misma posición.
+
+Esta restricción la se puede ver directamente por la terminal del código base, que mostrará un mensaje de salida: COLISION.
 
 **COMANDOS**
 
