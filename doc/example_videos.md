@@ -28,5 +28,5 @@ A continuación, se presenta una serie de videos demostrativos que ilustran el c
 ### Video 8: Pick and place con robot físico
 <video src="https://urjc-my.sharepoint.com/:v:/g/personal/s_calvo_2022_alumnos_urjc_es/IQCnhGIqC4ZIS7AUoDrLd-e7AfVs8GcfQRMQ1D-JzTheadE" controls width="100%"></video>
 
-### 🎥 Video 9: Pick de un objeto con el robot físico
+### Video 9: Pick de un objeto con el robot físico
 <video src="https://urjc-my.sharepoint.com/:v:/g/personal/s_calvo_2022_alumnos_urjc_es/IQBf_15bE0k0RriBYQoTNqg7AcKTtb2Yxxvt4iSMj_JgpCY" controls width="100%"></video>
