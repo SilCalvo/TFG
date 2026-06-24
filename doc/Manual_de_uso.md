@@ -183,13 +183,13 @@ Aquí no se muestra un entorno fotorrealista. RViz visualiza el estado del robot
 - Observar la estructura cinemática.
 - Depurar el funcionamiento interno de ROS 2.
 
-[Visualización del robot y TFs en RViz](multimedia/rviz_photo.png)
+![Visualización del robot y TFs en RViz](multimedia/rviz_photo.png)
 
 #### 2.4.2 PyBullet: El gemelo digital
 
 En esta ventana se muestra un entorno en el que se pueden observar las paredes virtuales, introducir objetos en escena, ver cámaras RGBD, etc. Se mueve al recibir los comandos, que los recibe a la vez que el robot real.
 
-[Visualización del robot y entorno en Pybullet](multimedia/digital_twin_photo.png)
+![Visualización del robot y entorno en Pybullet](multimedia/digital_twin_photo.png)
 
 ---
 
@@ -197,7 +197,7 @@ En esta ventana se muestra un entorno en el que se pueden observar las paredes v
 
 La plataforma SURI permite el control de un brazo robótico físico mediante un panel de control o interfaz HMI (Human-Machine Interface) gestionado por una placa Arduino.
 
-**Montaje y configuración inicial:** Para el ensamblaje del robot real, se deben seguir las instrucciones detalladas en el [vídeo de montaje](https://www.youtube.com/watch?v=JBl7gwf7ORU). La única modificación respecto al diseño del vídeo original es la sustitución del motor paso a paso por un servomotor **MSG90**. Es importante recordar que las dimensiones de esta modificación deben actualizarse en el archivo `.urdf`. El esquema eléctrico completo para realizar las conexiones se encuentra disponible en el apartado de [Anexos](#6-anexos).
+**Montaje y configuración inicial:** Para el ensamblaje del robot real, se deben seguir las instrucciones detalladas en el [vídeo de montaje](https://www.youtube.com/watch?v=JBl7gwf7ORU) (Se puede ver una foto del robot fisico al final de esta sección). La única modificación respecto al diseño del vídeo original es la sustitución del motor paso a paso por un servomotor **MSG90**. Es importante recordar que las dimensiones de esta modificación deben actualizarse en el archivo `.urdf`. El esquema eléctrico completo para realizar las conexiones se encuentra disponible en el apartado de [Anexos](#6-anexos).
 
 **Controles físicos:** El panel está diseñado para facilitar el manejo manual y la interacción con la simulación. Sus componentes principales son:
 
@@ -219,7 +219,7 @@ Durante el funcionamiento automático, el robot puede moverse a posiciones muy d
 
 Mientras este ajuste gradual se está llevando a cabo, los LEDs azul y amarillo permanecerán encendidos simultáneamente hasta que el robot finalice el movimiento y pase de forma definitiva al control manual.
 
-[Visualización del robot fisico usado de ejemplo](multimedia/real_robot_photo.png)
+![Visualización del robot fisico usado de ejemplo](multimedia/real_robot_photo.png)
 
 ---
 
