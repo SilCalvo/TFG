@@ -20,28 +20,14 @@ En las siguientes carpetas encontrarás todos los recursos del proyecto:
     Código final del brazo robotico en arduino. Para más información [`arduino.md/`](./src/arduino/arduino.md)
 
   - [`pybullet/`](./src/pybullet/)  
-    Codigo de prueba para comprpbar que la cinematica directa calculada mediante el metodo denavit hartenberg es correcta comprobandolo con pybullet.Para más información [`pybullet.md/`](./src/pybullet/pybullet.md)
+    Codigo de prueba para comprobar que la cinemática directa calculada mediante el método denavit hartenberg es correcta comprobandolo con pybullet. Para más información [`pybullet.md/`](./src/pybullet/pybullet.md)
 
   - [`ros2_ws/`](./src/ros2_ws/)  
    Workspace en ros2 jazzy con todos los paquetes necesarios para el funcionamiento. Para más información [`ros2_ws.md/`](./src/ros2_ws/ros2_ws.md)
 
 - [`documentacion/`](./doc/)  
- Contiene la documentación de este programa (Como cambiar un robot, como funciona, manuales, informes... ) Para más información [`doc.md/`](./doc/./doc.md)
+ Contiene la documentación de este programa (Manual de uso, esquemas, videos... ) Para más información [`doc.md/`](./doc/doc.md)
 
-Para más información sobre el proyecto acuda a [`documentacion/`](./doc/) 
-
-
-## FALTA
-
-Falta: ----------------------------------------
-
-
-- escribir ecuaciones bien
-- testers
-- Rutina pick and plce fisico con videos
-- limpiar repo
-- tabla denavit de nuevo urdfs
-- Añadir esquema ros2
-- repasar tfg
+Para más información sobre el proyecto así como los primeros pasos acuda a [`documentacion/`](./doc/) 
 
 

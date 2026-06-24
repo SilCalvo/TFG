@@ -676,6 +676,8 @@ ros2 run robot_pkg rutine_node
 
 #### 5.2.2 Estructura de una rutina
 
+Puedes usar los ejemplos de rutinas ya creadas para crear nuevas. 
+
 ```yaml
 rutina:
   - tipo: "moveJ"

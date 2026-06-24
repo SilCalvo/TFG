@@ -216,14 +216,42 @@ void MoveArmNode::handle_go_home(
 }
 
 MoveArmNode::Point MoveArmNode::calculate_dk(const std::vector<double>& angles) {
-  // Denavit Hartenberg table parameters for the 7-DOF arm
-  /*Point p = {0.0, 0.0, 0.0};
-  if (angles.size() >= 3) {
-    double q1 = angles[0], q2 = angles[1], q3 = angles[2];
-    p.x = std::cos(q1) * (0.4 * std::sin(q2 + q3) + 0.3 * std::sin(q2));
-    p.y = std::sin(q1) * (0.4 * std::sin(q2 + q3) + 0.3 * std::sin(q2));
-    p.z = 0.4 * std::cos(q2 + q3) + 0.3 * std::cos(q2) + 0.4;
+  // Denavit Hartenberg table parameters for the 4-DOF arm
+  /*Point p;
+  p.x = 0.0;
+  p.y = 0.0;
+  p.z = 0.0;
+
+  if (angles.size() == 4) {
+    double q1 = angles[0], q2 = angles[1], q3 = angles[2], q4 = angles[3];
+    
+    // Robot parameters (meters)
+    double l1 = 0.07;
+    double l2 = 0.07;
+    double l3 = 0.07;
+    double l4 = 0.05;
+    const double PI = 3.141592653589793;
+
+    // Each trigonometric operation is calculated only once
+    double q4_offset = q4 + (PI / 4.0); // q4 + 45 degrees
+    double cos_q4_offset = cos(q4_offset);
+    double sin_q4_offset = sin(q4_offset);
+    
+    double sin_q3_q2 = sin(q3 - q2);
+    double cos_q2_q3 = cos(q2 - q3); 
+
+    // 4. Simplified final equations
+    double common_factor = (l4 * cos_q4_offset * sin_q3_q2) - (l2 * sin(q2)) + (l3 * sin_q3_q2);
+
+    double x =  sin(q1) * common_factor + (l4 * cos(q1) * sin_q4_offset);
+    double y = -cos(q1) * common_factor + (l4 * sin(q1) * sin_q4_offset);
+    double z = l1 + (l2 * cos(q2)) + cos_q2_q3 * (l3 + l4 * cos_q4_offset);
+    
+    p.x = x;
+    p.y = y;
+    p.z = z;
   }
+
   return p;*/
 
   // Using the DK service for accurate calculation
