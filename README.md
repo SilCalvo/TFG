@@ -1,5 +1,7 @@
 #  Plataforma de Simulación Universal para Robótica Industrial (SURI) -  TFG Silvia Calvo Cabello
 
+![Logo](doc/multimedia/tfg_logo.PNG)
+
 ## Descripción
 
 Es un entorno de simulación basado en ROS 2 y PyBullet diseñado para generar el gemelo digital de cualquier manipulador robótico industrial. Su arquitectura es completamente independiente del hardware (hardware-agnostic), permitiendo validar trayectorias y tareas en diferentes robots con tan solo proporcionar su modelo descriptivo URDF.
